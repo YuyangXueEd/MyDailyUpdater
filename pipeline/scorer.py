@@ -1,10 +1,6 @@
 import re
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 from tenacity import retry, stop_after_attempt, wait_exponential
-
-# Keep concurrency very low to reduce rate-limit pressure in CI.
-_MAX_WORKERS = 2
 
 
 def _build_paper_prompt(paper: dict) -> str:
@@ -75,21 +71,18 @@ def score_papers(
     model: str,
     threshold: float,
 ) -> list[dict]:
-    """Score papers concurrently, one per LLM call."""
+    """Score papers sequentially to avoid rate limiting."""
     if not papers:
         return []
 
     results: list[dict] = []
-    with ThreadPoolExecutor(max_workers=_MAX_WORKERS) as executor:
-        futures = {executor.submit(_score_paper, p, client, model): p for p in papers}
-        for future in as_completed(futures):
-            try:
-                results.append(future.result())
-            except Exception as e:
-                paper = futures[future]
-                paper["score"] = 0.0
-                results.append(paper)
-                print(f"  Scoring error: {e}")
+    for i, p in enumerate(papers):
+        try:
+            results.append(_score_paper(p, client, model))
+        except Exception as e:
+            p["score"] = 0.0
+            results.append(p)
+            print(f"  Scoring error: {e}")
 
     return [p for p in results if p["score"] >= threshold]
 
@@ -100,20 +93,17 @@ def score_jobs(
     model: str,
     threshold: float,
 ) -> list[dict]:
-    """Score jobs concurrently."""
+    """Score jobs sequentially to avoid rate limiting."""
     if not jobs:
         return []
 
     results: list[dict] = []
-    with ThreadPoolExecutor(max_workers=_MAX_WORKERS) as executor:
-        futures = {executor.submit(_score_job, j, client, model): j for j in jobs}
-        for future in as_completed(futures):
-            try:
-                results.append(future.result())
-            except Exception as e:
-                job = futures[future]
-                job["relevance_score"] = 0.0
-                results.append(job)
-                print(f"  Job scoring error: {e}")
+    for j in jobs:
+        try:
+            results.append(_score_job(j, client, model))
+        except Exception as e:
+            j["relevance_score"] = 0.0
+            results.append(j)
+            print(f"  Job scoring error: {e}")
 
     return [j for j in results if j["relevance_score"] >= threshold]

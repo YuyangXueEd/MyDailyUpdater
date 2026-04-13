@@ -1,4 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -28,21 +27,17 @@ def summarize_paper(paper: dict, client: Any, model: str) -> dict:
 
 
 def summarize_papers(papers: list[dict], client: Any, model: str) -> list[dict]:
-    """Summarize all papers concurrently."""
+    """Summarize all papers sequentially to avoid rate limiting."""
     if not papers:
         return []
-    results = [None] * len(papers)
-    with ThreadPoolExecutor(max_workers=min(5, len(papers))) as executor:
-        futures = {executor.submit(_summarize_one_paper, p, client, model): i
-                   for i, p in enumerate(papers)}
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                results[idx] = future.result()
-            except Exception as e:
-                papers[idx]["abstract_zh"] = "摘要生成失败。"
-                results[idx] = papers[idx]
-                print(f"  Paper summarize error: {e}")
+    results = []
+    for p in papers:
+        try:
+            results.append(_summarize_one_paper(p, client, model))
+        except Exception as e:
+            p["abstract_zh"] = "摘要生成失败。"
+            results.append(p)
+            print(f"  Paper summarize error: {e}")
     return results
 
 
@@ -60,20 +55,16 @@ def summarize_hn_story(story: dict, client: Any, model: str) -> dict:
 
 
 def summarize_hn_stories(stories: list[dict], client: Any, model: str) -> list[dict]:
-    """Summarize HN stories concurrently."""
+    """Summarize HN stories sequentially to avoid rate limiting."""
     if not stories:
         return []
-    results = [None] * len(stories)
-    with ThreadPoolExecutor(max_workers=min(10, len(stories))) as executor:
-        futures = {executor.submit(_summarize_one_hn, s, client, model): i
-                   for i, s in enumerate(stories)}
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                results[idx] = future.result()
-            except Exception as e:
-                stories[idx]["summary_zh"] = "摘要生成失败。"
-                results[idx] = stories[idx]
+    results = []
+    for s in stories:
+        try:
+            results.append(_summarize_one_hn(s, client, model))
+        except Exception as e:
+            s["summary_zh"] = "摘要生成失败。"
+            results.append(s)
     return results
 
 
@@ -89,20 +80,16 @@ def summarize_job(job: dict, client: Any, model: str) -> dict:
 
 
 def summarize_jobs(jobs: list[dict], client: Any, model: str) -> list[dict]:
-    """Summarize jobs concurrently."""
+    """Summarize jobs sequentially to avoid rate limiting."""
     if not jobs:
         return []
-    results = [None] * len(jobs)
-    with ThreadPoolExecutor(max_workers=min(5, len(jobs))) as executor:
-        futures = {executor.submit(summarize_job, j, client, model): i
-                   for i, j in enumerate(jobs)}
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                results[idx] = future.result()
-            except Exception as e:
-                jobs[idx]["requirements_zh"] = "摘要生成失败。"
-                results[idx] = jobs[idx]
+    results = []
+    for j in jobs:
+        try:
+            results.append(summarize_job(j, client, model))
+        except Exception as e:
+            j["requirements_zh"] = "摘要生成失败。"
+            results.append(j)
     return results
 
 
@@ -117,20 +104,16 @@ def _summarize_one_github_repo(repo: dict, client: Any, model: str) -> dict:
 
 
 def summarize_github_repos(repos: list[dict], client: Any, model: str) -> list[dict]:
-    """Summarize GitHub trending repos concurrently."""
+    """Summarize GitHub trending repos sequentially to avoid rate limiting."""
     if not repos:
         return []
-    results = [None] * len(repos)
-    with ThreadPoolExecutor(max_workers=min(10, len(repos))) as executor:
-        futures = {executor.submit(_summarize_one_github_repo, r, client, model): i
-                   for i, r in enumerate(repos)}
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                results[idx] = future.result()
-            except Exception as e:
-                repos[idx]["summary_zh"] = "摘要生成失败。"
-                results[idx] = repos[idx]
+    results = []
+    for r in repos:
+        try:
+            results.append(_summarize_one_github_repo(r, client, model))
+        except Exception as e:
+            r["summary_zh"] = "摘要生成失败。"
+            results.append(r)
     return results
 
 
