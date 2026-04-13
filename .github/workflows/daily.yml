@@ -5,6 +5,10 @@ on:
     - cron: '0 0 * * *'   # UTC 00:00 = UK winter midnight
   workflow_dispatch:        # manual trigger for testing
 
+concurrency:
+  group: daily-digest-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   digest:
     runs-on: ubuntu-latest
@@ -19,6 +23,9 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+
+      - name: Sync latest main
+        run: git pull --rebase origin main
 
       - name: Install dependencies
         run: pip install -r requirements.txt
