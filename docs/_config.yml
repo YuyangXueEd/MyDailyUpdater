@@ -1,6 +1,8 @@
 title: "Research Daily Digest"
 description: "Daily AI/CV/Medical Imaging research updates"
 theme: minima
-baseurl: ""
-url: ""
+baseurl: "/MyDailyUpdater"
+url: "https://yuyangxueed.github.io"
 permalink: /:categories/:year/:month/:day/:title/
+exclude:
+  - data/

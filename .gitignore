@@ -6,6 +6,6 @@ __pycache__/
 dist/
 .pytest_cache/
 .claude/
-data/daily/
-data/weekly/
-data/monthly/
+docs/data/daily/
+docs/data/weekly/
+docs/data/monthly/

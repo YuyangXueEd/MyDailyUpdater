@@ -4,7 +4,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-_DEFAULT_DATA_DIR = str(Path(__file__).parent.parent / "data" / "daily")
+_DEFAULT_DATA_DIR = str(Path(__file__).parent.parent / "docs" / "data" / "daily")
 
 
 def load_daily_jsons(dates: list[str], data_dir: str = _DEFAULT_DATA_DIR) -> list[dict]:

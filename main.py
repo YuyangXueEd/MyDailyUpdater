@@ -123,7 +123,7 @@ def run_weekly() -> None:
 
     sources = load_sources()
     client = get_openrouter_client(sources)
-    data_dir = str(Path(__file__).parent / "data" / "daily")
+    data_dir = str(Path(__file__).parent / "docs" / "data" / "daily")
 
     dailies = load_daily_jsons(dates, data_dir)
     all_papers = [p for d in dailies for p in d.get("papers", [])]
@@ -154,7 +154,7 @@ def run_monthly() -> None:
 
     sources = load_sources()
     client = get_openrouter_client(sources)
-    data_dir = str(Path(__file__).parent / "data" / "daily")
+    data_dir = str(Path(__file__).parent / "docs" / "data" / "daily")
 
     dailies = load_daily_jsons(dates, data_dir)
     all_papers = [p for d in dailies for p in d.get("papers", [])]
@@ -183,7 +183,7 @@ def check_today() -> None:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     yesterday = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
 
-    data_dir = Path(__file__).parent / "data" / "daily"
+    data_dir = Path(__file__).parent / "docs" / "data" / "daily"
     for date_str in [today, yesterday]:
         path = data_dir / f"{date_str}.json"
         if path.exists():

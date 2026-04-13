@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-_DEFAULT_DATA_DIR = str(Path(__file__).parent.parent / "data" / "daily")
+_DEFAULT_DATA_DIR = str(Path(__file__).parent.parent / "docs" / "data" / "daily")
 
 
 def build_daily_payload(
@@ -35,7 +35,7 @@ def write_daily_json(payload: dict, base_dir: str = _DEFAULT_DATA_DIR) -> str:
 
 
 def write_weekly_json(payload: dict) -> str:
-    base_dir = str(Path(__file__).parent.parent / "data" / "weekly")
+    base_dir = str(Path(__file__).parent.parent / "docs" / "data" / "weekly")
     os.makedirs(base_dir, exist_ok=True)
     out_path = os.path.join(base_dir, f"{payload['period']}.json")
     with open(out_path, "w", encoding="utf-8") as f:
@@ -44,7 +44,7 @@ def write_weekly_json(payload: dict) -> str:
 
 
 def write_monthly_json(payload: dict) -> str:
-    base_dir = str(Path(__file__).parent.parent / "data" / "monthly")
+    base_dir = str(Path(__file__).parent.parent / "docs" / "data" / "monthly")
     os.makedirs(base_dir, exist_ok=True)
     out_path = os.path.join(base_dir, f"{payload['period']}.json")
     with open(out_path, "w", encoding="utf-8") as f:
