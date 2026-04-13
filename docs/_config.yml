@@ -1,0 +1,6 @@
+title: "Research Daily Digest"
+description: "Daily AI/CV/Medical Imaging research updates"
+theme: minima
+baseurl: ""
+url: ""
+permalink: /:categories/:year/:month/:day/:title/

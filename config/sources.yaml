@@ -1,0 +1,20 @@
+arxiv:
+  enabled: true
+  max_papers_per_run: 500
+
+hacker_news:
+  enabled: true
+
+jobs:
+  enabled: true
+
+supervisor_monitoring:
+  enabled: true
+
+llm:
+  scoring_model: "deepseek/deepseek-chat"
+  summarization_model: "deepseek/deepseek-chat"
+  base_url: "https://openrouter.ai/api/v1"
+
+pages:
+  base_url: ""

@@ -1,0 +1,78 @@
+arxiv:
+  categories:
+    - cs.CV
+    - cs.AI
+    - cs.LG
+    - eess.IV
+
+  must_include:
+    - medical imaging
+    - medical image
+    - MRI
+    - CT scan
+    - radiology
+    - pathology
+    - ultrasound
+    - fundus
+    - histology
+    - segmentation
+    - computer vision
+    - large language model
+    - vision language model
+    - diffusion model
+    - foundation model
+
+  boost_keywords:
+    - VLM
+    - SAM
+    - ViT
+    - CLIP
+    - zero-shot
+    - few-shot
+    - multimodal
+
+  llm_score_threshold: 6
+
+hacker_news:
+  min_score: 50
+  max_items: 20
+  keywords:
+    - AI
+    - LLM
+    - machine learning
+    - computer vision
+    - GPU
+    - open source model
+    - research
+    - benchmark
+
+jobs:
+  rss_sources:
+    - url: "https://www.jobs.ac.uk/jobs/academic-or-research/?format=rss"
+      name: "jobs.ac.uk Research"
+    - url: "https://www.jobs.ac.uk/jobs/computer-science/?format=rss"
+      name: "jobs.ac.uk CS"
+    - url: "https://www.findapostdoc.com/rss"
+      name: "FindAPostDoc"
+    - url: "https://academicpositions.com/rss/jobs"
+      name: "AcademicPositions"
+
+  filter_keywords:
+    - computer vision
+    - medical imaging
+    - machine learning
+    - artificial intelligence
+    - deep learning
+    - LLM
+    - VLM
+    - postdoc
+    - research associate
+    - fellowship
+
+  exclude_keywords:
+    - chemistry
+    - economics
+    - social science
+    - humanities
+
+  llm_score_threshold: 6
