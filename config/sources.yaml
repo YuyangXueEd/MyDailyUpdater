@@ -16,8 +16,8 @@ github_trending:
   max_repos: 15
 
 llm:
-  scoring_model: "openai/gpt-5-nano"
-  summarization_model: "openai/gpt-5-nano"
+  scoring_model: "google/gemini-2.5-flash-lite-preview-09-2025"
+  summarization_model: "google/gemini-2.5-flash-lite-preview-09-2025"
   base_url: "https://openrouter.ai/api/v1"
 
 pages:
