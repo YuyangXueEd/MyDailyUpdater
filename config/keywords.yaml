@@ -4,6 +4,7 @@ arxiv:
     - cs.AI
     - cs.LG
     - eess.IV
+    - cs.MA
 
   must_include:
     - medical imaging

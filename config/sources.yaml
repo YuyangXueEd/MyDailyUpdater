@@ -1,6 +1,6 @@
 arxiv:
   enabled: true
-  max_papers_per_run: 120
+  max_papers_per_run: 300
 
 hacker_news:
   enabled: true
