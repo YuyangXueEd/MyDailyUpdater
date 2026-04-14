@@ -1,6 +1,6 @@
 {
   "date": "2026-04-14",
-  "generated_at": "2026-04-14T10:11:36.780515+00:00",
+  "generated_at": "2026-04-14T10:16:26.776483+00:00",
   "papers": [
     {
       "id": "2604.11679v1",
@@ -19,7 +19,7 @@
       "url": "http://arxiv.org/abs/2604.11679v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11679v1",
       "score": 10.0,
-      "abstract_zh": "该论文组织了FOMO25挑战赛，旨在推动脑部MRI基础模型的临床应用。**核心方法**是利用大规模未标记的临床数据（FOMO60K）进行自监督学习（SSL）预训练，并评估模型在真实、少样本和跨域临床任务上的泛化能力。**主要贡献**是首次在面向临床工作流的真实数据上，系统性地验证了SSL预训练基础模型在脑部MRI分析中的有效性和鲁棒性。",
+      "abstract_zh": "该论文组织了FOMO25挑战赛，旨在推动脑部MRI基础模型的临床应用。核心方法是利用大规模未标注的临床数据（FOMO60K）进行自监督学习（SSL）预训练，并在少样本和跨领域设置下评估模型在卒中分类、脑膜瘤分割和脑龄回归等任务上的泛化能力。其贡献在于提供了一个更贴近真实临床环境的基准测试，以克服现有研究中预训练数据规模小和基准测试数据质量过高的问题。",
       "figure_url": "https://arxiv.org/html/2604.11679v1/figures/supervised_baseline.png",
       "figure_caption": "Self-supervised pretraining boosts generalization. Across tasks, the top pretraining-based model from the method-track outperforms both from-scratch out-of-domain and in-domain supervised baselines, demonstrating that SSL can effectively leverage heterogeneous MRI data. Baselines are nnU-Net (segmentation) and Asparagus (classification/regression). The best performing method for classification was ashash, for segmentation Dolphin_creators, and for regression FOMO2JOMO. For Task 2, “Easy cases” were defined as the top 25% of cases ranked by average Dice score across all challenge participants.",
       "primary_category": "cs.CV",
@@ -44,7 +44,7 @@
       "url": "http://arxiv.org/abs/2604.11775v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11775v1",
       "score": 9.0,
-      "abstract_zh": "该论文提出了一种**高效的KernelSHAP框架**，通过**限制计算到感兴趣区域及其感受野**并**缓存日志预测**来加速3D医学图像分割的可解释性。其贡献在于**实现了对体积CT分割的实用化归因分析**，并探讨了**不同特征抽象和聚合函数对生成临床相关解释的影响**。",
+      "abstract_zh": "该论文提出了一种高效的KernelSHAP框架，通过限制计算到感兴趣区域及其感受野，并利用补丁逻辑缓存加速推理，解决了3D医学图像分割中基于扰动的可解释性方法的计算瓶颈。其贡献在于实现了对体积CT分割的实用化解释，并通过比较不同特征抽象和聚合函数，生成了更具临床意义的归因。",
       "figure_url": "https://arxiv.org/html/2604.11775v1/figs/supervoxel-maps/fcc-Coronal.png",
       "figure_caption": "Coronal examples of (left) Regular FCC supervoxels and (right) Hybrid (organ-aware) FCC supervoxels within the RF-supported crop B RF B_{\\mathrm{RF}} . Regular FCC provides uniform geometry-driven units, whereas the Hybrid variant further splits FCC cells along organ boundaries to improve anatomical alignment.",
       "primary_category": "cs.CV",
@@ -68,7 +68,7 @@
       "url": "http://arxiv.org/abs/2604.11653v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11653v1",
       "score": 9.0,
-      "abstract_zh": "GazeVaLM是一个多观察者眼动基准数据集，用于评估AI生成X光片的临床真实性。它记录了放射科医生在诊断和真假分类任务中对真实和合成X光片的注视行为，并提供了人类与最先进多模态LLM在决策和不确定性水平上的直接比较分析。",
+      "abstract_zh": "GazeVaLM构建了一个包含放射科医生眼动数据的基准，用于评估AI生成X光片的临床真实性。该数据集记录了专家在诊断和真假分类任务中对真实和合成X光片的注视模式，并与多模态大语言模型（LLMs）的表现进行对比分析。其核心贡献是提供了首个结合眼动数据和AI评估的临床真实性基准，以深入理解人类感知和AI性能的差异。",
       "figure_url": "https://arxiv.org/html/2604.11653v1/figures/Fig1.png",
       "figure_caption": "Figure 1. Overview of the proposed dataset pipeline, which introduces has two different assessors undertake two different tasks to produce an assortment of gaze data.",
       "primary_category": "cs.CV",
@@ -92,7 +92,7 @@
       "url": "http://arxiv.org/abs/2604.11789v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11789v1",
       "score": 9.0,
-      "abstract_zh": "该论文综述了大型多模态模型（LMMs）与以对象为中心的视觉（Object-Centric Vision）的融合研究。核心方法是通过引入对象级表示和操作，解决LMMs在精确对象识别、空间推理和可控编辑方面的局限性。主要贡献在于系统性地梳理了该交叉领域在对象级理解、分割、编辑和生成方面的最新进展。",
+      "abstract_zh": "该论文综述了大型多模态模型（LMMs）与面向对象视觉（Object-Centric Vision）的融合研究。核心方法是将LMMs的能力扩展到精确的实例识别、空间推理和可控的视觉操作。主要贡献在于系统性地梳理了该交叉领域在对象级理解、分割、编辑和生成方面的最新进展。",
       "figure_url": "https://arxiv.org/html/2604.11789v1/x1.png",
       "figure_caption": "Overview of object-centric vision in the era of large multimodal models. The modalities considered in this paper include images, videos, and 3D data. Object-centric representations enable four fundamental capabilities: object understanding, object segmentation, object editing, and object generation.",
       "primary_category": "cs.CV",
@@ -120,7 +120,7 @@
       "url": "http://arxiv.org/abs/2604.11762v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11762v1",
       "score": 9.0,
-      "abstract_zh": "**核心方法：** 研究团队构建并发布了 **MosaicMRI**，这是一个大规模、多样化的**原始肌肉骨骼（MSK）MRI数据集**，包含2671个完整采样的3D数据卷。\n\n**核心贡献：** 该数据集是迄今为止最大的开源原始MSK MRI集合，旨在解决现有模型在不同解剖结构上可靠性研究不足的问题，并提供了一个用于评估加速重建等机器学习方法的基准。",
+      "abstract_zh": "**核心方法：** 论文发布了 **MosaicMRI**，一个大规模、多样化的**原始肌肉骨骼（MSK）MRI数据集**，包含2671个完整采样的MR数据卷。\n\n**核心贡献：** 该数据集是迄今为止最大的开源原始MSK MRI资源，旨在解决现有模型在不同解剖结构上可靠性研究不足的问题，并用其对加速重建基线模型（如VarNet）进行了全面评估。",
       "figure_url": "https://arxiv.org/html/2604.11762v1/x1.png",
       "figure_caption": "MosaicMRI overview. (left) Anatomy distribution by volume count, showing a long-tailed composition prevalently by spine (49%, 1 , 316 1{,}316 volumes), followed by shoulder (14%, 373) and knee (14%, 362). (right) Representative slices spanning six anatomy groups and three orientations (axial, sagittal, coronal); overlays report in-plane matrix size, receive-coil count, and number of slices.",
       "primary_category": "cs.CV",
@@ -143,7 +143,7 @@
       "url": "http://arxiv.org/abs/2604.11559v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11559v1",
       "score": 9.0,
-      "abstract_zh": "该论文提出了一种**渐进式纹理感知扩散模型（PTD）**来解决稀疏视角CT（SVCT）中的纹理恢复难题。它采用**粗到细的框架**：首先通过PTD$_{\\textit{rec}}$恢复低频骨架，然后利用PTD$_{\\textit{diff}}$中的**双域引导条件扩散**来生成高保真、一致的纹理细节。",
+      "abstract_zh": "该论文提出**渐进式纹理感知扩散模型（PTD）**，采用**粗到细**的框架恢复稀疏视角CT图像。它首先用**PTD$_{\\textit{rec}}$**恢复低频内容（粗糙结构），然后用**PTD$_{\\textit{diff}}$**通过**双域引导的条件扩散**生成高保真、一致的纹理细节。",
       "primary_category": "cs.CV",
       "primary_category_anchor": "cs-cv",
       "primary_category_rank": 0
@@ -191,7 +191,7 @@
       "url": "http://arxiv.org/abs/2604.11730v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11730v1",
       "score": 8.0,
-      "abstract_zh": "该论文提出了一种利用**多模态行为信号（如面部、语音、肢体语言）**来**自动识别视频中用户的“矛盾/犹豫”（Ambivalence/Hesitancy, A/H）情绪**的方法。其核心贡献在于**开发了针对性识别A/H的技术**，旨在为个性化数字健康干预提供实时反馈，从而提高干预的依从性和有效性。",
+      "abstract_zh": "该论文提出了一种基于行为科学的视频分析方法，用于识别个体在健康干预中的“矛盾/犹豫”（A/H）情绪。核心贡献在于通过分析语言、面部、声音和肢体语言等模态信息，自动化识别这种阻碍行为改变的关键情绪，以支持个性化的数字健康干预。",
       "figure_url": "https://arxiv.org/html/2604.11730v1/x1.png",
       "figure_caption": "Conceptual illustration of the theoretical pathway by which ambivalence/hesitation (A/H) recognition can influence a digital behaviour change intervention: a user interacts with a smartphone app targeting physical activity, while the app detects A/H and adaptively adjusts cues and strategies to deliver more personalized support.",
       "primary_category": "cs.CV",
@@ -216,7 +216,7 @@
       "url": "http://arxiv.org/abs/2604.11798v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11798v1",
       "score": 8.0,
-      "abstract_zh": "该论文提出了一种基于nnU-Net的**预算感知不确定性量化框架**，用于放射治疗分割的质量保证（QA）。它结合了不确定性估计（如预测熵）和事后校准方法，生成**像素级不确定性图**，以指导临床医生进行有针对性的手动审查。",
+      "abstract_zh": "该论文提出了一种**基于预算感知的、利用nnU-Net的放疗分割质量保证（QA）框架**。该框架结合**不确定性量化（如预测熵）和事后校准**，生成**逐体素的不确定性图**，以指导人工复核。研究对比了多种不确定性方法（如TS、DE、CE、TTA）在TMLI任务中的表现，旨在提高模型部署的可靠性。",
       "primary_category": "cs.CV",
       "primary_category_anchor": "cs-cv",
       "primary_category_rank": 0
@@ -236,7 +236,7 @@
       "url": "http://arxiv.org/abs/2604.11585v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11585v1",
       "score": 8.0,
-      "abstract_zh": "GeomPrompt提出了一种轻量级的跨模态适配模块，仅利用RGB图像生成任务驱动的几何提示，作为深度信息的替代输入，用于处理缺失的深度数据。此外，GeomPrompt-Recovery模块通过预测第四通道的校正来补偿退化的深度信息。这些方法仅通过下游分割监督进行训练，旨在恢复对分割有用的几何先验知识。",
+      "abstract_zh": "GeomPrompt提出了一种轻量级跨模态模块，仅利用RGB图像生成任务驱动的几何提示，作为冻结的RGB-D分割模型的第四通道输入，以应对深度信息缺失。此外，GeomPrompt-Recovery模块通过预测第四通道的校正来补偿退化的深度信息。两者仅依赖分割监督进行训练，有效恢复了对分割有用的几何先验知识。",
       "primary_category": "cs.CV",
       "primary_category_anchor": "cs-cv",
       "primary_category_rank": 0
@@ -256,7 +256,7 @@
       "url": "http://arxiv.org/abs/2604.11636v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11636v1",
       "score": 8.0,
-      "abstract_zh": "**核心方法：** MorphoFlow 提出了一种稀疏监督的生成式形状建模框架，结合神经隐式表示和自编码器，利用稀疏表面注释直接学习紧凑的概率形状表示。\n\n**贡献：** 该方法克服了传统方法对密集标注的依赖，实现了分辨率无关的 3D 形态建模，并通过自回归流捕获了潜在的解剖学变异分布。",
+      "abstract_zh": "**核心方法：** MorphoFlow 提出了一种基于稀疏表面标注的生成式形状建模框架，它结合了神经隐式表示、自解码器和自回归归一化流。\n\n**主要贡献：** 该方法实现了紧凑且概率性的形状表示学习，能够在仅有稀疏监督的情况下，进行分辨率无关的 3D 形态建模和可解释的潜在变异性分析。",
       "figure_url": "https://arxiv.org/html/2604.11636v1/x1.png",
       "figure_caption": "MorphoFlow Architecture . For only generative shape modelling α − 1 = 1 \\alpha^{-1}=1 , making the distribution a standard normal. For compact shape latent α − 1 \\alpha^{-1} values are learned during training with ARD regularization loss.",
       "primary_category": "cs.CV",
@@ -280,7 +280,7 @@
       "url": "http://arxiv.org/abs/2604.11627v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11627v1",
       "score": 8.0,
-      "abstract_zh": "该论文提出了 **POINTS-Long**，一种受人眼启发的**自适应双模态**多模态大语言模型（MLLM）。它通过**焦点模式**（高精度）和**待机模式**（高效率）动态调整视觉Token数量，显著提升了长序列视觉任务的效率，同时支持高效的**流式视觉理解**。",
+      "abstract_zh": "**核心方法：** POINTS-Long 提出了一种受人眼启发的动态双模态（焦点/待机）视觉标记缩放机制，并设计了可动态分离的KV缓存。\n\n**核心贡献：** 该模型在处理长序列视觉任务时，实现了效率和准确性的动态权衡，在保持高精度的同时大幅减少了视觉标记和计算量，并原生支持高效的流式视觉理解。",
       "figure_url": "https://arxiv.org/html/2604.11627v1/x1.png",
       "figure_caption": "POINTS-Long: Bridging the Gap between Human Visual Perception and MLLM Scalability. Inspired by human’s adaptive visual processing, POINTS-Long introduces a dual-mode system which switches between high-fidelity Focus Mode and efficient Standby Mode, enabling both detailed analysis and long-term streaming understanding with significantly reduced cost.",
       "primary_category": "cs.CV",
@@ -302,7 +302,7 @@
       "url": "http://arxiv.org/abs/2604.11707v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11707v1",
       "score": 8.0,
-      "abstract_zh": "该论文提出了一种名为 Re2Pix 的分层视频预测框架，它将预测分解为**语义表示预测**和**表示引导的视觉合成**两阶段。核心方法是先预测未来场景结构（在冻结模型特征空间中），再用这些预测表示引导扩散模型生成逼真帧，有效解决了动态场景预测的语义一致性和视觉保真度问题。",
+      "abstract_zh": "该论文提出了一种名为 Re2Pix 的分层视频预测框架，它将预测分解为**语义表示预测**和**表示引导的视觉合成**两阶段。核心方法是先预测未来场景结构（在冻结模型特征空间中），再用这些预测表示指导扩散模型生成逼真视频。这使得模型能解耦处理动态一致性和视觉保真度。",
       "figure_url": "https://arxiv.org/html/2604.11707v1/x1.png",
       "figure_caption": "Overview of the proposed Re2Pix hierarchical framework during inference. In Stage 1, semantic features h 1 : M h_{1:M} of the context frames are extracted from a vision foundation model (VFM) encoder E h E_{h} and fed into a masked feature transformer to autoregressively predict (in frame-wise way) future semantic VFM features h ^ M + 1 : K \\hat{h}_{M+1:K} . In Stage 2, both the past h ^ 1 : M \\hat{h}_{1:M} and predicted features h ^ M + 1 : K \\hat{h}_{M+1:K} condition the diffusion transformer G z G_{z} to generate future VAE latents z ^ M + 1 : K \\hat{z}_{M+1:K} , which are then decoded into RGB future frames.",
       "primary_category": "cs.CV",
@@ -328,7 +328,7 @@
       "url": "http://arxiv.org/abs/2604.11490v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11490v1",
       "score": 7.0,
-      "abstract_zh": "该论文提出了**人类区域适应（Anthropogenic Regional Adaptation）**的新范式，旨在优化模型对特定区域的关联性，同时保持全局泛化能力。作者还提出了**GG-EZ**方法，通过区域数据过滤和模型合并来实现这种适应。",
+      "abstract_zh": "该论文提出了**人类区域适应（Anthropogenic Regional Adaptation）**的新范式，旨在优化多模态模型对特定区域的关联性，同时保持全局泛化能力。为此，研究人员设计了**GG-EZ**方法，通过区域数据过滤和模型合并来实现高效适应，并在多种视觉-语言模型上验证了其有效性。",
       "figure_url": "https://arxiv.org/html/2604.11490v1/x1.png",
       "figure_caption": "Through anthropogenic regional adaptation, we identify two primary model archetypes: (left) Global model with strong overall global performance, but struggle to represent certain regions appropriately, and (right) Regional-specific model that has a strong representation towards certain regions, but fall short on the global context.",
       "primary_category": "cs.CV",
@@ -353,7 +353,7 @@
       "url": "http://arxiv.org/abs/2604.11689v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11689v1",
       "score": 7.0,
-      "abstract_zh": "该论文提出了 **LARY 基准**，用于统一评估**潜在动作表示**在视觉到动作对齐任务中的能力。它利用海量人类视频数据，评估潜在动作表示在**高层语义动作**和**底层机器人控制**上的泛化性。",
+      "abstract_zh": "该论文提出了 **LARY 基准**，用于统一评估**潜在动作表示**在**高层语义动作**和**底层机器人控制**任务中的泛化能力。\n\n其核心方法是构建一个包含海量视频、图像对和运动轨迹的大型数据集，以解决现有VLA模型中显式动作数据短缺的问题。",
       "figure_url": "https://arxiv.org/html/2604.11689v1/x1.png",
       "figure_caption": "LARYBench evaluates vision-to-action transformation on both action generalization and robotic control.",
       "primary_category": "cs.CV",
@@ -377,7 +377,7 @@
       "url": "http://arxiv.org/abs/2604.11637v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11637v1",
       "score": 7.0,
-      "abstract_zh": "**核心方法：** STS-Mixer将4D点云视频转换为图谱信号，通过频谱分解捕捉不同频率带的几何结构（低频捕获粗略形状，高频捕获细节）。\n\n**贡献：** 提出STS-Mixer框架，统一融合了空间、时间与频谱表示，以更有效地理解4D点云视频的几何动态，克服了纯时空方法的局限性。",
+      "abstract_zh": "STS-Mixer 提出了一种新颖的**时空-谱混合（Spatio-Temporal-Spectral Mixer）**框架，通过将4D点云视频转换为**图谱信号**并分解为不同频率，以捕捉其内在的几何结构。该方法的核心贡献在于**融合了时空信息与频率域的几何细节**，有效提升了4D点云视频的理解能力。",
       "figure_url": "https://arxiv.org/html/2604.11637v1/x1.png",
       "figure_caption": "Graph spectral analysis of point clouds with Graph Fourier Transform (GFT) and inverse GFT (IGFT). The high-frequency bands of point clouds encode fine-grained geometric details which can be observed by the difference between the original point cloud and the one w/o high frequency. The low-frequency bands capture most energy as well as the coarse shapes which can be observed by the similarity between the original point cloud and the one w/o mid-high frequency.",
       "primary_category": "cs.CV",
@@ -400,7 +400,7 @@
       "url": "http://arxiv.org/abs/2604.11809v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11809v1",
       "score": 7.0,
-      "abstract_zh": "该论文研究了在特征匹配中引入旋转不变性的最佳阶段。研究发现，在描述符阶段引入旋转不变性与在匹配器阶段引入效果相似，但能使匹配器更快地实现旋转不变性，且不损害直立性能。",
+      "abstract_zh": "该论文研究了在特征匹配中引入旋转不变性的最佳阶段。研究发现，在描述符阶段引入旋转不变性与在匹配器阶段引入效果相似，但能使匹配器更快，且不损害垂直（upright）性能。",
       "primary_category": "cs.CV",
       "primary_category_anchor": "cs-cv",
       "primary_category_rank": 0
@@ -421,7 +421,7 @@
       "url": "http://arxiv.org/abs/2604.11563v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11563v1",
       "score": 7.0,
-      "abstract_zh": "Synthius-Mem提出了一种受大脑启发的结构化人格记忆系统，通过将对话分解为六个认知领域来提取“已知信息”，而非简单检索原始对话。该方法有效抵抗了幻觉，并在LoCoMo基准测试中实现了高记忆准确率和强大的对抗鲁棒性。",
+      "abstract_zh": "Synthius-Mem提出了一种受大脑启发的结构化人格记忆系统，通过将对话分解为六个认知领域来提取“已知信息”，而非简单检索原始对话。该方法有效抵抗幻觉，并在LoCoMo基准测试中实现了高记忆准确率（94.4%）和强大的对抗鲁棒性（99.6%）。",
       "primary_category": "cs.AI",
       "primary_category_anchor": "cs-ai",
       "primary_category_rank": 1
@@ -444,7 +444,7 @@
       "url": "http://arxiv.org/abs/2604.11547v1",
       "pdf_url": "https://arxiv.org/pdf/2604.11547v1",
       "score": 8.0,
-      "abstract_zh": "该论文提出了 **MedSSR** 框架，通过利用罕见病知识**合成可控的推理数据**来解决医疗推理数据稀疏性问题。随后，它采用**半监督强化学习**，利用模型自身生成的伪标签在合成数据上进行自监督训练，以高效提升模型在数据稀疏领域的推理能力。",
+      "abstract_zh": "该论文提出MedSSR框架，通过利用罕见病知识**合成可控的推理问题**，并利用模型自身生成伪标签。然后采用**自监督强化学习**在合成数据上训练，以高效增强LLM在数据稀疏领域的医疗推理能力。",
       "figure_url": "https://arxiv.org/html/2604.11547v1/x1.png",
       "figure_caption": "Distribution of question types in existing medical datasets. Only 22% are reasoning-intensive, and just 3% among them concern rare diseases.",
       "primary_category": "cs.LG",
@@ -460,7 +460,7 @@
       "score": 241,
       "created_at": "2026-04-13T21:25:38Z",
       "comments_url": "https://news.ycombinator.com/item?id=47758028",
-      "summary_zh": "斯坦福报告揭示，人工智能圈内人士与公众的认知差距日益扩大。"
+      "summary_zh": "斯坦福报告揭示：人工智能圈内人与大众的认知差距日益扩大。"
     },
     {
       "id": 47751032,
@@ -478,7 +478,7 @@
       "score": 131,
       "created_at": "2026-04-13T19:28:41Z",
       "comments_url": "https://news.ycombinator.com/item?id=47756772",
-      "summary_zh": "GAIA是一个开源框架，旨在让用户在本地硬件上构建和运行AI智能体。"
+      "summary_zh": "GAIA是一个开源框架，用于在本地硬件上构建和运行人工智能代理。"
     },
     {
       "id": 47753643,
@@ -493,10 +493,10 @@
       "id": 47762901,
       "title": "An AI Vibe Coding Horror Story",
       "url": "https://www.tobru.ch/an-ai-vibe-coding-horror-story/",
-      "score": 114,
+      "score": 121,
       "created_at": "2026-04-14T08:35:45Z",
       "comments_url": "https://news.ycombinator.com/item?id=47762901",
-      "summary_zh": "AI 辅助编程可能导致代码质量下降和维护困难，带来“恐怖”的开发体验。"
+      "summary_zh": "AI 辅助编程可能导致难以追踪的、令人不安的“代码怪谈”。"
     },
     {
       "id": 47757775,
@@ -514,7 +514,7 @@
       "score": 84,
       "created_at": "2026-04-13T23:26:04Z",
       "comments_url": "https://news.ycombinator.com/item?id=47759292",
-      "summary_zh": "人工智能正在数学领域引发革命，辅助甚至发现新的数学定理和证明。"
+      "summary_zh": "人工智能正在彻底改变数学研究，带来新的发现和工具。"
     },
     {
       "id": 47752402,
@@ -523,16 +523,16 @@
       "score": 77,
       "created_at": "2026-04-13T14:21:29Z",
       "comments_url": "https://news.ycombinator.com/item?id=47752402",
-      "summary_zh": "扎克伯格正秘密开发一个AI“分身”，或将代替他出席会议。"
+      "summary_zh": "扎克伯格正秘密开发一个AI“分身”，可能用于代替他出席会议。"
     },
     {
       "id": 47758347,
       "title": "N-Day-Bench – Can LLMs find real vulnerabilities in real codebases?",
       "url": "https://ndaybench.winfunc.com",
-      "score": 71,
+      "score": 72,
       "created_at": "2026-04-13T21:54:03Z",
       "comments_url": "https://news.ycombinator.com/item?id=47758347",
-      "summary_zh": "N-Day-Bench测试大型语言模型在真实代码库中发现实际安全漏洞的能力。"
+      "summary_zh": "N-Day-Bench测试探究大型语言模型能否在真实代码库中发现实际安全漏洞。"
     },
     {
       "id": 47758863,
@@ -541,7 +541,7 @@
       "score": 67,
       "created_at": "2026-04-13T22:40:26Z",
       "comments_url": "https://news.ycombinator.com/item?id=47758863",
-      "summary_zh": "AI驱动的“十倍速”工作要求正给资深工程师带来严重的身心健康负担。"
+      "summary_zh": "AI 驱动的“十倍工程师”目标正以牺牲资深工程师的身体健康为代价。"
     }
   ],
   "jobs": [
@@ -552,7 +552,7 @@
       "posted_date": "",
       "source": "jobs.ac.uk CS",
       "deadline": "2026-05-11T00:00:00+00:00",
-      "requirements_zh": "研究方向：利用in silico模型研究乳腺癌侵袭和定植骨组织的机制，重点关注运动对骨病变发展的影响及机械敏感性骨细胞的作用，涉及机械载荷、细胞成像、体内micro-CT和空间转录组学数据的整合分析。\n关键要求：具有生物信息学和计算生物力学背景的欧洲研究理事会（ERC）资助的博士后研究员；具备计算机科学、生物医学科学或生物工程背景，有跨学科研究经验和生物信息学分析经验；或具备生物力学或其他相关炎症和病理学技能的工程师，并有处理大型数据集的经验。\n申请信息：截止/开始时间、申请材料、联系渠道（如有）：截止日期：2026-05-11T00:00:00+00:00；申请材料和联系渠道未注明。\n职位条件：地点、合同类型、工作量、薪资：地点：London, England, United Kingdom；合同类型：固定期限/合同 (Fixed-Term/Contract)；工作量：全职 (Full Time)；薪资：GBP38419.00-GBP51755.00/年。\n一句建议：给CV/医疗影像/LLM方向申请者的匹配建议：建议具有生物力学建模或空间转录组学分析经验的申请",
+      "requirements_zh": "研究方向：利用in silico模型研究乳腺癌侵袭和骨组织定植的机制，重点关注运动对骨损伤发展的影响及机械敏感性骨细胞的作用，整合机械载荷、细胞成像、体内微CT和空间转录组学数据。\n关键要求：具有生物信息学和计算生物力学背景的欧洲研究理事会（ERC）资助的博士后研究员；具备计算机科学、生物医学科学或生物工程背景，有跨学科研究经验和生物信息学分析经验；或具备炎症和病理学相关生物力学技能的工程师，并有处理大型数据集的经验。\n申请信息：截止/开始时间、申请材料、联系渠道（如有）：截止时间：2026-05-11；申请材料和联系渠道未注明。\n职位条件：地点、合同类型、工作量、薪资：地点：伦敦，英格兰，英国；合同类型：固定期限/合同；工作量：全职；薪资：每年GBP38419.00-GBP51755.00。\n一句建议：给CV/医疗影像/LLM方向申请者的匹配建议：建议侧重强调在生物力学建模、空间组学数据分析或处理大型生物医学数据集方面的计算技能，以匹配该职位对in silico模型构建和多模态数据整合的要求。",
       "relevance_score": 8.0,
       "institution": "Queen Mary University of London",
       "location": "London, England, United Kingdom",
@@ -569,7 +569,7 @@
       "posted_date": "",
       "source": "jobs.ac.uk CS",
       "deadline": "2026-04-30T00:00:00+00:00",
-      "requirements_zh": "研究方向：新兴技术与国家安全（涉及AI能力负责任使用、全球威胁评估、政策制定等）\n关键要求：高度积极主动、协作能力强，能够参与设计和交付高质量的混合方法研究，并能与高级国家安全决策者建立关系；需满足安全审查（SC）资格。\n申请信息：截止/开始时间：2026-04-30T23:59:00+00:00 (BST)；申请材料：未注明；联系渠道：未注明\n职位条件：地点：London, England, United Kingdom；合同类型：固定期限/合同 (Fixed-Term/Contract)；工作量：全职 (Full Time)，每周36小时；薪资：GBP45000.00-GBP50000.00/年\n一句建议：建议重点突出在跨学科研究、政策影响或安全相关领域的应用经验。",
+      "requirements_zh": "研究方向：新兴技术（如AI）在国家安全领域的应用、地缘政治竞争、AI赋能的虚假信息、公共态度与政策框架制定\n关键要求：高度积极主动、协作能力强、能够设计和交付高质量的混合方法研究、具备获得安全审查（SC）许可的资格\n申请信息：截止/开始时间：2026年4月30日 23:59 (BST)；申请材料：未注明；联系渠道：未注明\n职位条件：地点：伦敦，英格兰，英国；合同类型：固定期限/合同；工作量：全职 (36小时)；薪资：每年GBP45000.00-GBP50000.00\n一句建议：建议申请者强调在跨学科研究（数据科学/AI与安全/政策）中的项目经验和与政府/行业利益相关者的沟通能力。",
       "relevance_score": 8.0,
       "institution": "The Alan Turing Institute",
       "location": "London, England, United Kingdom",
@@ -586,7 +586,7 @@
       "posted_date": "",
       "source": "jobs.ac.uk CS",
       "deadline": "2026-05-04T00:00:00+00:00",
-      "requirements_zh": "研究方向：应用深度学习于多相CT影像和纵向生物标志物数据，以实现肝细胞癌复发的早期检测。\n关键要求：计算机科学、生物医学工程、医学影像等相关领域博士学位（或即将完成）；具备深度学习的实践经验，精通Python及相关框架；有处理大型临床影像数据集的经验；具备医学影像分析（优选CT/MRI）背景。\n申请信息：截止/开始时间：2026-05-04T00:00:00+00:00 / 未注明；申请材料：未注明；联系渠道（如有）：未注明\n职位条件：地点：London, England, United Kingdom；合同类型：固定期限/合同 (Fixed-Term/Contract)；工作量：兼职 (Part Time)；薪资：GBP38419.00-GBP44288.00 YEAR\n一句建议：该职位侧重于深度学习在医疗影像（特别是CT）和纵向临床数据融合的应用，建议CV/医疗影像方向申请者重点突出在医学图像分析、多模态数据处理及模型开发方面的经验。",
+      "requirements_zh": "研究方向：深度学习在肝细胞癌复发早期检测中的应用，结合多相CT影像和纵向生物标志物数据。\n关键要求：计算机科学、生物医学工程、医学影像等相关领域博士（或即将完成）；具备深度学习实践经验，精通Python及其框架；有处理大型临床影像数据集的经验；具备医学影像分析（优选CT/MRI）背景。\n申请信息：截止/开始时间：2026-05-04（截止）；申请材料：未注明；联系渠道：未注明\n职位条件：地点：伦敦，英格兰，英国；合同类型：固定期限/合同；工作量：兼职；薪资：GBP38419.00-GBP44288.00/年\n一句建议：该职位高度专注于医疗影像和深度学习的交叉应用，建议重点突出在CT/MRI分析、多模态数据处理及临床转化方面的具体项目经验。",
       "relevance_score": 10.0,
       "institution": "Queen Mary University of London",
       "location": "London, England, United Kingdom",
@@ -603,7 +603,7 @@
       "posted_date": "",
       "source": "jobs.ac.uk AI",
       "deadline": "2026-05-17T00:00:00+00:00",
-      "requirements_zh": "研究方向：人工智能（AI）、机器学习、数据科学，重点关注AI的可解释性、隐私性、鲁棒性和治理，应用领域包括健康与生命科学、国防与安全、可持续工程、农业与水资源韧性或创意经济。\n关键要求：强大的技术和编程技能；以问题为导向的研究思维；致力于开放、协作和跨学科研究；能够领导应用AI研究、开发标书、获取资金并交付项目。\n申请信息：截止/开始时间：2026-05-17（截止时间），申请材料：未注明，联系渠道（如有）：未注明\n职位条件：地点：Coventry, England, United Kingdom；合同类型：Permanent；工作量：Full Time；薪资：GBP59138.00-GBP62728.00 YEAR\n一句建议：对于CV/医疗影像/LLM方向申请者，应强调在可解释性、隐私保护或特定应用领域（如健康与生命科学）的深度研究经验和项目资金申请能力。",
+      "requirements_zh": "研究方向：人工智能（AI）、机器学习、数据科学，重点关注AI的可解释性、隐私性、鲁棒性和治理，应用领域包括健康与生命科学、国防与安全、可持续工程、农业与水资源韧性、创意经济。\n关键要求：强大的技术和编程技能，以问题为导向的研究思维，致力于开放、协作和跨学科研究。\n申请信息：截止/开始时间：2026-05-17；申请材料：未注明；联系渠道（如有）：未注明\n职位条件：地点：Coventry, England, United Kingdom；合同类型：Permanent；工作量：Full Time；薪资：GBP59138.00-GBP62728.00 YEAR\n一句建议：对于CV/医疗影像方向申请者，应强调在健康与生命科学领域应用AI研究的经验和潜在资金申请能力；对于LLM方向申请者，可侧重于AI的可解释性、鲁棒性或治理方面的研究成果。",
       "relevance_score": 8.0,
       "institution": "Coventry University Group",
       "location": "Coventry, England, United Kingdom",
@@ -614,23 +614,6 @@
       "job_ref": "3397"
     },
     {
-      "title": "Inkfish Research Scientist in Machine Learning for Wearables",
-      "url": "https://www.jobs.ac.uk/job/DRD112/inkfish-research-scientist-in-machine-learning-for-wearables/",
-      "description": "About Us King’s College London is an internationally renowned university delivering exceptional education and world-leading research. We are dedicated to driving positive and sustainable change in society and realising our vision of making the world a better place. We are delighted to announce exciting new opportunities to join our community. EMBRACE is a visionary, multicomponent international research programme, the first of its kind in the world, supported by Inkfish with £35M core funds over six years. It is a global study of 60,000 participants, including 20,000 mothers, 20,000 infants and up to 20,000 partners. It brings together world-leading clinician scientists across six distinguished Healthcare organisations, world-leading AI & technology companies, together with premier biotech companies, with the overarching aim to fast-track major scientific breakthroughs, revolutionise maternal and early childhood health through precision-personalised interventions, powered by a groundbreaking symbiosis of cutting-edge AI combined with human support. About the role The Research Scientist in Machine Learning for Wearables will develop predictive deep learning models to assess maternal and partner health and behaviour throughout pregnancy, enabling a holistic understanding of health trajectories and personalised interventions. The post focuses on analysing multimodal data collected from wearable devices (e.g., heart rate, sleep patterns, physical activity) and voice biomarkers to identify patterns linked to maternal health outcomes. The goal is to support personalised health interventions and contribute to the advancement of precision maternal and early childhood care within the EMBRACE research programme, which is led by Professor Josip Car. Multimodal wearable data will be collected from smartwatches/fitness trackers via continuously monitoring physiological metrics, including heart rate, heart rate variability, sleep patterns, physical activity levels, energy expenditure and so forth. They will be analysed to detect patterns and anomalies correlating with known markers of maternal health, including blood pressure, blood glucose, gestational weight gain, sleep and stress levels. In addition, the project will also aim to analyse voice biomarkers to capture unique vocal features that may reflect pregnant women’s physical and mental health risks and conditions. There will also be opportunities to develop research profile, travel for conferences and presentations, as well as contribute to academic publications. The post holder is expected to hold a PhD degree in Bioinformatics, Computer Science or other relevant discipline. They will have skills in deep learning for wearable data analysis. Experience of studying health data science and/or machine learning for healthcare would be beneficial. This is a full-time post (35 hours per week), and you will be offered an a fixed term contract until 10/05/2029. Research staff at King’s are entitled to at least 10 days per year (pro-rata) for professional development. This entitlement, from the Concordat to Support the Career Development of Researchers , applies to Postdocs, Research Assistants, Research and Teaching Technicians, Teaching Fellows and AEP equivalent up to and including grade 7. Visit the Centre for Research Staff Development for more information. £45,031 to £52,514 per annum, including London Weighting Allowance",
-      "posted_date": "",
-      "source": "jobs.ac.uk Mathematics",
-      "deadline": "2026-05-06T00:00:00+00:00",
-      "requirements_zh": "研究方向：可穿戴设备上的机器学习，用于评估母体和伴侣的健康与行为，重点是深度学习模型开发和多模态数据（可穿戴设备数据、语音生物标志物）分析，以实现精准母婴健康干预。\n关键要求：开发用于评估母体和伴侣健康与行为的预测性深度学习模型；分析来自可穿戴设备（如心率、睡眠模式、身体活动）和语音生物标志物的多模态数据。\n申请信息：截止/开始时间：2026-05-06（截止日期），申请材料：未注明，联系渠道（如有）：未注明\n职位条件：地点：London, England, United Kingdom；合同类型：Fixed-Term/Contract；工作量：Full Time；薪资：GBP45031.00-GBP52514.00 YEAR\n一句建议：建议申请者强调在时间序列分析、多模态数据融合以及深度学习模型在生物信号处理方面的经验，以匹配该职位对可穿戴设备数据分析的需求。",
-      "relevance_score": 7.0,
-      "institution": "King's College London",
-      "location": "London, England, United Kingdom",
-      "salary": "GBP45031.00-GBP52514.00 YEAR",
-      "hours": "Full Time",
-      "contract_type": "Fixed-Term/Contract",
-      "placed_on": "8th April 2026",
-      "job_ref": "142925"
-    },
-    {
       "title": "MSCA Postdoctoral Fellowships at Slovak University of Technology in Bratislava - Research topic: Aggregation of uncertain data",
       "url": "https://euraxess.ec.europa.eu/jobs/hosting/msca-postdoctoral-fellowships-slovak-university-technology-bratislava-research-topic",
       "description": "Description Slovak University of Technology in Bratislava (STU) invites motivated researchers with a strong track record to prepare joint applications for 2026 Marie Skłodowska-Curie Actions Postdoctoral Fellowships (MSCA PF) call with a deadline on September 9, 2026. MSCA PFs are among Europe’s... * Funding Programme: [Horizon Europe - MSCA](https://euraxess.ec.europa.eu/jobs/search?f%5B0%5D=job_is_eu_founded%3A4348) Deadline: 18 May 2026 Website: [https://www.stuba.sk/](https://www.stuba.sk/) * [Share](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#share) * [X (formerly Twitter)](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#xTwitter) * [LinkedIn](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#linkedin) * [Facebook](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#facebook) * [Whatsapp](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#whatsapp) * [E-mail](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#email) * [Gmail](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#gmail) * [YahooMail](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#yahoomail) * [Pocket](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#pocket) * [Viadeo](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#viadeo) * [Weibo](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#weibo) * [Blogger](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#blogger) * [Qzone](https://euraxess.ec.europa.eu/jobs/search?f[0]=job_country:771&f[1]=offer_type:job_offer&f[2]=positions:postdoc_positions#qzone) * * JOB * Portugal * [Associação do Instituto Superior Técnico para a Investigação e Desenvolvimento _IST-ID](https://euraxess.ec.europa.eu/partnering/organisations/profile/associacao-do-instituto-superior-tecnico-para-investigacao-e) *",
@@ -638,7 +621,7 @@
       "posted_date": "14 April 2026",
       "deadline": "18 May 2026   Website:  [https://www",
       "source": "EURAXESS UK Postdoc",
-      "requirements_zh": "研究方向：不确定数据聚合 (Aggregation of uncertain data)\n关键要求：申请者需为有积极记录的、积极主动的研究人员，准备联合申请2026年MSCA博士后奖学金（MSCA PF）。\n申请信息：截止/开始时间：18 May 2026 (MSCA PF 截止日期为 September 9, 2026，此处18 May 2026可能是内部意向截止或信息有误，以MSCA官方为准), 申请材料：联合申请材料（具体材料未注明）, 联系渠道（如有）：未注明\n职位条件：地点：斯洛伐克布拉迪斯拉发技术大学 (Slovak University of Technology in Bratislava), 合同类型：MSCA Postdoctoral Fellowships (博士后奖学金), 工作量：未注明, 薪资：未注明\n一句建议：建议重点突出在数据不确定性处理、聚合算法或相关数学/计算机科学领域的深入研究经验。",
+      "requirements_zh": "研究方向：不确定数据聚合 (Aggregation of uncertain data)\n关键要求：具有良好研究记录的积极研究人员，需准备联合申请2026年MSCA博士后奖学金\n申请信息：截止/开始时间：18 May 2026 (MSCA PF 最终截止日期为 September 9, 2026), 申请材料：联合申请材料（具体材料未注明）, 联系渠道（如有）：未注明\n职位条件：地点：布拉迪斯拉发斯洛伐克技术大学 (Slovak University of Technology in Bratislava), 合同类型：MSCA Postdoctoral Fellowships (博士后奖学金), 工作量：未注明, 薪资：未注明\n一句建议：该职位专注于不确定数据处理，建议CV/医疗影像/LLM方向的申请者强调其在数据不确定性建模、鲁棒性分析或信息融合方面的经验。",
       "relevance_score": 7.0,
       "location": "",
       "salary": "",
@@ -655,47 +638,47 @@
       "url": "https://github.com/forrestchang/andrej-karpathy-skills",
       "description": "A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's observations on LLM coding pitfalls.",
       "stars_today": 5733,
-      "total_stars": 28781,
+      "total_stars": 28804,
       "language": "",
       "topics": [],
-      "summary_zh": "该仓库提供一个Markdown文件，基于Andrej Karpathy对LLM编程缺陷的观察，旨在提升Claude代码生成的能力。"
+      "summary_zh": "该仓库提供一个Markdown文件，基于Andrej Karpathy对大语言模型编程缺陷的观察，旨在提升Claude代码生成的准确性。"
     },
     {
       "full_name": "NousResearch/hermes-agent",
       "url": "https://github.com/NousResearch/hermes-agent",
       "description": "The agent that grows with you",
       "stars_today": 11289,
-      "total_stars": 81712,
+      "total_stars": 81735,
       "language": "Python",
       "topics": [],
-      "summary_zh": "Hermes Agent 是一个可成长的智能体，旨在通过持续学习和演进而不断增强其能力。"
+      "summary_zh": "Hermes Agent 是一个可成长的智能体，旨在通过持续学习和发展来适应用户需求。"
     },
     {
       "full_name": "shiyu-coder/Kronos",
       "url": "https://github.com/shiyu-coder/Kronos",
       "description": "Kronos: A Foundation Model for the Language of Financial Markets",
       "stars_today": 1554,
-      "total_stars": 17460,
+      "total_stars": 17463,
       "language": "Python",
       "topics": [],
-      "summary_zh": "**Kronos是一个金融市场语言的基础模型，旨在理解和处理金融领域的专业文本。**"
+      "summary_zh": "Kronos是一个**金融市场语言基础模型**，专注于理解和处理金融领域的专业文本。"
     },
     {
       "full_name": "sponsors/thedotmack",
       "url": "https://github.com/sponsors/thedotmack",
       "description": "A Claude Code plugin that automatically captures everything Claude does during your coding sessions, compresses it with AI (using Claude's agent-sdk), and injects relevant context back into future sessions.",
       "stars_today": 3175,
-      "total_stars": 54375,
+      "total_stars": 54384,
       "language": "TypeScript",
       "topics": [],
-      "summary_zh": "该GitHub仓库提供一个Claude代码插件，能自动捕获、AI压缩Claude的编码过程，并将相关上下文注入未来的会话中。"
+      "summary_zh": "该Claude代码插件能自动捕获编码过程，用AI压缩信息，并将相关上下文注入未来的Claude会话中，实现智能上下文增强。"
     },
     {
       "full_name": "microsoft/markitdown",
       "url": "https://github.com/microsoft/markitdown",
       "description": "Python tool for converting files and office documents to Markdown.",
       "stars_today": 2808,
-      "total_stars": 107728,
+      "total_stars": 107730,
       "language": "Python",
       "topics": [],
       "summary_zh": "Markitdown是一个Python工具，能将各种文件和Office文档高效地转换为Markdown格式。"
@@ -705,20 +688,20 @@
       "url": "https://github.com/multica-ai/multica",
       "description": "The open-source managed agents platform. Turn coding agents into real teammates — assign tasks, track progress, compound skills.",
       "stars_today": 1715,
-      "total_stars": 11866,
+      "total_stars": 11876,
       "language": "TypeScript",
       "topics": [],
-      "summary_zh": "这是一个开源的托管式智能体平台，能将代码智能体转化为真正的团队伙伴，用于任务分配、进度追踪和技能复合。"
+      "summary_zh": "这是一个开源的托管式智能体平台，能将代码智能体转化为团队成员，实现任务分配、进度跟踪和技能复合。"
     },
     {
       "full_name": "coleam00/Archon",
       "url": "https://github.com/coleam00/Archon",
       "description": "The first open-source harness builder for AI coding. Make AI coding deterministic and repeatable.",
       "stars_today": 677,
-      "total_stars": 17826,
+      "total_stars": 17828,
       "language": "TypeScript",
       "topics": [],
-      "summary_zh": "**Archon是首个开源AI编程测试框架，旨在让AI编程结果可预测、可复现。**"
+      "summary_zh": "**Archon是首个开源AI编程测试框架，旨在实现AI代码生成的确定性和可复现性。**"
     },
     {
       "full_name": "snarktank/ralph",
@@ -728,17 +711,17 @@
       "total_stars": 16729,
       "language": "TypeScript",
       "topics": [],
-      "summary_zh": "Ralph 是一个自主运行的 AI 代理循环，它会持续执行任务，直到所有产品需求（PRD）项目完成。"
+      "summary_zh": "Ralph 是一个自主运行的 AI 代理循环，它会持续执行直到完成所有产品需求（PRD）项目。"
     },
     {
       "full_name": "virattt/ai-hedge-fund",
       "url": "https://github.com/virattt/ai-hedge-fund",
       "description": "An AI Hedge Fund Team",
       "stars_today": 783,
-      "total_stars": 53527,
+      "total_stars": 53532,
       "language": "Python",
       "topics": [],
-      "summary_zh": "该仓库是一个**人工智能对冲基金团队**的项目集合，旨在利用AI技术进行量化投资和策略开发。"
+      "summary_zh": "该仓库是一个人工智能对冲基金团队的项目集合，旨在利用AI技术进行量化投资策略的开发与实践。"
     },
     {
       "full_name": "anthropics/claude-cookbooks",
@@ -748,14 +731,14 @@
       "total_stars": 39850,
       "language": "Jupyter Notebook",
       "topics": [],
-      "summary_zh": "这个仓库提供了Claude模型的实用食谱和笔记本，展示了有趣且高效的使用方法。"
+      "summary_zh": "这个仓库是Anthropic提供的Claude模型使用指南集，通过一系列笔记本和食谱展示了有趣且高效的Claude应用方法。"
     },
     {
       "full_name": "shanraisshan/claude-code-best-practice",
       "url": "https://github.com/shanraisshan/claude-code-best-practice",
       "description": "from vibe coding to agentic engineering - practice makes claude perfect",
       "stars_today": 2461,
-      "total_stars": 42770,
+      "total_stars": 42773,
       "language": "HTML",
       "topics": [],
       "summary_zh": "该仓库旨在通过实践，将Claude的使用从简单的代码编写提升到更高级的智能体工程实践。"
@@ -768,7 +751,7 @@
       "total_stars": 16690,
       "language": "TypeScript",
       "topics": [],
-      "summary_zh": "这是一个开源的语音合成工作室，提供全面的工具和平台来实现高质量的语音合成功能。"
+      "summary_zh": "这是一个开源的语音合成工作室，提供全面的工具和环境来进行高质量的语音生成。"
     },
     {
       "full_name": "sponsors/ahujasid",
@@ -778,14 +761,14 @@
       "total_stars": 19643,
       "language": "Python",
       "topics": [],
-      "summary_zh": "这个GitHub仓库是 **ahujasid** 的个人赞助者页面，用于展示和管理对他的支持。"
+      "summary_zh": "该仓库展示了作者的GitHub赞助者信息，可能包含赞助者列表或相关设置。"
     },
     {
       "full_name": "sponsors/hacksider",
       "url": "https://github.com/sponsors/hacksider",
       "description": "real time face swap and one-click video deepfake with only a single image",
       "stars_today": 217,
-      "total_stars": 90479,
+      "total_stars": 90482,
       "language": "Python",
       "topics": [],
       "summary_zh": "该仓库提供**实时换脸和一键视频深度伪造**功能，仅需**单张图像**即可实现。"
@@ -795,10 +778,10 @@
       "url": "https://github.com/gsd-build/get-shit-done",
       "description": "A light-weight and powerful meta-prompting, context engineering and spec-driven development system for Claude Code by TÂCHES.",
       "stars_today": 655,
-      "total_stars": 52524,
+      "total_stars": 52526,
       "language": "JavaScript",
       "topics": [],
-      "summary_zh": "这是一个轻量级、强大的Claude代码元提示、上下文工程和规范驱动开发系统，旨在高效完成任务。"
+      "summary_zh": "这是一个轻量级、强大的Claude代码元提示、上下文工程和规范驱动开发系统。"
     }
   ],
   "meta": {
@@ -806,13 +789,13 @@
     "papers_after_keyword_filter": 64,
     "papers_after_llm_filter": 19,
     "jobs_fetched": 0,
-    "jobs_after_filter": 6,
+    "jobs_after_filter": 5,
     "supervisor_pages_checked": 0,
     "supervisor_updates_found": 0,
     "llm_model": "google/gemini-2.5-flash-lite-preview-09-2025",
     "scoring_model": "google/gemini-2.5-flash-lite-preview-09-2025",
     "summarization_model": "google/gemini-2.5-flash-lite-preview-09-2025",
     "cost_usd": 0.0,
-    "duration_seconds": 154
+    "duration_seconds": 115
   }
 }
