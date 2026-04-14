@@ -69,13 +69,44 @@ def summarize_hn_stories(stories: list[dict], client: Any, model: str) -> list[d
 
 
 def summarize_job(job: dict, client: Any, model: str) -> dict:
+    description = (job.get("description", "") or "")[:1800]
+    location = job.get("location", "") or "未注明"
+    salary = job.get("salary", "") or "未注明"
+    deadline = job.get("deadline", "") or "未注明"
+    contract_type = job.get("contract_type", "") or "未注明"
+    hours = job.get("hours", "") or "未注明"
+    placed_on = job.get("placed_on", "") or job.get("posted_date", "") or "未注明"
+    job_ref = job.get("job_ref", "") or "未注明"
+
     prompt = (
-        "从以下职位描述中，用中文提取：\n"
-        "1. 截止日期（如有）\n2. 主要技术要求（不超过80字）\n\n"
+        "你是学术职位信息提取助手。请基于输入内容，输出中文结构化要点。\n"
+        "必须遵守：\n"
+        "1) 仅输出以下5行，每行前缀固定，不要加其它说明。\n"
+        "2) 若信息缺失请写‘未注明’，不要编造。\n"
+        "3) 技术与研究方向尽量具体，避免空泛表述。\n\n"
+        "输出格式：\n"
+        "研究方向：...\n"
+        "关键要求：...\n"
+        "申请信息：截止/开始时间、申请材料、联系渠道（如有）\n"
+        "职位条件：地点、合同类型、工作量、薪资\n"
+        "一句建议：给CV/医疗影像/LLM方向申请者的匹配建议\n\n"
         f"职位：{job['title']}\n机构：{job.get('institution','')}\n"
-        f"描述：{job.get('description','')[:800]}"
+        f"地点：{location}\n薪资：{salary}\n截止日期：{deadline}\n"
+        f"合同类型：{contract_type}\n工作量：{hours}\n发布时间：{placed_on}\n职位编号：{job_ref}\n"
+        f"描述：{description}"
     )
-    job["requirements_zh"] = _call(client, model, prompt)
+
+    try:
+        job["requirements_zh"] = _call(client, model, prompt)
+    except Exception:
+        fallback_lines = [
+            "研究方向：未能自动提取，请查看原始职位描述。",
+            "关键要求：请重点关注方法技能、学位背景、论文/项目经历要求。",
+            f"申请信息：截止日期 {deadline}；发布时间 {placed_on}；职位编号 {job_ref}。",
+            f"职位条件：地点 {location}；合同类型 {contract_type}；工作量 {hours}；薪资 {salary}。",
+            "一句建议：若你的方向与岗位标题高度匹配，建议尽快准备材料并核对申请入口。",
+        ]
+        job["requirements_zh"] = "\n".join(fallback_lines)
     return job
 
 

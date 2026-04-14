@@ -21,6 +21,9 @@ arxiv:
     - vision language model
     - diffusion model
     - foundation model
+    - agent
+    - orchestration
+    - agentic
 
   boost_keywords:
     - VLM
@@ -31,7 +34,7 @@ arxiv:
     - few-shot
     - multimodal
 
-  llm_score_threshold: 6
+  llm_score_threshold: 7
 
 hacker_news:
   min_score: 50
@@ -45,6 +48,8 @@ hacker_news:
     - open source model
     - research
     - benchmark
+    - agent
+    - agentic
 
 jobs:
   rss_sources:
@@ -52,10 +57,33 @@ jobs:
       name: "jobs.ac.uk Research"
     - url: "https://www.jobs.ac.uk/jobs/computer-science/?format=rss"
       name: "jobs.ac.uk CS"
-    - url: "https://www.findapostdoc.com/rss"
-      name: "FindAPostDoc"
-    - url: "https://academicpositions.com/rss/jobs"
-      name: "AcademicPositions"
+    - url: "https://www.jobs.ac.uk/jobs/artificial-intelligence/?format=rss"
+      name: "jobs.ac.uk AI"
+    - url: "https://www.jobs.ac.uk/jobs/mathematics/?format=rss"
+      name: "jobs.ac.uk Mathematics"
+
+  jina_sources:
+    - url: "https://www.findapostdoc.com/search/?Keywords=machine+learning"
+      name: "FindAPostDoc ML"
+      type: "findapostdoc"
+    - url: "https://www.findapostdoc.com/search/?Keywords=computer+vision"
+      name: "FindAPostDoc CV"
+      type: "findapostdoc"
+    - url: "https://www.findapostdoc.com/search/?Keywords=medical+imaging"
+      name: "FindAPostDoc Medical"
+      type: "findapostdoc"
+    - url: "https://academicpositions.com/find-jobs?keywords=machine+learning"
+      name: "AcademicPositions ML"
+      type: "academicpositions"
+    - url: "https://academicpositions.com/find-jobs?keywords=computer+vision"
+      name: "AcademicPositions CV"
+      type: "academicpositions"
+    - url: "https://academicpositions.com/find-jobs?keywords=medical+imaging"
+      name: "AcademicPositions Medical"
+      type: "academicpositions"
+    - url: "https://euraxess.ec.europa.eu/jobs/search?f%5B0%5D=job_country%3A771&f%5B1%5D=offer_type%3Ajob_offer&f%5B2%5D=positions%3Apostdoc_positions"
+      name: "EURAXESS UK Postdoc"
+      type: "euraxess"
 
   filter_keywords:
     - computer vision
@@ -68,6 +96,8 @@ jobs:
     - postdoc
     - research associate
     - fellowship
+    - agent
+    - agentic
 
   exclude_keywords:
     - chemistry
@@ -75,4 +105,4 @@ jobs:
     - social science
     - humanities
 
-  llm_score_threshold: 6
+  llm_score_threshold: 7

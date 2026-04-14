@@ -4,6 +4,7 @@ from collectors.jobs_collector import (
     _extract_job_posting_schema,
     _extract_jobs_ac_uk_table_details,
     enrich_job_details,
+    dedupe_jobs,
 )
 
 
@@ -178,3 +179,54 @@ def test_enrich_job_details_falls_back_to_jobs_ac_uk_table(httpx_mock):
         assert enriched["location"] == "London"
         assert enriched["salary"] == "£38,419 to £46,618 per annum."
         assert enriched["deadline"] == "26th April 2026"
+
+
+def test_dedupe_jobs_by_normalized_url_removes_tracking_variants():
+        jobs = [
+            {
+                "title": "Postdoctoral Researcher in Medical Imaging",
+                "url": "https://jobs.ac.uk/job/ABC?utm_source=rss",
+                "institution": "Example University",
+                "deadline": "2026-05-01",
+                "source": "jobs.ac.uk Research",
+            },
+            {
+                "title": "Postdoctoral Researcher in Medical Imaging",
+                "url": "https://jobs.ac.uk/job/ABC?ref=computer-science",
+                "institution": "Example University",
+                "deadline": "2026-05-01",
+                "source": "jobs.ac.uk CS",
+            },
+        ]
+
+        deduped = dedupe_jobs(jobs)
+        assert len(deduped) == 1
+
+
+def test_dedupe_jobs_fallback_key_when_url_missing():
+        jobs = [
+            {
+                "title": "Research Associate in AI",
+                "url": "",
+                "institution": "Example University",
+                "deadline": "2026-05-01",
+                "source": "FindAPostDoc",
+            },
+            {
+                "title": "Research Associate in AI",
+                "url": "",
+                "institution": "Example University",
+                "deadline": "2026-05-01",
+                "source": "AcademicPositions",
+            },
+            {
+                "title": "Research Associate in AI",
+                "url": "",
+                "institution": "Another University",
+                "deadline": "2026-05-01",
+                "source": "FindAPostDoc",
+            },
+        ]
+
+        deduped = dedupe_jobs(jobs)
+        assert len(deduped) == 2

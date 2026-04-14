@@ -10,7 +10,7 @@ def test_load_keywords_has_arxiv_categories():
 def test_load_keywords_has_must_include():
     cfg = load_keywords()
     assert "medical imaging" in cfg["arxiv"]["must_include"]
-    assert cfg["arxiv"]["llm_score_threshold"] == 6
+    assert cfg["arxiv"]["llm_score_threshold"] == 7
 
 
 def test_load_sources_has_llm_config():

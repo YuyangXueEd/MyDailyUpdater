@@ -139,6 +139,7 @@ def run_daily(kw: dict, sources: dict, supervisors: list) -> None:
             rss_sources=kw["jobs"]["rss_sources"],
             filter_keywords=kw["jobs"]["filter_keywords"],
             exclude_keywords=kw["jobs"]["exclude_keywords"],
+            jina_sources=kw["jobs"].get("jina_sources", []),
         )
         scored_jobs = score_jobs(raw_jobs, client, scoring_model, kw["jobs"]["llm_score_threshold"])
         jobs = summarize_jobs(scored_jobs, client, summary_model)
