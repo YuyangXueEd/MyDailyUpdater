@@ -5,7 +5,7 @@ nav_order: 4
 has_children: false
 ---
 
-# 月报存档
+# Monthly Overview
 
 {% assign monthly_pages = site.pages | where_exp: "p", "p.dir == '/monthly/'" | sort: "name" | reverse %}
 {% for page in monthly_pages %}
