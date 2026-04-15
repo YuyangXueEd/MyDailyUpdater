@@ -34,6 +34,8 @@ In your fork: **Settings → Secrets and variables → Actions → New repositor
 |---|---|
 | `OPENROUTER_API_KEY` | Your [OpenRouter](https://openrouter.ai) API key |
 
+To get your key: go to [openrouter.ai/keys](https://openrouter.ai/keys) → **Create Key** → copy the value starting with `sk-or-...`.
+
 The pipeline uses OpenRouter so you can swap models freely in `config/sources.yaml`.
 
 ### 3. Enable GitHub Pages
@@ -162,10 +164,16 @@ After the daily payload is built, the pipeline can push it to external services.
 Posts a Block Kit message to a Slack channel with top papers, HN stories, trending repos, and a job summary.
 
 **Setup:**
-1. Go to [api.slack.com/apps](https://api.slack.com/apps) → Create App → From scratch
-2. Enable **Incoming Webhooks** → Add New Webhook to Workspace → copy the URL
-3. Add it as a GitHub secret: **Settings → Secrets → `SLACK_WEBHOOK_URL`**
-4. Enable in `config/sources.yaml`:
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → From scratch
+2. In the left sidebar, go to **Features → Incoming Webhooks**
+3. Toggle **Activate Incoming Webhooks** to **On**
+4. Scroll to the bottom and click **Add New Webhook to Workspace**
+5. Select the channel you want to post to, then click **Allow**
+6. Back on the Incoming Webhooks page, copy the URL from the table — it looks like:
+   `https://hooks.slack.com/services/T.../B.../...`
+7. Add it as a GitHub secret: **Settings → Secrets and variables → Actions → New repository secret**
+   - Name: `SLACK_WEBHOOK_URL` · Secret: the URL you just copied
+8. Enable in `config/sources.yaml`:
 
 ```yaml
 sinks:

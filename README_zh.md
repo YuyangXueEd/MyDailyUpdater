@@ -34,6 +34,8 @@
 |---|---|
 | `OPENROUTER_API_KEY` | 你的 [OpenRouter](https://openrouter.ai) API Key |
 
+获取方式：前往 [openrouter.ai/keys](https://openrouter.ai/keys) → **Create Key** → 复制以 `sk-or-...` 开头的密钥。
+
 流水线使用 OpenRouter，可以在 `config/sources.yaml` 中自由切换模型。
 
 ### 3. 开启 GitHub Pages
@@ -162,10 +164,16 @@ my_source:
 通过 Incoming Webhook 向 Slack 频道发送 Block Kit 消息，包含顶级论文、HN 热文、热门仓库和职位摘要。
 
 **配置步骤：**
-1. 前往 [api.slack.com/apps](https://api.slack.com/apps) → 创建 App → From scratch
-2. 启用 **Incoming Webhooks** → Add New Webhook to Workspace → 复制 Webhook URL
-3. 添加为 GitHub Secret：**Settings → Secrets → `SLACK_WEBHOOK_URL`**
-4. 在 `config/sources.yaml` 中启用：
+1. 前往 [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → From scratch
+2. 左侧菜单进入 **Features → Incoming Webhooks**
+3. 将 **Activate Incoming Webhooks** 开关拨到 **On**
+4. 滚动到页面底部，点击 **Add New Webhook to Workspace**
+5. 选择要发送消息的频道，点击 **Allow**
+6. 回到 Incoming Webhooks 页面，从底部表格中复制 Webhook URL，格式如下：
+   `https://hooks.slack.com/services/T.../B.../...`
+7. 添加为 GitHub Secret：**Settings → Secrets and variables → Actions → New repository secret**
+   - Name: `SLACK_WEBHOOK_URL` · Secret: 粘贴刚才复制的 URL
+8. 在 `config/sources.yaml` 中启用：
 
 ```yaml
 sinks:
