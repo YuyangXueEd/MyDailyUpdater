@@ -67,8 +67,11 @@ templates/           Jinja2 templates → Markdown
 
 sinks/               Delivery layer (all disabled by default)
   base.py            BaseSink ABC — enabled defaults False (opt-in)
-  slack.py           SlackSink — Block Kit via Incoming Webhook
   __init__.py        SINK_REGISTRY list
+  README.md          Full sink guide
+  slack/             SlackSink — Block Kit via Incoming Webhook
+  _template/         Starter template for new sinks
+  Each package contains __init__.py (sink class) + README.md (docs)
 
 config/
   sources.yaml       Enable/disable extensions, language, LLM models, sink config

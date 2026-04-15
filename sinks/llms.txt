@@ -1,0 +1,108 @@
+# sinks/ — LLM context file
+
+This directory contains all delivery sinks for MyDailyUpdater.
+Each sink receives the fully-built daily payload and delivers it to an external service.
+
+See also: sinks/README.md (human guide), sinks/_template/ (starter)
+
+---
+
+## File map
+
+```
+base.py          BaseSink ABC — credentials from env, config for display options
+__init__.py      SINK_REGISTRY list — all active sinks registered here
+README.md        Human-readable guide
+llms.txt         This file
+
+slack/
+  __init__.py    SlackSink — Block Kit via Incoming Webhook
+  README.md      Setup, config, message structure, limitations
+
+_template/
+  __init__.py    Fully commented starter for new sinks
+  README.md      How to use the template
+```
+
+---
+
+## BaseSink contract
+
+```python
+class BaseSink(ABC):
+    key: str = ""   # unique snake_case — must match sinks.<key> in sources.yaml
+
+    def __init__(self, config: dict): ...
+
+    @property
+    def enabled(self) -> bool:
+        return self.config.get("enabled", False)   # sinks are opt-in
+
+    @abstractmethod
+    def deliver(self, payload: dict) -> None:
+        # Format and deliver payload to the external service.
+        # Raise on unrecoverable errors.
+        ...
+```
+
+Sinks default to **disabled**. Must set `enabled: true` in sources.yaml to activate.
+
+---
+
+## Credential convention
+
+Always read from `os.environ`, never from `self.config`:
+
+```python
+def deliver(self, payload):
+    token = os.environ.get("MY_TOKEN", "")
+    if not token:
+        raise EnvironmentError("MY_TOKEN is not set")
+```
+
+---
+
+## Payload schema
+
+```python
+payload = {
+    "date":               "YYYY-MM-DD",
+    "papers":             list[dict],   # see extensions/llms.txt → Papers schema
+    "hacker_news":        list[dict],   # see extensions/llms.txt → HN stories schema
+    "github_trending":    list[dict],   # see extensions/llms.txt → GitHub repos schema
+    "jobs":               list[dict],   # see extensions/llms.txt → Jobs schema
+    "supervisor_updates": list[dict],   # see extensions/llms.txt → Supervisor schema
+    "meta": {
+        "duration_seconds": int,
+        "llm_model": str,
+    },
+}
+```
+
+---
+
+## SINK_REGISTRY
+
+```python
+# sinks/__init__.py
+from sinks.base import BaseSink
+from sinks.slack import SlackSink
+
+SINK_REGISTRY: list[type[BaseSink]] = [
+    SlackSink,
+    # MySink,   ← add here
+]
+```
+
+The orchestrator iterates SINK_REGISTRY, skips disabled sinks, and calls `sink.deliver(payload)`.
+
+---
+
+## How to add a sink (quick reference)
+
+1. `cp -r sinks/_template sinks/my_sink`
+2. Set `key`; implement `deliver()`; read credentials from `os.environ`
+3. Add to `SINK_REGISTRY` in `sinks/__init__.py`
+4. Add config block under `sinks:` in `config/sources.yaml`
+5. Document required env var in `sinks/my_sink/README.md`
+6. `PYTHONPATH=. pytest tests/ -q` — all must pass
