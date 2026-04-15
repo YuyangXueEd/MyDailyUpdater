@@ -1,17 +1,19 @@
-"""Jobs extension — fetches, scores, and summarises academic job postings."""
+"""postdoc_jobs extension — fetches, scores, and summarises postdoc and academic job postings."""
 
-from collectors.jobs_collector import fetch_jobs
-from pipeline.scorer import score_jobs
-from pipeline.summarizer import summarize_jobs
+from extensions.postdoc_jobs.collector import fetch_jobs
+from extensions.postdoc_jobs.scorer import score_jobs
+from extensions.postdoc_jobs.summarizer import summarize_jobs
 from extensions.base import BaseExtension, FeedSection
 
 
-class JobsExtension(BaseExtension):
-    key = "jobs"
-    title = "Academic Jobs"
+class PostdocJobsExtension(BaseExtension):
+    key = "postdoc_jobs"
+    title = "Postdoc Jobs"
+    icon = "💼"
+    payload_key = "jobs"
 
     def fetch(self) -> list[dict]:
-        print("Fetching jobs...")
+        print("Fetching postdoc jobs...")
         jobs = fetch_jobs(
             rss_sources=self.config.get("rss_sources", []),
             filter_keywords=self.config.get("filter_keywords", []),
@@ -32,13 +34,11 @@ class JobsExtension(BaseExtension):
 
         scored = score_jobs(items, self.llm, scoring_model, threshold)
         summarised = summarize_jobs(scored, self.llm, summary_model, lang)
-        print(f"  Jobs: {len(summarised)}")
+        print(f"  Postdoc Jobs: {len(summarised)}")
         return summarised
 
     def render(self, items: list[dict]) -> FeedSection:
-        return FeedSection(
-            key=self.key,
-            title=self.title,
+        return self.build_section(
             items=items,
             meta={"count": len(items)},
         )

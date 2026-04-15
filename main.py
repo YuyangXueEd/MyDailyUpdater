@@ -23,8 +23,8 @@ from openai import OpenAI
 
 from extensions import REGISTRY, FeedSection
 from sinks import SINK_REGISTRY
-from pipeline.config_loader import load_keywords, load_sources, load_supervisors, validate_sources, validate_keywords
-from pipeline.summarizer import lang_instruction
+from pipeline.config_loader import load_extension_config, load_sources, validate_sources, validate_arxiv_config
+from pipeline.utils import lang_instruction
 from pipeline.aggregator import build_weekly_payload, build_monthly_payload, load_daily_jsons
 from publishers.data_publisher import (
     write_daily_json, write_weekly_json, write_monthly_json, build_daily_payload,
@@ -48,16 +48,15 @@ def get_openrouter_client(sources_cfg: dict) -> OpenAI:
     )
 
 
-def _build_extension_configs(
-    sources: dict, keywords: dict, supervisors: list
-) -> dict[str, dict]:
+def _build_extension_configs(sources: dict) -> dict[str, dict]:
     """
-    Merge per-extension config slices from sources.yaml and keywords.yaml.
+    Build per-extension config dicts by merging sources.yaml options with
+    per-extension filter/keyword config from config/extensions/{name}.yaml.
 
     Each extension receives a single flat dict containing:
-      - source settings (enabled flag, limits, URLs)
-      - keyword / filter settings
-      - injected LLM model names
+      - source settings (enabled flag, limits) from sources.yaml
+      - filter/keyword settings from config/extensions/{name}.yaml
+      - injected LLM model names and language
     """
     llm = {
         "llm_scoring_model": sources["llm"]["scoring_model"],
@@ -65,19 +64,12 @@ def _build_extension_configs(
         "language": sources.get("language", "en"),
     }
     return {
-        "arxiv": {**sources.get("arxiv", {}), **keywords.get("arxiv", {}), **llm},
-        "hacker_news": {
-            **sources.get("hacker_news", {}),
-            **keywords.get("hacker_news", {}),
+        ext_class.key: {
+            **sources.get(ext_class.key, {}),
+            **load_extension_config(ext_class.key),
             **llm,
-        },
-        "jobs": {**sources.get("jobs", {}), **keywords.get("jobs", {}), **llm},
-        "supervisor_updates": {
-            **sources.get("supervisor_monitoring", {}),
-            "supervisors": supervisors,
-            **llm,
-        },
-        "github_trending": {**sources.get("github_trending", {}), **llm},
+        }
+        for ext_class in REGISTRY
     }
 
 
@@ -92,12 +84,12 @@ def _instantiate_extensions(
     return extensions
 
 
-def run_daily(kw: dict, sources: dict, supervisors: list, dry_run: bool = False) -> None:
+def run_daily(sources: dict, dry_run: bool = False) -> None:
     if dry_run:
         print("DRY RUN — fetching data only, skipping all LLM calls.")
     start = time.time()
     client = get_openrouter_client(sources)
-    configs = _build_extension_configs(sources, kw, supervisors)
+    configs = _build_extension_configs(sources)
     if dry_run:
         for cfg in configs.values():
             cfg["dry_run"] = True
@@ -108,7 +100,7 @@ def run_daily(kw: dict, sources: dict, supervisors: list, dry_run: bool = False)
         sections[ext.key] = ext.run()
 
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    arxiv_meta = sections["arxiv"].meta
+    arxiv_meta = sections.get("arxiv", FeedSection(key="arxiv", title="arXiv Papers")).meta
     summary_model = sources["llm"]["summarization_model"]
     scoring_model = sources["llm"]["scoring_model"]
 
@@ -123,19 +115,11 @@ def run_daily(kw: dict, sources: dict, supervisors: list, dry_run: bool = False)
         ),
         "scoring_model": scoring_model,
         "summarization_model": summary_model,
-        "cost_usd": 0.0,
         "duration_seconds": round(time.time() - start),
     }
 
-    payload = build_daily_payload(
-        date_str,
-        papers=sections["arxiv"].items,
-        hn_stories=sections["hacker_news"].items,
-        jobs=[],
-        supervisor_updates=[],
-        meta=meta,
-        github_trending=sections["github_trending"].items,
-    )
+    display_order = sources.get("display_order", [ext_class.key for ext_class in REGISTRY])
+    payload = build_daily_payload(date_str, sections, meta, display_order)
     json_path = write_daily_json(payload)
     md_path = render_daily_page(payload)
     print(f"Written: {json_path}")
@@ -263,20 +247,16 @@ if __name__ == "__main__":
     if args.check_today:
         check_today()
     elif args.dry_run:
-        kw = load_keywords()
         sources = load_sources()
         validate_sources(sources)
-        validate_keywords(kw)
-        supervisors = load_supervisors()
-        run_daily(kw, sources, supervisors, dry_run=True)
+        validate_arxiv_config(load_extension_config("arxiv"))
+        run_daily(sources, dry_run=True)
     else:
-        kw = load_keywords()
         sources = load_sources()
         validate_sources(sources)
-        validate_keywords(kw)
-        supervisors = load_supervisors()
+        validate_arxiv_config(load_extension_config("arxiv"))
         if args.mode == "daily":
-            run_daily(kw, sources, supervisors)
+            run_daily(sources)
         elif args.mode == "weekly":
             run_weekly()
         elif args.mode == "monthly":

@@ -1,3 +1,5 @@
+# config/extensions/supervisor_updates.yaml — lab/advisor pages to monitor
+#
 # Add target supervisor/lab homepages here.
 # Format:
 #   - name: "Prof. Name"

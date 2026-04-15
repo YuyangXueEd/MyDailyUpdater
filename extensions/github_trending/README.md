@@ -12,6 +12,9 @@ render()   — wraps in FeedSection
 
 ## Config (`config/sources.yaml`)
 
+> This extension has no filter/keyword config — all options live in `sources.yaml`.
+> To add filter config, create `config/extensions/github_trending.yaml`.
+
 | Key | Where | Default | Notes |
 |---|---|---|---|
 | `enabled` | sources.yaml | `true` | |

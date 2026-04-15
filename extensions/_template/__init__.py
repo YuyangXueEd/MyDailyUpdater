@@ -5,7 +5,7 @@ Copy this file to extensions/my_source.py and fill in the three methods.
 Then follow the steps in extensions/README.md to register and configure it.
 
 Quick reference:
-  self.config  — your config slice from sources.yaml + keywords.yaml
+  self.config  — your config slice merged from sources.yaml + config/extensions/{name}.yaml
   self.llm     — OpenAI-compatible client (or None if extension has no LLM)
   self.enabled — False if sources.yaml sets enabled: false for this key
 """
@@ -18,6 +18,7 @@ class TemplateExtension(BaseExtension):
     # ── Required class attributes ──────────────────────────────────────────────
     key   = "my_source"   # must match your config/sources.yaml key exactly
     title = "My Source"   # shown as the section heading in the rendered output
+    icon  = "🧩"          # shown in the quick-nav and section heading
 
     # ── Step 1: fetch ──────────────────────────────────────────────────────────
     def fetch(self) -> list[dict]:
@@ -92,9 +93,7 @@ class TemplateExtension(BaseExtension):
           - The items list is what the Jinja2 template will iterate over,
             so make sure the field names match what your template expects.
         """
-        return FeedSection(
-            key=self.key,
-            title=self.title,
+        return self.build_section(
             items=items,
             meta={"count": len(items)},
         )

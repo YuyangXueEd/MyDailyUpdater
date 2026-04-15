@@ -1,4 +1,4 @@
-from collectors.hn_collector import filter_stories, parse_story
+from extensions.hacker_news.collector import filter_stories, parse_story
 
 
 def test_filter_stories_by_score():

@@ -6,7 +6,7 @@ from typing import Any
 import trafilatura
 
 
-_DEFAULT_HASHES_PATH = str(Path(__file__).parent.parent / "docs" / "data" / "supervisor_hashes.json")
+_DEFAULT_HASHES_PATH = str(Path(__file__).parent.parent.parent / "docs" / "data" / "supervisor_hashes.json")
 
 
 def compute_hash(text: str) -> str:

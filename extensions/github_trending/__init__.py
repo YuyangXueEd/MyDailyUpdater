@@ -1,13 +1,14 @@
 """GitHub Trending extension — fetches and summarises trending AI/ML repos."""
 
-from collectors.github_trending_collector import fetch_github_trending
-from pipeline.summarizer import summarize_github_repos
+from extensions.github_trending.collector import fetch_github_trending
+from extensions.github_trending.summarizer import summarize_github_repos
 from extensions.base import BaseExtension, FeedSection
 
 
 class GitHubTrendingExtension(BaseExtension):
     key = "github_trending"
     title = "GitHub Trending"
+    icon = "⭐"
 
     def fetch(self) -> list[dict]:
         print("Fetching GitHub trending...")
@@ -25,9 +26,7 @@ class GitHubTrendingExtension(BaseExtension):
         return summarize_github_repos(items, self.llm, summary_model, lang)
 
     def render(self, items: list[dict]) -> FeedSection:
-        return FeedSection(
-            key=self.key,
-            title=self.title,
+        return self.build_section(
             items=items,
             meta={"count": len(items)},
         )

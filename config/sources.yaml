@@ -2,9 +2,19 @@
 #
 # Each top-level key corresponds to an extension registered in extensions/__init__.py.
 # To add a new extension:
-#   1. Create extensions/my_source.py subclassing BaseExtension (key = "my_source")
+#   1. Create extensions/my_source/ subclassing BaseExtension (key = "my_source")
 #   2. Add it to REGISTRY in extensions/__init__.py
-#   3. Add a config block here (and keyword filters in keywords.yaml if needed)
+#   3. Add "- my_source" to display_order below
+#   4. Add an enabled: true/false block here for the on/off toggle
+#   5. For filter/keyword config, create config/extensions/my_source.yaml
+
+display_order:
+  - weather
+  - arxiv
+  - github_trending
+  - hacker_news
+  - postdoc_jobs
+  - supervisor_updates
 
 arxiv:
   enabled: true
@@ -13,15 +23,20 @@ arxiv:
 hacker_news:
   enabled: true
 
-jobs:
-  enabled: false   # extension offline — see extensions/jobs.py.bak
+postdoc_jobs:
+  enabled: false   # extension offline — see extensions/postdoc_jobs/
 
-supervisor_monitoring:
+supervisor_updates:
   enabled: false   # extension offline — see extensions/supervisor.py.bak
 
 github_trending:
   enabled: true
   max_repos: 15
+
+weather:
+  enabled: true
+  city: "Edinburgh"
+  timezone: "auto"
 
 # Output language for all summaries.
 # Default: "en" (English, no translation needed).
@@ -54,4 +69,3 @@ sinks:
     max_papers: 5   # top papers to post
     max_hn: 3       # top HN stories to post
     max_github: 3   # top GitHub repos to post
-

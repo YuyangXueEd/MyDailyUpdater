@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-from pipeline.scorer import (
+from extensions.arxiv.scorer import (
     build_batch_paper_prompt, parse_score, parse_batch_scores, score_papers,
 )
 

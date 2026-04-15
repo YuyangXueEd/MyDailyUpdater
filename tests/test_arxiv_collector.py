@@ -1,4 +1,4 @@
-from collectors.arxiv_collector import keyword_match, fetch_papers, _parse_first_figure
+from extensions.arxiv.collector import keyword_match, fetch_papers, _parse_first_figure
 
 
 def test_keyword_match_positive():

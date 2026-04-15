@@ -1,4 +1,4 @@
-from collectors.github_trending_collector import _parse_trending_article
+from extensions.github_trending.collector import _parse_trending_article
 
 
 def test_parse_trending_article_extracts_real_star_counts():

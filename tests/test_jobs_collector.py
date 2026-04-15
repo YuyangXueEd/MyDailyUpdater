@@ -1,4 +1,4 @@
-from collectors.jobs_collector import (
+from extensions.postdoc_jobs.collector import (
     parse_feed_entry,
     filter_job,
     _extract_job_posting_schema,

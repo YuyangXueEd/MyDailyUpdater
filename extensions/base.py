@@ -25,6 +25,8 @@ class FeedSection:
 
     key: str
     title: str
+    icon: str = "📌"
+    payload_key: str | None = None
     items: list[dict] = field(default_factory=list)
     meta: dict = field(default_factory=dict)
 
@@ -54,6 +56,8 @@ class BaseExtension(ABC):
 
     key: str = ""
     title: str = ""
+    icon: str = "📌"
+    payload_key: str = ""
 
     def __init__(self, config: dict, llm_client: Any = None) -> None:
         self.config = config
@@ -62,6 +66,21 @@ class BaseExtension(ABC):
     @property
     def enabled(self) -> bool:
         return self.config.get("enabled", True)
+
+    def build_section(
+        self,
+        items: list[dict] | None = None,
+        meta: dict | None = None,
+    ) -> FeedSection:
+        """Create a FeedSection with the extension's display defaults."""
+        return FeedSection(
+            key=self.key,
+            title=self.title,
+            icon=self.icon,
+            payload_key=self.payload_key or self.key,
+            items=items or [],
+            meta=meta or {},
+        )
 
     @abstractmethod
     def fetch(self) -> list[dict]:
@@ -95,7 +114,7 @@ class BaseExtension(ABC):
         it returns an empty FeedSection without calling fetch/process/render.
         """
         if not self.enabled:
-            return FeedSection(key=self.key, title=self.title)
+            return self.build_section()
         items = self.fetch()
         items = self.process(items)
         return self.render(items)

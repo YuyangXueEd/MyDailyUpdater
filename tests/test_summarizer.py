@@ -1,8 +1,9 @@
 from unittest.mock import MagicMock
-from pipeline.summarizer import (
-    summarize_paper, summarize_hn_story,
-    summarize_job, summarize_supervisor_update,
-)
+
+from extensions.arxiv.summarizer import summarize_paper
+from extensions.hacker_news.summarizer import summarize_hn_story
+from extensions.postdoc_jobs.summarizer import summarize_job
+from extensions.supervisor_updates.summarizer import summarize_supervisor_update
 
 
 def _mock_client(response_text: str) -> MagicMock:

@@ -9,22 +9,35 @@ _DEFAULT_DATA_DIR = str(Path(__file__).parent.parent / "docs" / "data" / "daily"
 
 def build_daily_payload(
     date_str: str,
-    papers: list[dict],
-    hn_stories: list[dict],
-    jobs: list[dict],
-    supervisor_updates: list[dict],
+    sections: dict,
     meta: dict,
-    github_trending: list[dict] | None = None,
+    display_order: list[str],
 ) -> dict[str, Any]:
+    sections_ordered = [
+        {
+            "key": key,
+            "payload_key": sections[key].payload_key or key,
+            "title": sections[key].title,
+            "icon": sections[key].icon,
+            "items": sections[key].items,
+            "meta": sections[key].meta,
+        }
+        for key in display_order
+        if key in sections
+    ]
+
+    flat_sections: dict[str, list[dict]] = {}
+    for key, sec in sections.items():
+        flat_sections[key] = sec.items
+        payload_key = sec.payload_key or key
+        flat_sections[payload_key] = sec.items
+
     return {
         "date": date_str,
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "papers": papers,
-        "hacker_news": hn_stories,
-        "jobs": jobs,
-        "supervisor_updates": supervisor_updates,
-        "github_trending": github_trending or [],
+        "sections_ordered": sections_ordered,
         "meta": meta,
+        **flat_sections,
     }
 
 

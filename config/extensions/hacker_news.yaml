@@ -1,0 +1,15 @@
+# config/extensions/hacker_news.yaml — Hacker News filter config
+
+min_score: 50
+max_items: 20
+keywords:
+  - AI
+  - LLM
+  - machine learning
+  - computer vision
+  - GPU
+  - open source model
+  - research
+  - benchmark
+  - agent
+  - agentic

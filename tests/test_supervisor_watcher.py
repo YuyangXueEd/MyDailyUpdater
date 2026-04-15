@@ -1,5 +1,5 @@
 import json
-from collectors.supervisor_watcher import compute_hash, detect_changes, update_hashes
+from extensions.supervisor_updates.collector import compute_hash, detect_changes, update_hashes
 
 
 def test_compute_hash_is_deterministic():

@@ -3,24 +3,29 @@ from pathlib import Path
 import yaml
 
 CONFIG_DIR = Path(__file__).parent.parent / "config"
+EXTENSIONS_CONFIG_DIR = CONFIG_DIR / "extensions"
 
 
-def _load_yaml(filename: str) -> dict:
-    with open(CONFIG_DIR / filename, encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def load_keywords() -> dict:
-    return _load_yaml("keywords.yaml")
+def _load_yaml(path: Path) -> dict:
+    with open(path, encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
 
 
 def load_sources() -> dict:
-    return _load_yaml("sources.yaml")
+    return _load_yaml(CONFIG_DIR / "sources.yaml")
 
 
-def load_supervisors() -> list:
-    data = _load_yaml("supervisors.yaml")
-    return data.get("supervisors", [])
+def load_extension_config(name: str) -> dict:
+    """Load per-extension config from config/extensions/{name}.yaml.
+
+    Returns an empty dict if no config file exists for this extension.
+    This allows extensions with no filter/keyword config (e.g. github_trending)
+    to omit the file entirely.
+    """
+    path = EXTENSIONS_CONFIG_DIR / f"{name}.yaml"
+    if not path.exists():
+        return {}
+    return _load_yaml(path)
 
 
 def validate_sources(sources: dict) -> None:
@@ -51,21 +56,20 @@ def validate_sources(sources: dict) -> None:
         sys.exit(1)
 
 
-def validate_keywords(keywords: dict) -> None:
-    """Check keywords.yaml for common misconfigurations."""
+def validate_arxiv_config(arxiv_cfg: dict) -> None:
+    """Check config/extensions/arxiv.yaml for common misconfigurations."""
     errors = []
 
-    arxiv = keywords.get("arxiv", {})
-    if not arxiv.get("categories"):
-        errors.append("  • arxiv.categories is empty — no papers will be fetched")
-    if not arxiv.get("must_include"):
-        errors.append("  • arxiv.must_include is empty — all fetched papers will pass keyword filter")
+    if not arxiv_cfg.get("categories"):
+        errors.append("  • categories is empty — no papers will be fetched")
+    if not arxiv_cfg.get("must_include"):
+        errors.append("  • must_include is empty — all fetched papers will pass keyword filter")
 
-    threshold = arxiv.get("llm_score_threshold", 7)
+    threshold = arxiv_cfg.get("llm_score_threshold", 7)
     if not isinstance(threshold, (int, float)) or not (0 <= threshold <= 10):
-        errors.append(f"  • arxiv.llm_score_threshold must be between 0 and 10, got: {threshold!r}")
+        errors.append(f"  • llm_score_threshold must be between 0 and 10, got: {threshold!r}")
 
     if errors:
-        print("WARNING: Possible misconfiguration in keywords.yaml:", file=sys.stderr)
+        print("WARNING: Possible misconfiguration in config/extensions/arxiv.yaml:", file=sys.stderr)
         for e in errors:
             print(e, file=sys.stderr)

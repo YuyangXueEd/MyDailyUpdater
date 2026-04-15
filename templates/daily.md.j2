@@ -12,9 +12,9 @@ date: {{ date }}
 {% set summarization_model = meta.get('summarization_model') %}
 
 {% if scoring_model and summarization_model and scoring_model != summarization_model %}
-> Generated on {{ generated_at[:10] }} | Scoring model: {{ scoring_model }} | Summary model: {{ summarization_model }} | Cost: ${{ "%.4f"|format(meta.cost_usd) }}
+> Generated on {{ generated_at[:10] }} | Scoring model: {{ scoring_model }} | Summary model: {{ summarization_model }}
 {% else %}
-> Generated on {{ generated_at[:10] }} | Model: {{ meta.llm_model }} | Cost: ${{ "%.4f"|format(meta.cost_usd) }}
+> Generated on {{ generated_at[:10] }} | Model: {{ meta.llm_model }}
 {% endif %}
 
 ---
@@ -115,153 +115,32 @@ date: {{ date }}
 <aside class="daily-nav-panel" aria-label="Page navigation">
   <div class="daily-nav-title">Quick Nav</div>
   <ul>
-    <li><a href="#arxiv">arXiv Papers</a></li>
-    {% if papers %}
-    <li>By category
-      <ul>
-        {% set nav_ns = namespace(seen=[]) %}
-        {% for p in papers %}
-          {% set category_name = p.get('primary_category', (p.categories[0] if p.categories else 'Other')) %}
-          {% set category_anchor = p.get('primary_category_anchor', category_name | lower | replace('.', '-') | replace(' ', '-') | replace('/', '-')) %}
-          {% if category_anchor not in nav_ns.seen %}
-          <li><a href="#cat-{{ category_anchor }}">{{ category_name }}</a></li>
-          {% set _ = nav_ns.seen.append(category_anchor) %}
-          {% endif %}
-        {% endfor %}
-      </ul>
+  {% for sec in sections_ordered %}{% if sec["items"] %}
+    <li>
+      <a href="#{{ sec.key }}">{{ sec.icon }} {{ sec.title }}</a>
+      {% include "extensions/" + sec.key + "/nav.md.j2" ignore missing %}
     </li>
-    {% endif %}
-    <li><a href="#hacker-news">Hacker News</a></li>
-    {% if jobs %}
-    <li><a href="#jobs">Research Jobs</a></li>
-    {% endif %}
-    {% if github_trending %}
-    <li><a href="#github-trending">GitHub Trending</a></li>
-    {% endif %}
-    {% if supervisor_updates %}
-    <li><a href="#supervisors">Supervisor Updates</a></li>
-    {% endif %}
+  {% endif %}{% endfor %}
   </ul>
 </aside>
 
 <details class="daily-nav-mobile">
   <summary><strong>Quick Nav</strong></summary>
   <ul>
-    <li><a href="#arxiv">arXiv Papers</a></li>
-    {% if papers %}
-    <li>By category
-      <ul>
-        {% set nav_mobile_ns = namespace(seen=[]) %}
-        {% for p in papers %}
-          {% set category_name = p.get('primary_category', (p.categories[0] if p.categories else 'Other')) %}
-          {% set category_anchor = p.get('primary_category_anchor', category_name | lower | replace('.', '-') | replace(' ', '-') | replace('/', '-')) %}
-          {% if category_anchor not in nav_mobile_ns.seen %}
-          <li><a href="#cat-{{ category_anchor }}">{{ category_name }}</a></li>
-          {% set _ = nav_mobile_ns.seen.append(category_anchor) %}
-          {% endif %}
-        {% endfor %}
-      </ul>
+  {% for sec in sections_ordered %}{% if sec["items"] %}
+    <li>
+      <a href="#{{ sec.key }}">{{ sec.icon }} {{ sec.title }}</a>
+      {% include "extensions/" + sec.key + "/nav.md.j2" ignore missing %}
     </li>
-    {% endif %}
-    <li><a href="#hacker-news">Hacker News</a></li>
-    {% if jobs %}
-    <li><a href="#jobs">Research Jobs</a></li>
-    {% endif %}
-    {% if github_trending %}
-    <li><a href="#github-trending">GitHub Trending</a></li>
-    {% endif %}
-    {% if supervisor_updates %}
-    <li><a href="#supervisors">Supervisor Updates</a></li>
-    {% endif %}
+  {% endif %}{% endfor %}
   </ul>
 </details>
 
 ---
 
-<h2 id="arxiv">📄 arXiv Papers Today ({{ papers|length }})</h2>
-
-{% if papers %}
-{% set content_ns = namespace(seen=[]) %}
-{% for p in papers %}
-{% set category_name = p.get('primary_category', (p.categories[0] if p.categories else 'Other')) %}
-{% set category_anchor = p.get('primary_category_anchor', category_name | lower | replace('.', '-') | replace(' ', '-') | replace('/', '-')) %}
-{% if category_anchor not in content_ns.seen %}
-<h3 id="cat-{{ category_anchor }}">{{ category_name }}</h3>
-{% set _ = content_ns.seen.append(category_anchor) %}
-{% endif %}
-
-<h4>{{ loop.index }}. <a href="{{ p.url }}">{{ p.title }}</a></h4>
-
-**Authors:** {{ p.authors | join(', ') }}{% if p.affiliations %} | **Affiliations:** {{ p.affiliations | join('; ') }}{% endif %} | **Categories:** {{ p.categories | join(', ') }}{% if p.score is defined and p.score %} | **Score:** {{ "%.1f"|format(p.score) }}/10{% endif %}
-
-{% if p.figure_url %}
-![{{ p.figure_caption or p.title }}]({{ p.figure_url }})
-{% if p.figure_caption %}
-*Figure 1.* {{ p.figure_caption }}
-{% endif %}
-{% endif %}
-
-{{ p.abstract }}
-
----
+{% for sec in sections_ordered %}
+{% include "extensions/" + sec.key + "/template.md.j2" ignore missing %}
 {% endfor %}
-{% else %}
-{% if meta.get('papers_after_keyword_filter', 0) > 0 %}
-*No papers made the final cut today. {{ meta.papers_after_keyword_filter }} candidates passed keyword filtering but scored 0 after LLM scoring — this usually means the scoring threshold is too strict or the scoring request failed.*
-{% else %}
-*No papers matched today's filters.*
-{% endif %}
-{% endif %}
-
-<h2 id="hacker-news">🔥 Hacker News ({{ hacker_news|length }})</h2>
-
-{% if hacker_news %}
-{% for s in hacker_news %}
-- **[{{ s.title }}]({{ s.url }})** ({{ s.score }}pts) — {{ s.summary }} [[comments]({{ s.comments_url }})]
-{% endfor %}
-{% else %}
-*No matching stories today.*
-{% endif %}
-
-{% if jobs %}
-<h2 id="jobs">💼 Research Jobs ({{ jobs|length }})</h2>
-
-{% for j in jobs %}
-### [{{ j.title }}]({{ j.url }})
-
-**Institution:** {{ j.institution or 'Unknown' }} | **Location:** {{ j.location or 'N/A' }} | **Source:** {{ j.source }} | **Deadline:** {{ j.deadline or 'N/A' }} | **Relevance:** {{ "%.1f"|format(j.relevance_score) }}/10
-
-{% if j.salary %}
-**Salary:** {{ j.salary }}
-
-{% endif %}
-{% for line in j.requirements.split('\n') %}{% if line.strip() %}
-- {{ line }}
-{% endif %}{% endfor %}
-
----
-{% endfor %}
-{% endif %}
-
-{% if github_trending %}
-<h2 id="github-trending">⭐ GitHub Trending ({{ github_trending|length }})</h2>
-
-{% for r in github_trending %}
-- **[{{ r.full_name }}]({{ r.url }})** {% if r.language %}· {{ r.language }}{% endif %} {% if r.stars_today %}· ⭐ +{{ r.stars_today }} today{% elif r.total_stars %}· ⭐ {{ r.total_stars }}{% endif %}
-
-  {{ r.description | replace('\n', ' ') | truncate(100, True, '…') }}{% if r.summary %}
-  > {{ r.summary }}{% endif %}
-
-{% endfor %}
-{% endif %}
-
-{% if supervisor_updates %}
-<h2 id="supervisors">👨‍🏫 Supervisor Updates</h2>
-
-{% for u in supervisor_updates %}
-- **{{ u.name }}** ({{ u.institution }}) — {{ u.change_summary }} [[page]({{ u.url }})]
-{% endfor %}
-{% endif %}
 
 ---
 *[Home](/) | [Weekly](/weekly/) | [Monthly](/monthly/)*

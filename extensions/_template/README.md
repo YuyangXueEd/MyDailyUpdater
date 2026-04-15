@@ -30,7 +30,7 @@ Once your extension is working, update this README with:
 
 - What it does (one paragraph)
 - Pipeline diagram (`fetch → process → render`)
-- Config table (sources.yaml + keywords.yaml keys, defaults, notes)
+- Config table (sources.yaml + extensions/{name}.yaml keys, defaults, notes)
 - Output item schema (field names and types)
 - Underlying collectors / external APIs used
 - Test command

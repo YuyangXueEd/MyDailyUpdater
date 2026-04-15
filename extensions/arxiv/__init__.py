@@ -3,9 +3,9 @@
 import re
 from typing import Any
 
-from collectors.arxiv_collector import fetch_papers, enrich_papers_with_figures
-from pipeline.scorer import score_papers
-from pipeline.summarizer import summarize_papers
+from extensions.arxiv.collector import fetch_papers, enrich_papers_with_figures
+from extensions.arxiv.scorer import score_papers
+from extensions.arxiv.summarizer import summarize_papers
 from extensions.base import BaseExtension, FeedSection
 
 
@@ -51,6 +51,8 @@ def _prepare_papers(papers: list[dict], preferred_categories: list[str]) -> list
 class ArxivExtension(BaseExtension):
     key = "arxiv"
     title = "arXiv Papers"
+    icon = "📄"
+    payload_key = "papers"
 
     def __init__(self, config: dict, llm_client: Any = None) -> None:
         super().__init__(config, llm_client)
@@ -93,9 +95,7 @@ class ArxivExtension(BaseExtension):
 
     def render(self, items: list[dict]) -> FeedSection:
         prepared = _prepare_papers(items, self.config.get("categories", []))
-        return FeedSection(
-            key=self.key,
-            title=self.title,
+        return self.build_section(
             items=prepared,
             meta={
                 "papers_fetched": self.config.get("max_papers_per_run", 500),

@@ -29,15 +29,17 @@ The output every extension must produce:
 ```python
 @dataclass
 class FeedSection:
-    key:   str        # snake_case, matches config/sources.yaml key
-    title: str        # display name shown in rendered output
-    items: list[dict] # processed item dicts
-    meta:  dict       # optional stats (counts, durations, etc.)
+    key:         str        # snake_case, matches config/sources.yaml key
+    title:       str        # display name shown in rendered output
+    icon:        str        # marker shown in nav + heading
+    payload_key: str | None # optional flat JSON key (defaults to key)
+    items:       list[dict] # processed item dicts
+    meta:        dict       # optional stats (counts, durations, etc.)
 ```
 
 ### What's injected into `self.config`
 
-The orchestrator merges your `sources.yaml` block with `keywords.yaml` and injects:
+The orchestrator merges your `sources.yaml` block with `config/extensions/{name}.yaml` and injects:
 
 | Key | Value |
 |---|---|
@@ -78,20 +80,41 @@ REGISTRY = [
 ]
 ```
 
-### 4. Add a config block
+### 4. Add a template and config block
 
-In `config/sources.yaml`:
+Create `extensions/my_source/template.md.j2`. This file owns the section's markdown rendering and receives the current section as `sec`.
+
+```jinja2
+{% if sec["items"] %}
+<h2 id="{{ sec.key }}">{{ sec.icon }} {{ sec.title }} ({{ sec["items"]|length }})</h2>
+
+{% for item in sec["items"] %}
+- {{ item }}
+{% endfor %}
+{% endif %}
+```
+
+Then add it to `config/sources.yaml`:
+
+```yaml
+display_order:
+  - my_source
+```
 
 ```yaml
 my_source:
   enabled: true
-  # any extension-specific options
+  # any source-level limits (e.g. max_items)
 ```
 
-In `main.py`, inside `_build_extension_configs()`, add:
+If your extension needs filter/keyword config, create `config/extensions/my_source.yaml`:
 
-```python
-"my_source": {**sources.get("my_source", {}), **llm},
+```yaml
+# config/extensions/my_source.yaml
+keywords:
+  - AI
+  - machine learning
+llm_score_threshold: 7
 ```
 
 ### 5. Write a test
@@ -119,13 +142,16 @@ python main.py --dry-run
 
 ## Built-in extensions
 
-Each extension is a package (`extensions/<name>/`) containing `__init__.py` (the extension class) and `README.md` (docs specific to that extension).
+Each extension is a package (`extensions/<name>/`) containing `__init__.py` (the extension class), `template.md.j2` (its section template), and usually `README.md` (docs specific to that extension).
 
 | Package | Key | What it does |
 |---|---|---|
 | `arxiv/` | `arxiv` | Fetches arXiv papers, LLM-scores and summarises them — [docs](arxiv/README.md) |
 | `hacker_news/` | `hacker_news` | Fetches top HN stories above a score threshold — [docs](hacker_news/README.md) |
 | `github_trending/` | `github_trending` | Fetches daily trending GitHub repos — [docs](github_trending/README.md) |
+| `postdoc_jobs/` | `postdoc_jobs` | Fetches and ranks research job postings — [docs](postdoc_jobs/README.md) |
+| `supervisor_updates/` | `supervisor_updates` | Monitors supervisor / lab pages for changes — [docs](supervisor_updates/README.md) |
+| `weather/` | `weather` | Fetches today's weather for a configured city |
 
 ---
 

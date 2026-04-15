@@ -13,16 +13,16 @@ process()  — LLM batch scoring → drops papers below threshold
 render()   — sorts by category rank then score, wraps in FeedSection
 ```
 
-## Config (`config/sources.yaml` + `config/keywords.yaml`)
+## Config (`config/sources.yaml` + `config/extensions/arxiv.yaml`)
 
 | Key | Where | Default | Notes |
 |---|---|---|---|
 | `enabled` | sources.yaml | `true` | |
 | `max_papers_per_run` | sources.yaml | `300` | Papers fetched before any filtering |
-| `categories` | keywords.yaml | `[]` | arXiv category codes, e.g. `cs.CV`, `cs.LG` |
-| `must_include` | keywords.yaml | `[]` | At least one term must appear in title or abstract |
-| `boost_keywords` | keywords.yaml | `[]` | Increase LLM score if matched |
-| `llm_score_threshold` | keywords.yaml | `7` | Papers scoring below this (0–10) are dropped |
+| `categories` | extensions/arxiv.yaml | `[]` | arXiv category codes, e.g. `cs.CV`, `cs.LG` |
+| `must_include` | extensions/arxiv.yaml | `[]` | At least one term must appear in title or abstract |
+| `boost_keywords` | extensions/arxiv.yaml | `[]` | Increase LLM score if matched |
+| `llm_score_threshold` | extensions/arxiv.yaml | `7` | Papers scoring below this (0–10) are dropped |
 
 ## Output item schema
 

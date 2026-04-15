@@ -11,14 +11,14 @@ process()  — LLM summarises what changed on each page
 render()   — wraps in FeedSection
 ```
 
-## Config (`config/sources.yaml` + `config/supervisors.yaml`)
+## Config (`config/sources.yaml` + `config/extensions/supervisor_updates.yaml`)
 
 | Key | Where | Notes |
 |---|---|---|
-| `enabled` | sources.yaml | Set to `true` to activate (key: `supervisor_monitoring`) |
-| `supervisors` | supervisors.yaml | List of `{name, institution, url}` dicts to monitor |
+| `enabled` | sources.yaml | Set to `true` to activate (key: `supervisor_updates`) |
+| `supervisors` | extensions/supervisor_updates.yaml | List of `{name, institution, url}` dicts to monitor |
 
-Example `config/supervisors.yaml`:
+Example `config/extensions/supervisor_updates.yaml`:
 ```yaml
 supervisors:
   - name: "Ada Lovelace"
@@ -43,20 +43,20 @@ Page hashes are stored in `docs/data/supervisor_hashes.json`. On each run, the e
 
 ## Underlying collector
 
-- `collectors/supervisor_watcher.py`
+- `extensions/supervisor_updates/collector.py`
   - `fetch_supervisor_updates(supervisors)` — fetches and diffs pages
   - `compute_hash(text)`, `detect_changes(supervisors, hash_store)`, `update_hashes()`
 
 ## Enabling this extension
 
-1. Set `supervisor_monitoring.enabled: true` in `config/sources.yaml`
-2. Add supervisors to `config/supervisors.yaml`
-3. Add it to `REGISTRY` in `extensions/__init__.py`:
+1. Set `supervisor_updates.enabled: true` in `config/sources.yaml`
+2. Add supervisors to `config/extensions/supervisor_updates.yaml`
+3. Add `supervisor_updates` to `display_order` in `config/sources.yaml`
+4. Add it to `REGISTRY` in `extensions/__init__.py`:
    ```python
    from extensions.supervisor_updates import SupervisorExtension
    REGISTRY = [..., SupervisorExtension]
    ```
-4. Update `run_daily()` in `main.py` to pass `sections["supervisor_updates"].items` to `build_daily_payload()`
 
 ## Tests
 

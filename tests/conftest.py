@@ -4,8 +4,8 @@ from pathlib import Path
 
 
 @pytest.fixture
-def keywords_config():
-    with open("config/keywords.yaml") as f:
+def arxiv_config():
+    with open("config/extensions/arxiv.yaml") as f:
         return yaml.safe_load(f)
 
 

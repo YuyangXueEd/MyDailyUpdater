@@ -10,14 +10,14 @@ process()  — LLM one-sentence summary per story
 render()   — wraps in FeedSection
 ```
 
-## Config (`config/sources.yaml` + `config/keywords.yaml`)
+## Config (`config/sources.yaml` + `config/extensions/hacker_news.yaml`)
 
 | Key | Where | Default | Notes |
 |---|---|---|---|
 | `enabled` | sources.yaml | `true` | |
-| `min_score` | keywords.yaml | `50` | Minimum HN points to include |
-| `max_items` | keywords.yaml | `20` | Maximum stories to fetch |
-| `keywords` | keywords.yaml | `[]` | At least one must appear in the story title |
+| `min_score` | extensions/hacker_news.yaml | `50` | Minimum HN points to include |
+| `max_items` | extensions/hacker_news.yaml | `20` | Maximum stories to fetch |
+| `keywords` | extensions/hacker_news.yaml | `[]` | At least one must appear in the story title |
 
 ## Output item schema
 

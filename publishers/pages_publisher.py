@@ -2,10 +2,11 @@ import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
+_PROJECT_ROOT = str(Path(__file__).parent.parent)
 _TEMPLATES_DIR = str(Path(__file__).parent.parent / "templates")
 _DEFAULT_DOCS_DIR = str(Path(__file__).parent.parent / "docs")
 
-_env = Environment(loader=FileSystemLoader(_TEMPLATES_DIR))
+_env = Environment(loader=FileSystemLoader([_TEMPLATES_DIR, _PROJECT_ROOT]))
 
 
 def render_daily_page(payload: dict, docs_dir: str = _DEFAULT_DOCS_DIR) -> str:
