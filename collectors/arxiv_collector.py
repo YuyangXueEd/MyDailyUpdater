@@ -42,22 +42,52 @@ def _parse_first_figure(html: str, base_url: str) -> dict[str, str] | None:
     return None
 
 
+def _parse_author_affiliations(html: str) -> list[str]:
+    matches = re.findall(
+        r"<meta[^>]+name=[\"']citation_author_institution[\"'][^>]+content=[\"']([^\"']+)[\"']",
+        html,
+        re.IGNORECASE,
+    )
+    cleaned = [_clean_html_text(m) for m in matches if m.strip()]
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for item in cleaned:
+        key = item.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(item)
+    return deduped
+
+
 def enrich_paper_with_figure(paper: dict[str, Any]) -> dict[str, Any]:
-    """Best-effort fetch of Figure 1 from the arXiv HTML page."""
+    """Best-effort fetch of Figure 1 and author affiliations from arXiv pages."""
     paper_id = paper.get("id", "")
     if not paper_id:
         return paper
 
+    headers = {"User-Agent": "MyDailyUpdater/1.0"}
+
     html_url = f"https://arxiv.org/html/{paper_id}"
     try:
-        response = httpx.get(html_url, timeout=20, headers={"User-Agent": "MyDailyUpdater/1.0"})
+        response = httpx.get(html_url, timeout=20, headers=headers)
         response.raise_for_status()
+        figure = _parse_first_figure(response.text, html_url)
+        if figure:
+            paper.update(figure)
     except Exception:
-        return paper
+        pass
 
-    figure = _parse_first_figure(response.text, html_url)
-    if figure:
-        paper.update(figure)
+    abs_url = f"https://arxiv.org/abs/{paper_id}"
+    try:
+        abs_response = httpx.get(abs_url, timeout=20, headers=headers)
+        abs_response.raise_for_status()
+        affiliations = _parse_author_affiliations(abs_response.text)
+        if affiliations:
+            paper["affiliations"] = affiliations
+    except Exception:
+        pass
+
     return paper
 
 

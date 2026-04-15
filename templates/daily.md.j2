@@ -140,7 +140,7 @@ date: {{ date }}
 
 <h4>{{ loop.index }}. <a href="{{ p.url }}">{{ p.title }}</a></h4>
 
-**作者：** {{ p.authors | join(', ') }} | **分类：** {{ p.categories | join(', ') }} | **评分：** {{ "%.1f"|format(p.score) }}/10
+**作者：** {{ p.authors | join(', ') }}{% if p.affiliations %} | **单位：** {{ p.affiliations | join('；') }}{% endif %} | **分类：** {{ p.categories | join(', ') }} | **评分：** {{ "%.1f"|format(p.score) }}/10
 
 {% if p.figure_url %}
 ![{{ p.figure_caption or p.title }}]({{ p.figure_url }})
