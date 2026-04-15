@@ -30,11 +30,11 @@ nav_exclude: true
       </div>
       <div class="landing-stat">
         <strong>默认通知建议</strong>
-        <span>英文用户优先 Slack，中文用户后续优先微信 PushPlus。</span>
+        <span>英文用户优先 Slack，中文用户后续优先 Server酱。</span>
       </div>
       <div class="landing-stat">
         <strong>当前状态</strong>
-        <span>Wizard 已上线，WeChat / PushPlus sink 计划后续补充。</span>
+        <span>Wizard 已上线，中文 sink 将优先考虑 Server酱，再评估其他微信系方案。</span>
       </div>
     </div>
   </section>
@@ -56,23 +56,31 @@ nav_exclude: true
       <p>不同语言用户的默认习惯不同，所以推荐入口也可以不同。</p>
       <div class="landing-chip-row">
         <span class="landing-chip">English setup → Slack first</span>
-        <span class="landing-chip">中文 setup → WeChat / PushPlus first</span>
+        <span class="landing-chip">中文 setup → Server酱 first</span>
         <span class="landing-chip">两边都不锁死，可手动启用任意 sink</span>
       </div>
       <div class="landing-note" style="margin-top: 16px;">
         <strong>当前实现情况</strong>
-        PushPlus 很适合这个项目，也完全可以只靠 GitHub Actions 实现，但它会作为下一阶段的 sink 来做。
+        目前中文 sink 的首选方向改为 Server酱。它的接入路径对个人用户更轻，当前也更符合“少配置、先跑起来”的目标。
+      </div>
+      <div class="landing-note" style="margin-top: 16px;">
+        <strong>参考入口</strong>
+        官方文档入口可以先看
+        <a href="https://sct.ftqq.com/sendkey">SendKey 页面</a>。
+        如果你还没有账号，也可以用
+        <a href="https://sct.ftqq.com/r/21449">这个可选邀请链接</a>
+        注册；它只是可选入口，不影响你直接使用官方主页。
       </div>
     </article>
 
     <article class="landing-card">
       <h2>你现在就能做什么</h2>
-      <p>即使还没接入 WeChat sink，中文用户现在也可以完整跑通主流程。</p>
+      <p>即使还没接入 Server酱 sink，中文用户现在也可以完整跑通主流程。</p>
       <ul class="landing-list">
         <li>用 wizard 生成 `sources.yaml` 和各 extension 配置</li>
         <li>把 `OPENROUTER_API_KEY` 放进 GitHub Secrets</li>
         <li>先使用网站输出作为主要阅读入口</li>
-        <li>如果需要即时通知，当前可先启用 Slack sink</li>
+        <li>如果需要即时通知，当前可先启用 Slack sink，后续再切到 Server酱</li>
       </ul>
     </article>
   </section>
@@ -97,7 +105,7 @@ nav_exclude: true
         </p>
         <div class="landing-note">
           <strong>下一步</strong>
-          补 PushPlus sink，再把中文 setup 从“入口页”进一步升级成更完整的中文向导。
+          补 Server酱 sink，再把中文 setup 从“入口页”进一步升级成更完整的中文向导。
         </div>
       </div>
     </div>

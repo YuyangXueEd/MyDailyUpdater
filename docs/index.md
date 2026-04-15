@@ -69,7 +69,7 @@ nav_order: 1
       <p>Different users can start from different entry points without changing the underlying repo structure.</p>
       <div class="landing-chip-row">
         <span class="landing-chip">English setup → Slack-first guidance</span>
-        <span class="landing-chip">中文入口 → WeChat / PushPlus-first guidance</span>
+        <span class="landing-chip">中文入口 → Server酱-first guidance</span>
         <span class="landing-chip">Manual config remains available</span>
       </div>
     </article>
