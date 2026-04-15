@@ -51,15 +51,15 @@ The orchestrator merges your `sources.yaml` block with `keywords.yaml` and injec
 
 ## Quickstart: build a new extension
 
-### 1. Copy the template
+### 1. Copy the template package
 
 ```bash
-cp extensions/_template.py extensions/my_source.py
+cp -r extensions/_template extensions/my_source
 ```
 
 ### 2. Fill in the three methods
 
-Open `extensions/my_source.py` and implement:
+Open `extensions/my_source/__init__.py` and implement:
 
 - **`fetch()`** — pull raw data. Return a list of dicts. No LLM calls here.
 - **`process()`** — optional. Call `self.llm` to score or summarise. Respect `dry_run`.
@@ -119,11 +119,13 @@ python main.py --dry-run
 
 ## Built-in extensions
 
-| File | Key | What it does |
+Each extension is a package (`extensions/<name>/`) containing `__init__.py` (the extension class) and `README.md` (docs specific to that extension).
+
+| Package | Key | What it does |
 |---|---|---|
-| `arxiv.py` | `arxiv` | Fetches arXiv papers, LLM-scores and summarises them |
-| `hacker_news.py` | `hacker_news` | Fetches top HN stories above a score threshold |
-| `github_trending.py` | `github_trending` | Fetches daily trending GitHub repos |
+| `arxiv/` | `arxiv` | Fetches arXiv papers, LLM-scores and summarises them — [docs](arxiv/README.md) |
+| `hacker_news/` | `hacker_news` | Fetches top HN stories above a score threshold — [docs](hacker_news/README.md) |
+| `github_trending/` | `github_trending` | Fetches daily trending GitHub repos — [docs](github_trending/README.md) |
 
 ---
 

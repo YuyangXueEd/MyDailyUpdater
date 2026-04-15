@@ -9,15 +9,29 @@ See also: extensions/README.md (human guide), extensions/_template.py (starter)
 
 ## File map
 
+Each extension is a package directory containing `__init__.py` (the class) and `README.md` (extension-specific docs).
+
 ```
-base.py          BaseExtension ABC + FeedSection dataclass  ← read this first
-__init__.py      REGISTRY list — all active extensions registered here
-_template.py     Fully commented starter for new extensions
-arxiv.py         arXiv papers (fetch + LLM score + summarise + figure enrichment)
-hacker_news.py   Hacker News top stories (fetch + LLM summarise)
-github_trending.py  GitHub trending repos (fetch + LLM summarise)
-README.md        Human-readable guide (quickstart, checklist, testing)
-llms.txt         This file
+base.py              BaseExtension ABC + FeedSection dataclass  ← read this first
+__init__.py          REGISTRY list — all active extensions registered here
+README.md            Human-readable guide (quickstart, checklist, testing)
+llms.txt             This file
+
+arxiv/
+  __init__.py        ArxivExtension — fetch + LLM score + summarise + figures
+  README.md          Config options, output schema, test commands
+
+hacker_news/
+  __init__.py        HackerNewsExtension — fetch + LLM summarise
+  README.md          Config options, output schema, test commands
+
+github_trending/
+  __init__.py        GitHubTrendingExtension — fetch + LLM summarise
+  README.md          Config options, output schema, test commands
+
+_template/
+  __init__.py        Fully commented starter for new extensions
+  README.md          How to use the template
 ```
 
 Offline (not in REGISTRY, kept as .bak):

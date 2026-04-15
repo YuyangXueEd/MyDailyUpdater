@@ -30,13 +30,15 @@ Entry point: `main.py`
 ## Directory map
 
 ```
-extensions/          Pluggable data source extensions (one file = one source)
+extensions/          Pluggable data source extensions (one package = one source)
   base.py            BaseExtension ABC + FeedSection dataclass
-  arxiv.py           arXiv papers: fetch → score → summarise → enrich figures
-  hacker_news.py     HN stories above score threshold
-  github_trending.py GitHub trending repos
-  _template.py       Starter template for new extensions
+  __init__.py        REGISTRY list
   README.md          Full extension guide
+  arxiv/             arXiv papers: fetch → score → summarise → enrich figures
+  hacker_news/       HN stories above score threshold
+  github_trending/   GitHub trending repos
+  _template/         Starter template for new extensions
+  Each package contains __init__.py (extension class) + README.md (docs)
 
 collectors/          Low-level fetch/parse functions (used by extensions)
   arxiv_collector.py      fetch_papers(), enrich_papers_with_figures()
