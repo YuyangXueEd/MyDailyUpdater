@@ -15,7 +15,7 @@
 
 Fork this repo, drop in one API key, and get your own searchable digest site running in under 5 minutes. No server, no subscription, no manual reading.
 
-**[See a live example →](https://yuyangxueed.github.io/linnet)** · **[Setup Wizard →](https://yuyangxueed.github.io/linnet/setup/)** · **[Manual config guide →](docs/setup/manual-config.md)**
+**[See a live example →](https://yuyangxueed.github.io/linnet)** · **[Setup Wizard →](https://yuyangxueed.github.io/linnet/setup/)** · **[Manual config guide →](astro/public/setup/manual-config.md)**
 
 > **Important:** the public wizard is a generator for your own fork. It does **not** modify this demo site or this repository. Today it generates config for copy-paste; browser-side one-click deploy is not enabled yet.
 >
@@ -54,7 +54,7 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 |---|---|
 | `OPENROUTER_API_KEY` | Your key from [openrouter.ai/keys](https://openrouter.ai/keys) |
 
-OpenRouter is the default fast path because one key can access many models. If you want to experiment with other OpenAI-compatible gateways later, start from the [manual config guide](docs/setup/manual-config.md).
+OpenRouter is the default fast path because one key can access many models. If you want to experiment with other OpenAI-compatible gateways later, start from the [manual config guide](astro/public/setup/manual-config.md).
 
 ### 3. Enable GitHub Pages
 
@@ -64,7 +64,7 @@ Go to **Settings → Pages → Source: GitHub Actions** (not "Deploy from a bran
 
 Use the [Setup Wizard](https://yuyangxueed.github.io/linnet/setup/) for the fast path. It walks through source selection, ordering, sink choices, and generated files for **your fork**.
 
-If you prefer to edit everything yourself, use [`docs/setup/manual-config.md`](docs/setup/manual-config.md) instead.
+If you prefer to edit everything yourself, use [`astro/public/setup/manual-config.md`](astro/public/setup/manual-config.md) instead.
 
 ### 5. Run the first workflow
 
@@ -207,7 +207,6 @@ Linnet/
 ├── extensions/   # data-source plugins
 ├── sinks/        # optional delivery channels
 ├── config/       # sources.yaml + per-extension config
-├── templates/    # Jinja2 templates (legacy; Astro site reads JSON directly)
 ├── publishers/   # writes JSON outputs to docs/data/
 ├── docs/data/    # JSON data written by pipeline (NOT the served site)
 ├── astro/        # Astro v5 static site → deployed to GitHub Pages
@@ -224,13 +223,13 @@ This project actively encourages both contributors and end users to use AI agent
 
 Packaged skill folders now live in [`skills/`](skills/):
 
-- [`skills/linnet-contributor/SKILL.md`](skills/linnet-contributor/SKILL.md)
-- [`skills/linnet-config-customization/SKILL.md`](skills/linnet-config-customization/SKILL.md)
+- [`skills/dailyreport-contributor/SKILL.md`](skills/dailyreport-contributor/SKILL.md)
+- [`skills/dailyreport-config-customization/SKILL.md`](skills/dailyreport-config-customization/SKILL.md)
 
 Lightweight prompt versions are also available:
 
-- [`skills/linnet-contributor.md`](skills/linnet-contributor.md)
-- [`skills/linnet-config-customization.md`](skills/linnet-config-customization.md)
+- [`skills/dailyreport-contributor.md`](skills/dailyreport-contributor.md)
+- [`skills/dailyreport-config-customization.md`](skills/dailyreport-config-customization.md)
 
 Before asking an AI agent to make changes, point it at the repo guidance first:
 

@@ -57,13 +57,6 @@ pipeline/            Shared processing utilities
 
 publishers/
   data_publisher.py  build_daily_payload(), write_daily/weekly/monthly_json()
-  pages_publisher.py render_daily/weekly/monthly_page() via Jinja2 templates
-                     (generates legacy Markdown; superseded by Astro site in astro/)
-
-templates/           Jinja2 templates → Markdown (legacy; kept for compatibility)
-  daily.md.j2        Daily digest page
-  weekly.md.j2       Weekly rollup page
-  monthly.md.j2      Monthly overview page
 
 sinks/               Delivery layer (all disabled by default)
   base.py            BaseSink ABC — enabled defaults False (opt-in)
@@ -86,24 +79,23 @@ docs/                Data store (NOT the served site)
   data/daily/        Raw JSON payloads (YYYY-MM-DD.json)  ← pipeline writes here
   data/weekly/       Weekly JSON payloads
   data/monthly/      Monthly JSON payloads
-  setup/             Setup wizard static HTML (served as-is)
 
 astro/               Astro v5 static site (served via GitHub Pages)
   src/pages/         Route pages (index, daily/[date], weekly/[week], monthly/[month])
   src/components/    Astro components (PaperCard, HNCard, RepoCard, WeatherBlock, …)
   src/layouts/       Base layout with NavBar and theme toggle
   src/styles/        global.css with design tokens (CSS variables)
-  public/            Static assets (favicon, setup wizard copy)
+  public/            Static assets (favicon, setup wizard HTML)
   astro.config.mjs   Astro config — base: /Linnet, __DATA_ROOT__ vite define
   dist/              Build output → deployed to GitHub Pages (git-ignored)
 
 skills/              Public AI-assistant guidance and packaged skills
-  linnet-contributor.md                    Lightweight contributor prompt
-  linnet-contributor/                      Packaged contributor skill
-  linnet-config-customization.md           Lightweight setup/customization prompt
-  linnet-config-customization/             Packaged setup/customization skill
+  dailyreport-contributor.md               Lightweight contributor prompt
+  dailyreport-contributor/                 Packaged contributor skill
+  dailyreport-config-customization.md      Lightweight setup/customization prompt
+  dailyreport-config-customization/        Packaged setup/customization skill
 
-tests/               Pytest suite (61 tests, no live network or LLM calls)
+tests/               Pytest suite (no live network or LLM calls)
 ```
 
 ---
