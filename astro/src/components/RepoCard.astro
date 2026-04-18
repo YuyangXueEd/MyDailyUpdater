@@ -1,0 +1,71 @@
+---
+interface Props {
+  repo: {
+    name?: string;
+    full_name?: string;
+    description?: string;
+    url?: string;
+    stars?: number;
+    forks?: number;
+    language?: string;
+    stars_today?: number;
+    summary?: string;
+  };
+}
+const { repo } = Astro.props;
+const displayName = repo.full_name ?? repo.name ?? 'Unknown';
+---
+<article class="repo-card panel panel--strong">
+  <div class="repo-card__header">
+    <h3 class="repo-card__name">
+      {repo.url ? (
+        <a href={repo.url} target="_blank" rel="noopener" class="mono">{displayName}</a>
+      ) : (
+        <span class="mono">{displayName}</span>
+      )}
+    </h3>
+    <div class="repo-card__badges">
+      {repo.language && <span class="chip">{repo.language}</span>}
+      {repo.stars != null && (
+        <span class="chip chip--warm">⭐ {repo.stars.toLocaleString()}</span>
+      )}
+      {repo.stars_today != null && repo.stars_today > 0 && (
+        <span class="chip chip--accent">+{repo.stars_today} today</span>
+      )}
+    </div>
+  </div>
+  {(repo.description || repo.summary) && (
+    <p class="repo-card__desc">{repo.summary ?? repo.description}</p>
+  )}
+</article>
+
+<style>
+.repo-card {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.repo-card__header { display: flex; flex-direction: column; gap: 0.45rem; }
+
+.repo-card__name {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.repo-card__name a {
+  color: var(--site-brand);
+  text-decoration: none;
+}
+
+.repo-card__name a:hover { text-decoration: underline; }
+
+.repo-card__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.repo-card__desc {
+  font-size: 0.84rem;
+  color: var(--site-text-muted);
+  line-height: 1.6;
+}
+</style>

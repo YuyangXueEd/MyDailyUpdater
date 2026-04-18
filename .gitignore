@@ -30,3 +30,8 @@ daily-pipeline.log
 .codex
 
 superpowers/
+
+# Astro
+astro/node_modules/
+astro/dist/
+astro/.astro/

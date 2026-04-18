@@ -1,0 +1,110 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<nav class="navbar">
+  <div class="navbar-inner page-wrap">
+    <a href={`${base}/`} class="navbar-brand">
+      <span class="navbar-logo">🐦</span>
+      <span class="navbar-name">Linnet</span>
+    </a>
+    <div class="navbar-links">
+      <a href={`${base}/daily/`}>Daily</a>
+      <a href={`${base}/weekly/`}>Weekly</a>
+      <a href={`${base}/monthly/`}>Monthly</a>
+      <a href={`${base}/setup/`}>Setup</a>
+    </div>
+    <button id="theme-toggle" class="navbar-theme-btn" aria-label="Toggle theme">
+      <span class="theme-icon">🌙</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+const btn = document.getElementById('theme-toggle');
+const icon = btn?.querySelector('.theme-icon');
+const stored = localStorage.getItem('theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const initial = stored ?? (prefersDark ? 'dark' : 'light');
+
+document.documentElement.dataset.theme = initial;
+if (icon) icon.textContent = initial === 'dark' ? '☀️' : '🌙';
+
+btn?.addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('theme', next);
+  if (icon) icon.textContent = next === 'dark' ? '☀️' : '🌙';
+});
+</script>
+
+<style>
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--nav-height);
+  background: var(--site-panel);
+  border-bottom: 1px solid var(--site-border);
+  backdrop-filter: blur(14px);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 1.5rem;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--site-brand) !important;
+  text-decoration: none !important;
+  letter-spacing: -0.02em;
+}
+
+.navbar-logo { font-size: 1.15rem; }
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.navbar-links a {
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--site-text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.navbar-links a:hover {
+  background: var(--site-brand-soft);
+  color: var(--site-brand);
+}
+
+.navbar-theme-btn {
+  background: none;
+  border: 1px solid var(--site-border);
+  border-radius: 999px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: var(--site-text-muted);
+  transition: background 0.15s;
+}
+
+.navbar-theme-btn:hover { background: var(--site-brand-soft); }
+
+@media (max-width: 480px) {
+  .navbar-links a { padding: 5px 8px; font-size: 0.8rem; }
+}
+</style>

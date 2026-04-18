@@ -1,7 +1,7 @@
 # Linnet — LLM context file
 
-Self-hosted daily research digest pipeline. Runs via GitHub Actions, outputs a
-Jekyll static site (GitHub Pages) and optional delivery sinks such as Slack and ServerChan.
+Self-hosted daily research digest pipeline. Runs via GitHub Actions, outputs an
+Astro static site (GitHub Pages) and optional delivery sinks such as Slack and ServerChan.
 
 Source: https://github.com/YuyangXueEd/linnet
 License: MIT
@@ -11,10 +11,9 @@ License: MIT
 ## Architecture overview
 
 ```
-main.py  ──►  extensions/  ──►  pipeline/  ──►  publishers/  ──►  docs/
-              (fetch+process    (score,          (JSON + Markdown
-               +render)         summarise)        templates)
-                                                       │
+main.py  ──►  extensions/  ──►  pipeline/  ──►  publishers/  ──►  docs/data/
+              (fetch+process    (score,          (JSON payloads)      │
+               +render)         summarise)                       astro/  ──►  GitHub Pages
                                                   sinks/  ──►  Slack / ServerChan
 ```
 
@@ -59,8 +58,9 @@ pipeline/            Shared processing utilities
 publishers/
   data_publisher.py  build_daily_payload(), write_daily/weekly/monthly_json()
   pages_publisher.py render_daily/weekly/monthly_page() via Jinja2 templates
+                     (generates legacy Markdown; superseded by Astro site in astro/)
 
-templates/           Jinja2 templates → Markdown
+templates/           Jinja2 templates → Markdown (legacy; kept for compatibility)
   daily.md.j2        Daily digest page
   weekly.md.j2       Weekly rollup page
   monthly.md.j2      Monthly overview page
@@ -82,11 +82,20 @@ config/
     postdoc_jobs.yaml      Job search routes and filters
     supervisor_updates.yaml URLs to monitor
 
-docs/                Generated site (served by GitHub Pages)
-  daily/             Rendered Markdown pages
-  data/daily/        Raw JSON payloads (YYYY-MM-DD.json)
+docs/                Data store (NOT the served site)
+  data/daily/        Raw JSON payloads (YYYY-MM-DD.json)  ← pipeline writes here
   data/weekly/       Weekly JSON payloads
   data/monthly/      Monthly JSON payloads
+  setup/             Setup wizard static HTML (served as-is)
+
+astro/               Astro v5 static site (served via GitHub Pages)
+  src/pages/         Route pages (index, daily/[date], weekly/[week], monthly/[month])
+  src/components/    Astro components (PaperCard, HNCard, RepoCard, WeatherBlock, …)
+  src/layouts/       Base layout with NavBar and theme toggle
+  src/styles/        global.css with design tokens (CSS variables)
+  public/            Static assets (favicon, setup wizard copy)
+  astro.config.mjs   Astro config — base: /Linnet, __DATA_ROOT__ vite define
+  dist/              Build output → deployed to GitHub Pages (git-ignored)
 
 skills/              Public AI-assistant guidance and packaged skills
   linnet-contributor.md                    Lightweight contributor prompt

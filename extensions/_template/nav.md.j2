@@ -1,19 +1,23 @@
 {#
-Optional quick-nav include for an extension.
+Optional quick-nav include for an extension (legacy Jinja2 / Markdown pipeline).
 
-What this file is for:
+NOTE: This file is for the legacy Jinja2 → Markdown rendering path only.
+In the Astro site (astro/), section navigation is handled automatically by the
+floating nav in astro/src/pages/daily/[date].astro — no per-extension file needed.
+
+What this file is for (legacy path):
 - Add extra links below the section entry in the daily quick-nav
 - Link to subsections, tags, categories, anchors, or custom views
 
-How it is used:
+How it is used (legacy path):
 - templates/daily.md.j2 includes this file inside the nav list for the current
   section:
     {% include "extensions/" + sec.key + "/nav.md.j2" ignore missing %}
 - The current section is available as `sec`.
 
 Safe default:
-- If your extension has no subsection anchors or extra navigation, delete this
-  file.
+- Delete this file if your extension has no subsection anchors or extra navigation.
+- For the Astro site, no per-extension nav file is needed.
 
 Minimal example:
   {% if sec["items"] %}

@@ -1,24 +1,25 @@
 {#
-Optional page-level head include for an extension.
+Optional page-level head include for an extension (legacy Jinja2 / Markdown pipeline).
 
-What this file is for:
+NOTE: This file is for the legacy Jinja2 → Markdown rendering path only.
+In the Astro site (astro/), per-extension styling belongs in a dedicated Astro
+component under astro/src/components/. See SectionBlock.astro for how extension
+keys dispatch to the right component.
+
+What this file is for (legacy path):
 - Add CSS or JS that should only load when this extension section is present
 - Add third-party assets such as KaTeX, charts, syntax highlighting, etc.
 - Keep extension-specific page tweaks out of the shared site template
 
-How it is used:
+How it is used (legacy path):
 - templates/daily.md.j2 includes this file once for each rendered section:
     {% include "extensions/" + sec.key + "/head.html.j2" ignore missing %}
-- Because it is included from the daily page template, it receives the same
-  render context as the page, including common values such as:
-    sec
-    date
-    generated_at
-    meta
-    sections_ordered
+- Common render context values:
+    sec, date, generated_at, meta, sections_ordered
 
 Safe default:
-- If your extension does not need any extra head assets, delete this file.
+- Delete this file if your extension does not need extra head assets.
+- If building for the Astro site, create an Astro component instead.
 
 Minimal example:
   <style>

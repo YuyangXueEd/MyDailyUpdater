@@ -58,7 +58,7 @@ OpenRouter is the default fast path because one key can access many models. If y
 
 ### 3. Enable GitHub Pages
 
-Go to **Settings → Pages → Source: Deploy from a branch → `main` / `/docs`**.
+Go to **Settings → Pages → Source: GitHub Actions** (not "Deploy from a branch").
 
 ### 4. Open the wizard and generate config
 
@@ -207,9 +207,10 @@ Linnet/
 ├── extensions/   # data-source plugins
 ├── sinks/        # optional delivery channels
 ├── config/       # sources.yaml + per-extension config
-├── templates/    # daily / weekly / monthly page templates
-├── publishers/   # writes docs/ pages and JSON outputs
-├── docs/         # public GitHub Pages site
+├── templates/    # Jinja2 templates (legacy; Astro site reads JSON directly)
+├── publishers/   # writes JSON outputs to docs/data/
+├── docs/data/    # JSON data written by pipeline (NOT the served site)
+├── astro/        # Astro v5 static site → deployed to GitHub Pages
 ├── skills/       # public prompt/skill files for contributors and users
 ├── dev_docs/     # maintainer-focused docs
 └── main.py       # CLI entry point
@@ -270,7 +271,7 @@ Support is optional. I appreciate donations, but I value contributions, fixes, i
 
 ## Acknowledgements
 
-Special thanks to [Just the Docs](https://just-the-docs.com/) and [Jekyll](https://jekyllrb.com/) for the public-site foundation behind this project.
+The public site is built with [Astro](https://astro.build/) — fast, modern static site generator with excellent GitHub Pages support.
 
 More broadly, I’m also grateful to the many open-source repositories, maintainers, and contributors whose ideas, patterns, and examples helped shape this repo.
 

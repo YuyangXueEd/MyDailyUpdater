@@ -1,0 +1,91 @@
+---
+interface Props {
+  item: {
+    title: string;
+    url?: string;
+    score?: number;
+    by?: string;
+    time?: number;
+    descendants?: number;
+    summary?: string;
+    hn_url?: string;
+  };
+}
+const { item } = Astro.props;
+const domain = item.url ? new URL(item.url).hostname.replace('www.', '') : null;
+const timeStr = item.time ? new Date(item.time * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : null;
+---
+<article class="hn-card panel panel--strong">
+  <div class="hn-card__top">
+    {item.score != null && <span class="score-badge">{item.score}</span>}
+    <div class="hn-card__meta mono">
+      {domain && <span class="chip">{domain}</span>}
+      {timeStr && <span class="hn-card__time">{timeStr}</span>}
+    </div>
+  </div>
+  <h3 class="hn-card__title">
+    {item.url ? (
+      <a href={item.url} target="_blank" rel="noopener">{item.title}</a>
+    ) : (
+      item.title
+    )}
+  </h3>
+  {item.summary && <p class="hn-card__summary">{item.summary}</p>}
+  <div class="hn-card__footer">
+    {item.hn_url && (
+      <a href={item.hn_url} target="_blank" rel="noopener" class="hn-card__discuss mono">
+        {item.descendants ?? 0} comments →
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+.hn-card {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.hn-card__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hn-card__meta { display: flex; align-items: center; gap: 6px; }
+
+.hn-card__time {
+  font-size: 0.74rem;
+  color: var(--site-text-muted);
+  font-family: "JetBrains Mono", monospace;
+}
+
+.hn-card__title {
+  font-size: 0.97rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--site-text);
+}
+
+.hn-card__title a { color: inherit; text-decoration: none; }
+.hn-card__title a:hover { color: var(--site-brand); }
+
+.hn-card__summary {
+  font-size: 0.86rem;
+  color: var(--site-text-muted);
+  line-height: 1.65;
+}
+
+.hn-card__footer { margin-top: auto; }
+
+.hn-card__discuss {
+  font-size: 0.76rem;
+  color: var(--site-text-muted);
+  text-decoration: none;
+}
+
+.hn-card__discuss:hover { color: var(--site-brand); }
+</style>

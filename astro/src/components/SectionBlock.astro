@@ -1,0 +1,92 @@
+---
+import PaperCard from './PaperCard.astro';
+import HNCard from './HNCard.astro';
+import RepoCard from './RepoCard.astro';
+import WeatherBlock from './WeatherBlock.astro';
+import JobCard from './JobCard.astro';
+import GenericCard from './GenericCard.astro';
+
+interface Section {
+  key: string;
+  payload_key?: string;
+  title: string;
+  icon?: string;
+  items: Record<string, unknown>[];
+  meta?: Record<string, unknown>;
+}
+
+interface Props {
+  section: Section;
+}
+
+const { section } = Astro.props;
+const { key, title, icon, items } = section;
+const anchorId = key.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const isEmpty = !items || items.length === 0;
+
+type ItemType = Record<string, unknown>;
+---
+<section class="feed-section" id={anchorId}>
+  <div class="section-header">
+    {icon && <span class="section-icon" aria-hidden="true">{icon}</span>}
+    <h2>{title}</h2>
+    {!isEmpty && <span class="chip mono">{items.length}</span>}
+  </div>
+
+  {isEmpty && (
+    <p class="section-empty">No items for this section today.</p>
+  )}
+
+  {!isEmpty && key === 'weather' && (
+    <WeatherBlock items={items as Parameters<typeof WeatherBlock>[0]['items']} />
+  )}
+
+  {!isEmpty && (key === 'arxiv' || key === 'papers') && (
+    <div class="feed-grid">
+      {(items as ItemType[]).map(p => <PaperCard paper={p as Parameters<typeof PaperCard>[0]['paper']} />)}
+    </div>
+  )}
+
+  {!isEmpty && key === 'hacker_news' && (
+    <div class="feed-grid feed-grid--2col">
+      {(items as ItemType[]).map(i => <HNCard item={i as Parameters<typeof HNCard>[0]['item']} />)}
+    </div>
+  )}
+
+  {!isEmpty && key === 'github_trending' && (
+    <div class="feed-grid feed-grid--2col">
+      {(items as ItemType[]).map(r => <RepoCard repo={r as Parameters<typeof RepoCard>[0]['repo']} />)}
+    </div>
+  )}
+
+  {!isEmpty && (key === 'postdoc_jobs' || key === 'jobs') && (
+    <div class="feed-grid">
+      {(items as ItemType[]).map(j => <JobCard job={j as Parameters<typeof JobCard>[0]['job']} />)}
+    </div>
+  )}
+
+  {!isEmpty && key === 'supervisor_updates' && (
+    <div class="feed-grid">
+      {(items as ItemType[]).map(u => <GenericCard item={u} />)}
+    </div>
+  )}
+
+  {!isEmpty && !['weather','arxiv','papers','hacker_news','github_trending','postdoc_jobs','jobs','supervisor_updates'].includes(key) && (
+    <div class="feed-grid">
+      {(items as ItemType[]).map(u => <GenericCard item={u} />)}
+    </div>
+  )}
+</section>
+
+<style>
+.feed-section { margin-bottom: 2rem; }
+
+.section-empty {
+  font-size: 0.88rem;
+  color: var(--site-text-muted);
+  padding: 1.25rem;
+  border: 1px dashed var(--site-border);
+  border-radius: 18px;
+  text-align: center;
+}
+</style>
