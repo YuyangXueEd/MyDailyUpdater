@@ -15,7 +15,7 @@
 
 Fork this repo, drop in one API key, and get your own searchable digest site running in under 5 minutes. No server, no subscription, no manual reading.
 
-**[See a live example →](https://yuyangxueed.github.io/linnet)** · **[Setup Wizard →](https://yuyangxueed.github.io/linnet/setup/)** · **[Manual config guide →](docs/setup/manual-config.md)**
+**[See a live example →](https://yuyangxueed.github.io/linnet)** · **[Setup Wizard →](https://yuyangxueed.github.io/linnet/setup/)** · **[Manual config guide →](astro/public/setup/manual-config.md)**
 
 > **Important:** the public wizard is a generator for your own fork. It does **not** modify this demo site or this repository. Today it generates config for copy-paste; browser-side one-click deploy is not enabled yet.
 >
@@ -54,17 +54,17 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 |---|---|
 | `OPENROUTER_API_KEY` | Your key from [openrouter.ai/keys](https://openrouter.ai/keys) |
 
-OpenRouter is the default fast path because one key can access many models. If you want to experiment with other OpenAI-compatible gateways later, start from the [manual config guide](docs/setup/manual-config.md).
+OpenRouter is the default fast path because one key can access many models. If you want to experiment with other OpenAI-compatible gateways later, start from the [manual config guide](astro/public/setup/manual-config.md).
 
 ### 3. Enable GitHub Pages
 
-Go to **Settings → Pages → Source: Deploy from a branch → `main` / `/docs`**.
+Go to **Settings → Pages → Source: GitHub Actions** (not "Deploy from a branch").
 
 ### 4. Open the wizard and generate config
 
 Use the [Setup Wizard](https://yuyangxueed.github.io/linnet/setup/) for the fast path. It walks through source selection, ordering, sink choices, and generated files for **your fork**.
 
-If you prefer to edit everything yourself, use [`docs/setup/manual-config.md`](docs/setup/manual-config.md) instead.
+If you prefer to edit everything yourself, use [`astro/public/setup/manual-config.md`](astro/public/setup/manual-config.md) instead.
 
 ### 5. Run the first workflow
 
@@ -200,17 +200,50 @@ PYTHONPATH=. pytest tests/ -q
 
 ---
 
+## Architecture
+
+```text
+GitHub Actions (schedule)
+    │
+    ▼
+main.py  ──────────────────────────────────────────────────────────────
+    │
+    ├─► pipeline/config_loader.py   (loads sources.yaml + extension configs)
+    │
+    ├─► extensions/*/               (one per enabled source)
+    │       collector.py            fetch raw items  (no LLM)
+    │       summarizer.py           LLM summarisation
+    │       __init__.py             fetch → process → render → FeedSection
+    │
+    ├─► publishers/data_publisher.py
+    │       writes docs/data/daily/<date>.json
+    │              docs/data/weekly/<week>.json
+    │              docs/data/monthly/<month>.json
+    │
+    ├─► astro/  (Astro v5 static site, built by pages.yml)
+    │       src/pages/daily/[date].astro    reads JSON → HTML
+    │       src/pages/weekly/[week].astro
+    │       src/pages/monthly/[month].astro
+    │       src/components/                 PaperCard, HNCard, RepoCard, …
+    │       dist/                           deployed to GitHub Pages
+    │
+    └─► sinks/*/  (optional delivery channels, run after publish)
+            slack/__init__.py
+            serverchan/__init__.py
+```
+
 ## Project layout
 
 ```text
 Linnet/
-├── extensions/   # data-source plugins
+├── extensions/   # data-source plugins (collector + summarizer + __init__)
 ├── sinks/        # optional delivery channels
-├── config/       # sources.yaml + per-extension config
-├── templates/    # daily / weekly / monthly page templates
-├── publishers/   # writes docs/ pages and JSON outputs
-├── docs/         # public GitHub Pages site
-├── skills/       # public prompt/skill files for contributors and users
+├── config/       # sources.yaml + per-extension config examples
+├── pipeline/     # aggregator, config_loader, utils
+├── publishers/   # writes JSON to docs/data/
+├── docs/data/    # JSON written by pipeline (not the served site)
+├── astro/        # Astro v5 static site → GitHub Pages
+├── skills/       # packaged AI-assistant skills for contributors and users
 ├── dev_docs/     # maintainer-focused docs
 └── main.py       # CLI entry point
 ```
@@ -223,13 +256,8 @@ This project actively encourages both contributors and end users to use AI agent
 
 Packaged skill folders now live in [`skills/`](skills/):
 
-- [`skills/linnet-contributor/SKILL.md`](skills/linnet-contributor/SKILL.md)
-- [`skills/linnet-config-customization/SKILL.md`](skills/linnet-config-customization/SKILL.md)
-
-Lightweight prompt versions are also available:
-
-- [`skills/linnet-contributor.md`](skills/linnet-contributor.md)
-- [`skills/linnet-config-customization.md`](skills/linnet-config-customization.md)
+- [`skills/dailyreport-contributor/SKILL.md`](skills/dailyreport-contributor/SKILL.md)
+- [`skills/dailyreport-config-customization/SKILL.md`](skills/dailyreport-config-customization/SKILL.md)
 
 Before asking an AI agent to make changes, point it at the repo guidance first:
 
@@ -270,7 +298,7 @@ Support is optional. I appreciate donations, but I value contributions, fixes, i
 
 ## Acknowledgements
 
-Special thanks to [Just the Docs](https://just-the-docs.com/) and [Jekyll](https://jekyllrb.com/) for the public-site foundation behind this project.
+The public site is built with [Astro](https://astro.build/) — fast, modern static site generator with excellent GitHub Pages support.
 
 More broadly, I’m also grateful to the many open-source repositories, maintainers, and contributors whose ideas, patterns, and examples helped shape this repo.
 

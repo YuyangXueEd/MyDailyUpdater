@@ -1,0 +1,112 @@
+---
+import Base from '@/layouts/Base.astro';
+import PaperCard from '@/components/PaperCard.astro';
+import JobCard from '@/components/JobCard.astro';
+import { readdir, readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+declare const __DATA_ROOT__: string;
+const DATA_DIR = resolve(__DATA_ROOT__, 'weekly');
+
+export async function getStaticPaths() {
+  const dir = resolve(__DATA_ROOT__, 'weekly');
+  const files = await readdir(dir);
+  return files
+    .filter((f: string) => /^\d{4}-W\d{2}\.json$/.test(f))
+    .map((f: string) => ({ params: { week: f.replace('.json', '') } }));
+}
+
+const { week } = Astro.params;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const data: any = JSON.parse(await readFile(resolve(DATA_DIR, `${week}.json`), 'utf-8'));
+
+const topPapers: unknown[] = data.top_papers ?? [];
+const newJobs: unknown[] = data.new_jobs ?? [];
+const keywords: string[] = data.trending_keywords ?? [];
+const dailyRefs: string[] = data.daily_refs ?? [];
+const summaryZh: string = data.summary_zh ?? '';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const allFiles = await readdir(DATA_DIR);
+const allWeeks = allFiles
+  .filter((f: string) => /^\d{4}-W\d{2}\.json$/.test(f))
+  .map((f: string) => f.replace('.json', ''))
+  .sort();
+const idx = allWeeks.indexOf(week as string);
+const prevWeek = idx > 0 ? allWeeks[idx - 1] : null;
+const nextWeek = idx < allWeeks.length - 1 ? allWeeks[idx + 1] : null;
+---
+<Base title={`${week} Weekly Digest`}>
+  <div class="page-wrap" style="padding-top:1.5rem;padding-bottom:3rem;">
+    <header class="panel" style="padding:1.5rem;margin-bottom:2rem;">
+      <div class="kicker">Weekly issue</div>
+      <h1 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;">{week}</h1>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;">
+        <span class="chip chip--accent">{topPapers.length} papers</span>
+        {newJobs.length > 0 && <span class="chip chip--warm">{newJobs.length} jobs</span>}
+        {keywords.length > 0 && <span class="chip">{keywords.length} keywords</span>}
+      </div>
+    </header>
+
+    {summaryZh && (
+      <section style="margin-bottom:2rem;">
+        <div class="section-header"><h2>本周摘要</h2></div>
+        <div class="panel" style="padding:1.25rem;">
+          <p style="line-height:1.9;color:var(--site-text-muted);">{summaryZh}</p>
+        </div>
+      </section>
+    )}
+
+    {keywords.length > 0 && (
+      <section style="margin-bottom:2rem;">
+        <div class="section-header"><span class="section-icon">🔥</span><h2>Trending Keywords</h2></div>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+          {keywords.map((k: string) => <span class="chip">{k}</span>)}
+        </div>
+      </section>
+    )}
+
+    {topPapers.length > 0 && (
+      <section style="margin-bottom:2rem;">
+        <div class="section-header"><span class="section-icon">📄</span><h2>Top Papers</h2></div>
+        <div class="feed-grid">
+          {topPapers.map(p => (
+            <PaperCard paper={p as Parameters<typeof PaperCard>[0]['paper']} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {newJobs.length > 0 && (
+      <section style="margin-bottom:2rem;">
+        <div class="section-header"><span class="section-icon">💼</span><h2>New Postdoc Positions</h2></div>
+        <div class="feed-grid">
+          {newJobs.map(j => (
+            <JobCard job={j as Parameters<typeof JobCard>[0]['job']} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {dailyRefs.length > 0 && (
+      <section style="margin-bottom:2rem;">
+        <div class="section-header"><span class="section-icon">📅</span><h2>Daily Issues This Week</h2></div>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
+          {dailyRefs.map((d: string) => (
+            <a href={`${base}/daily/${d}/`} class="btn btn--secondary">{d}</a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <nav class="panel" style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;margin-top:1rem;">
+      {prevWeek ? (
+        <a href={`${base}/weekly/${prevWeek}/`} class="btn btn--secondary">← {prevWeek}</a>
+      ) : <span />}
+      <a href={`${base}/weekly/`} class="btn btn--secondary">Archive</a>
+      {nextWeek ? (
+        <a href={`${base}/weekly/${nextWeek}/`} class="btn btn--secondary">{nextWeek} →</a>
+      ) : <span />}
+    </nav>
+  </div>
+</Base>

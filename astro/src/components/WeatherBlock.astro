@@ -1,0 +1,163 @@
+---
+interface WeatherItem {
+  resolved_name?: string;
+  label?: string;
+  query?: string;
+  condition?: string;
+  weather_code?: number;
+  temperature_c?: number;
+  apparent_temperature_c?: number;
+  temp_max_c?: number;
+  temp_min_c?: number;
+  humidity_pct?: number;
+  wind_speed_kmh?: number;
+  precipitation_probability_pct?: number;
+  sunrise?: string;
+  sunset?: string;
+  forecast_date?: string;
+  source_url?: string;
+}
+
+interface Props {
+  items: WeatherItem[];
+}
+const { items } = Astro.props;
+
+function weatherEmoji(code?: number): string {
+  if (code == null) return '🌡️';
+  if (code === 0) return '☀️';
+  if (code <= 2) return '⛅';
+  if (code <= 3) return '☁️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '❄️';
+  if (code <= 82) return '🌦️';
+  return '⛈️';
+}
+
+function fmt(dt?: string): string {
+  if (!dt) return '';
+  const d = new Date(dt);
+  return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+---
+<div class="weather-grid">
+  {items.map(w => (
+    <div class="weather-card panel">
+      <div class="weather-card__top">
+        <span class="weather-card__emoji">{weatherEmoji(w.weather_code)}</span>
+        <div>
+          <h3 class="weather-card__city">{w.resolved_name ?? w.query ?? w.label}</h3>
+          <p class="weather-card__condition">{w.condition}</p>
+        </div>
+        <div class="weather-card__temp">
+          <span class="weather-card__temp-now">{w.temperature_c?.toFixed(1)}°C</span>
+          <span class="weather-card__temp-feels mono">feels {w.apparent_temperature_c?.toFixed(1)}°</span>
+        </div>
+      </div>
+      <div class="weather-card__stats">
+        <div class="weather-stat">
+          <span class="weather-stat__label mono">High / Low</span>
+          <span>{w.temp_max_c?.toFixed(1)}° / {w.temp_min_c?.toFixed(1)}°</span>
+        </div>
+        <div class="weather-stat">
+          <span class="weather-stat__label mono">Humidity</span>
+          <span>{w.humidity_pct}%</span>
+        </div>
+        <div class="weather-stat">
+          <span class="weather-stat__label mono">Wind</span>
+          <span>{w.wind_speed_kmh?.toFixed(0)} km/h</span>
+        </div>
+        <div class="weather-stat">
+          <span class="weather-stat__label mono">Rain</span>
+          <span>{w.precipitation_probability_pct}%</span>
+        </div>
+        {w.sunrise && (
+          <div class="weather-stat">
+            <span class="weather-stat__label mono">☀ Rise</span>
+            <span>{fmt(w.sunrise)}</span>
+          </div>
+        )}
+        {w.sunset && (
+          <div class="weather-stat">
+            <span class="weather-stat__label mono">🌙 Set</span>
+            <span>{fmt(w.sunset)}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.weather-card { padding: 1.25rem; }
+
+.weather-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.weather-card__emoji { font-size: 2.2rem; line-height: 1; }
+
+.weather-card__city {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--site-text);
+}
+
+.weather-card__condition {
+  font-size: 0.84rem;
+  color: var(--site-text-muted);
+  margin-top: 2px;
+}
+
+.weather-card__temp {
+  margin-left: auto;
+  text-align: right;
+}
+
+.weather-card__temp-now {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--site-brand);
+}
+
+.weather-card__temp-feels {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--site-text-muted);
+}
+
+.weather-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.weather-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--site-panel-strong);
+  border: 1px solid var(--site-border);
+  font-size: 0.84rem;
+}
+
+.weather-stat__label {
+  font-size: 0.68rem;
+  color: var(--site-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+</style>

@@ -54,19 +54,43 @@ Sinks default to **disabled** — you must set `enabled: true` in `sources.yaml`
 
 ## Payload schema
 
+`payload` is the dict written to `docs/data/daily/<date>.json`.
+
+### Recommended: `sections_ordered` (Astro-aligned, extension-agnostic)
+
 ```python
 payload = {
-    "date":               "YYYY-MM-DD",
-    "papers":             [...],   # arXiv items
-    "hacker_news":        [...],   # HN items
-    "github_trending":    [...],   # GitHub items
-    "jobs":               [...],   # jobs items (empty if extension disabled)
-    "supervisor_updates": [...],   # supervisor items (empty if disabled)
+    "date":             "YYYY-MM-DD",
+    "generated_at":     "2026-04-18T00:03:00+00:00",
+    "sections_ordered": [
+        {
+            "key":         "arxiv",        # extension key
+            "payload_key": "papers",       # legacy alias (same as key for most)
+            "title":       "arXiv Papers",
+            "icon":        "📄",
+            "items":       [...],          # list of item dicts
+            "meta":        {...},          # e.g. {"count": 12}
+        },
+        # ... one entry per enabled extension, in display_order
+    ],
     "meta": {
         "duration_seconds": 42,
         "llm_model": "model-name",
     },
+    # flat legacy keys are also present for backward compatibility:
+    "papers":             [...],
+    "hacker_news":        [...],
+    "github_trending":    [...],
 }
+```
+
+**Use `sections_ordered` for new sinks** — it works regardless of which
+extensions are enabled and preserves the user's `display_order`.
+
+```python
+for section in payload.get("sections_ordered", []):
+    items = section["items"][:self.config.get(f"max_{section['key']}", 5)]
+    # format items …
 ```
 
 See `extensions/llms.txt` for per-item field schemas.

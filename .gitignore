@@ -19,6 +19,11 @@ htmlcov/
 *.log
 daily-pipeline.log
 
+# Jinja2-rendered Markdown pages (legacy; Astro reads JSON directly now)
+docs/daily/
+docs/weekly/
+docs/monthly/
+
 # Editor & OS
 .DS_Store
 .idea/
@@ -28,5 +33,15 @@ daily-pipeline.log
 # Claude Code
 .claude/
 .codex
+.codebuddy/
 
 superpowers/
+
+# Astro / Node.js
+astro/node_modules/
+astro/dist/
+astro/.astro/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log
+.pnpm-debug.log*

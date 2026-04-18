@@ -1,0 +1,54 @@
+---
+import Base from '@/layouts/Base.astro';
+import { readdir, readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+declare const __DATA_ROOT__: string;
+const DATA_DIR = resolve(__DATA_ROOT__, 'monthly');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+interface Entry { month: string; papers: number; days: number }
+
+const files = await readdir(DATA_DIR);
+const entries: Entry[] = await Promise.all(
+  files
+    .filter((f: string) => /^\d{4}-\d{2}\.json$/.test(f))
+    .sort().reverse()
+    .map(async (f: string): Promise<Entry> => {
+      const month = f.replace('.json', '');
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const d: any = JSON.parse(await readFile(resolve(DATA_DIR, f), 'utf-8'));
+        return { month, papers: (d.top_papers ?? []).length, days: (d.daily_refs ?? []).length };
+      } catch {
+        return { month, papers: 0, days: 0 };
+      }
+    })
+);
+---
+<Base title="Monthly Archive">
+  <div class="page-wrap" style="padding-top:1.5rem;padding-bottom:3rem;">
+    <header style="margin-bottom:2rem;">
+      <div class="kicker">Archive</div>
+      <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-.03em;">Monthly Digests</h1>
+      <p style="color:var(--site-text-muted);margin-top:.5rem;">{entries.length} months published</p>
+    </header>
+    <div class="archive-grid">
+      {entries.map(({ month, papers, days }) => (
+        <a href={`${base}/monthly/${month}/`} class="archive-card panel panel--strong">
+          <div class="kicker">{month}</div>
+          <p class="archive-card__count">{papers} papers</p>
+          {days > 0 && <p class="archive-card__sources">{days} days tracked</p>}
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+.archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+.archive-card { padding: 1.1rem 1.25rem; text-decoration: none !important; display: flex; flex-direction: column; gap: .35rem; transition: box-shadow .15s, transform .15s; }
+.archive-card:hover { transform: translateY(-2px); }
+.archive-card__count { font-size: 1.4rem; font-weight: 800; color: var(--site-brand); line-height: 1; }
+.archive-card__sources { font-size: .76rem; color: var(--site-text-muted); font-family: "JetBrains Mono", monospace; }
+</style>

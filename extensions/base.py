@@ -19,7 +19,7 @@ class FeedSection:
              The orchestrator uses this to slot items into the daily payload.
     title — human-readable section heading used in rendered output.
     items — list of processed item dicts; schema is extension-specific and
-             must match what the Jinja2 templates expect for this section.
+             consumed by Astro components via sections_ordered in the daily payload.
     meta  — optional stats/counters (e.g. fetched, filtered, duration).
     """
 

@@ -5,7 +5,7 @@ Use this reference when the task touches onboarding, extensions, sinks, or the g
 ## Canonical onboarding files
 
 - `README.md` / `README_zh.md` — user-facing story and setup path
-- `docs/setup/manual-config.md` — advanced manual configuration path
+- `astro/public/setup/manual-config.md` — advanced manual configuration path
 - `config/sources.yaml` — top-level source, sink, language, and model config
 
 ## Extension files
@@ -20,14 +20,17 @@ Use this reference when the task touches onboarding, extensions, sinks, or the g
 - `sinks/llms.txt` — machine-readable sink guidance
 - `sinks/_template/` — starter package for new sinks
 
-## Generated-site files
+## Astro site files
 
-- `templates/*.md.j2` — daily/weekly/monthly page templates
-- `publishers/pages_publisher.py` — page rendering pipeline
-- `docs/_includes/head_custom.html` — shared public-site styling
+- `astro/src/pages/` — route pages (index, daily/[date], weekly/[week], monthly/[month])
+- `astro/src/components/` — card components (PaperCard, HNCard, RepoCard, …)
+- `astro/src/layouts/Base.astro` — HTML shell with NavBar and theme toggle
+- `astro/src/styles/global.css` — CSS design tokens
+- `astro/public/setup/` — setup wizard HTML
+- `astro/astro.config.mjs` — site base path and `__DATA_ROOT__` vite define
 
 ## Validation reminders
 
 - Run targeted lint checks for edited docs or code files.
 - Run `PYTHONPATH=. pytest tests/ -q` when Python behaviour changes.
-- Re-check generated page output when editing templates or page publisher logic.
+- Run `npm run check` inside `astro/` after editing Astro/TypeScript files.

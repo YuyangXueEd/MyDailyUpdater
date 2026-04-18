@@ -1,9 +1,0 @@
-<h2 id="hacker_news">{{ sec.icon }} {{ sec.title }} ({{ sec["items"]|length }})</h2>
-
-{% if sec["items"] %}
-{% for s in sec["items"] %}
-- **[{{ s.title }}]({{ s.url }})** ({{ s.score }}pts) — {{ s.summary }} [[comments]({{ s.comments_url }})]
-{% endfor %}
-{% else %}
-*No matching stories today.*
-{% endif %}

@@ -1,18 +1,25 @@
 """
-_template.py — starter template for a new Linnet extension.
+_template — starter template for a new Linnet extension.
 
-Copy this file to extensions/my_source.py and fill in the three methods.
-Then follow the steps in extensions/README.md to register and configure it.
+Copy the whole extensions/_template/ directory to extensions/my_source/,
+then:
+  1. Rename the class below and update key/title/icon.
+  2. Fill in collector.py with your fetch logic.
+  3. Fill in summarizer.py (or delete it if no LLM step is needed).
+  4. Follow extensions/README.md to register and configure.
 
 Quick reference:
-  self.config  — your config slice merged from sources.yaml + config/extensions/{name}.yaml
-  self.llm     — OpenAI-compatible client (or None if extension has no LLM)
-  self.enabled — False if sources.yaml sets enabled: false for this key
+  self.config  — config slice merged from sources.yaml + config/extensions/{name}.yaml
+  self.llm     — OpenAI-compatible client (or None if no LLM needed)
+  self.enabled — False when sources.yaml sets enabled: false for this key
 """
 
 import os
 
 from extensions.base import BaseExtension, FeedSection
+
+from .collector import fetch_items
+from .summarizer import summarize_items
 
 
 class TemplateExtension(BaseExtension):
@@ -24,42 +31,26 @@ class TemplateExtension(BaseExtension):
     # ── Step 1: fetch ──────────────────────────────────────────────────────────
     def fetch(self) -> list[dict]:
         """
-        Pull raw items from the data source.
+        Pull raw items from the data source via collector.py.
 
         Rules:
           - No LLM calls here (cost + latency belong in process()).
-          - Return a list of plain dicts; schema is up to you.
           - Read config options via self.config.get("my_option", default).
-          - Read credentials from environment variables only:
-              api_key = os.environ.get("MY_SOURCE_API_KEY", "")
-          - If the source is unavailable, return [] rather than raising.
+          - Read credentials from environment variables only.
+          - Return [] rather than raising if the source is unavailable.
         """
-        # Example: read a config option
         max_items = self.config.get("max_items", 20)
-
-        # Example: read a credential
         api_key = os.environ.get("MY_SOURCE_API_KEY", "")
-
-        items: list[dict] = []
-
-        # --- your fetching logic here ---
-        # items = fetch_from_api(api_key, max_items)
-
+        items = fetch_items(max_items=max_items, api_key=api_key)
         print(f"  {self.title}: fetched {len(items)} items")
         return items
 
     # ── Step 2: process (optional) ─────────────────────────────────────────────
     def process(self, items: list[dict]) -> list[dict]:
         """
-        Score, filter, or summarise items.
+        Score, filter, or summarise items via summarizer.py.
 
-        Rules:
-          - Always check dry_run first — skip LLM calls when set.
-          - Use self.llm for LLM calls (OpenAI-compatible client).
-          - Read language from self.config.get("language", "en").
-          - Return the filtered/enriched list.
-
-        If your extension needs no LLM processing, delete this method —
+        Delete this method entirely if your extension needs no LLM processing —
         the base class provides a pass-through default.
         """
         if self.config.get("dry_run"):
@@ -68,19 +59,15 @@ class TemplateExtension(BaseExtension):
 
         model = self.config["llm_summarization_model"]
         lang = self.config.get("language", "en")
+        prompts = self.config.get("prompts", {})
 
-        for item in items:
-            prompt = (
-                f"Summarise the following in one sentence in {lang}:\n{item.get('description', '')}"
-            )
-            resp = self.llm.chat.completions.create(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=80,
-            )
-            item["summary"] = resp.choices[0].message.content.strip()
-
-        return items
+        return summarize_items(
+            items,
+            self.llm,
+            model,
+            lang,
+            prompt_template=prompts.get("my_source_summary"),
+        )
 
     # ── Step 3: render ─────────────────────────────────────────────────────────
     def render(self, items: list[dict]) -> FeedSection:
@@ -90,8 +77,8 @@ class TemplateExtension(BaseExtension):
         Rules:
           - No network or LLM calls here.
           - Put useful counters in meta (shown in pipeline logs).
-          - The items list is what the Jinja2 template will iterate over,
-            so make sure the field names match what your template expects.
+          - The items list is what the Astro component will iterate over,
+            so make sure the field names match what your card component expects.
         """
         return self.build_section(
             items=items,

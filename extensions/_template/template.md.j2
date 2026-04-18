@@ -1,7 +1,0 @@
-{% if sec["items"] %}
-<h2 id="{{ sec.key }}">{{ sec.icon }} {{ sec.title }} ({{ sec["items"]|length }})</h2>
-
-{% for item in sec["items"] %}
-- {{ item }}
-{% endfor %}
-{% endif %}

@@ -1,7 +1,0 @@
-{% if sec["items"] %}
-<h2 id="supervisor_updates">{{ sec.icon }} {{ sec.title }}</h2>
-
-{% for u in sec["items"] %}
-- **{{ u.name }}** ({{ u.institution }}) — {{ u.change_summary }} [[page]({{ u.url }})]
-{% endfor %}
-{% endif %}

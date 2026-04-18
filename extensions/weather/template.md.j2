@@ -1,7 +1,0 @@
-{% if sec["items"] %}
-<h2 id="weather">{{ sec.icon }} {{ sec.title }}</h2>
-
-{% for w in sec["items"] %}
-- **{{ w.label }}**{% if w.forecast_date %} — {{ w.forecast_date }}{% endif %}: {{ w.condition }}{% if w.temperature_c is not none %}, {{ "%.1f"|format(w.temperature_c) }}°C{% endif %}{% if w.temp_min_c is not none and w.temp_max_c is not none %} ({{ "%.1f"|format(w.temp_min_c) }} to {{ "%.1f"|format(w.temp_max_c) }}°C){% endif %}{% if w.precipitation_probability_pct is not none %} · Precipitation {{ w.precipitation_probability_pct }}%{% endif %}{% if w.humidity_pct is not none %} · Humidity {{ w.humidity_pct }}%{% endif %}{% if w.wind_speed_kmh is not none %} · Wind {{ w.wind_speed_kmh }} km/h{% endif %} · [{{ w.source }}]({{ w.source_url }})
-{% endfor %}
-{% endif %}

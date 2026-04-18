@@ -1,0 +1,59 @@
+---
+interface Props {
+  job: {
+    title?: string;
+    institution?: string;
+    location?: string;
+    deadline?: string;
+    url?: string;
+    description?: string;
+    summary?: string;
+    source?: string;
+  };
+}
+const { job } = Astro.props;
+---
+<article class="job-card panel panel--strong">
+  <h3 class="job-card__title">
+    {job.url ? (
+      <a href={job.url} target="_blank" rel="noopener">{job.title ?? 'Untitled position'}</a>
+    ) : (
+      job.title ?? 'Untitled position'
+    )}
+  </h3>
+  <div class="job-card__meta mono">
+    {job.institution && <span class="chip">{job.institution}</span>}
+    {job.location && <span class="chip chip--accent">{job.location}</span>}
+    {job.deadline && <span class="chip chip--warm">Deadline: {job.deadline}</span>}
+  </div>
+  {(job.summary ?? job.description) && (
+    <p class="job-card__desc">{job.summary ?? job.description}</p>
+  )}
+</article>
+
+<style>
+.job-card {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.job-card__title {
+  font-size: 0.97rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--site-text);
+}
+
+.job-card__title a { color: inherit; text-decoration: none; }
+.job-card__title a:hover { color: var(--site-brand); }
+
+.job-card__meta { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.job-card__desc {
+  font-size: 0.86rem;
+  color: var(--site-text-muted);
+  line-height: 1.65;
+}
+</style>

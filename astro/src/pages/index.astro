@@ -1,0 +1,111 @@
+---
+import Base from '@/layouts/Base.astro';
+import { readdir } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+declare const __DATA_ROOT__: string;
+const dailyDir = resolve(__DATA_ROOT__, 'daily');
+const weeklyDir = resolve(__DATA_ROOT__, 'weekly');
+
+const dailyFiles = await readdir(dailyDir).catch((): string[] => []);
+const weeklyFiles = await readdir(weeklyDir).catch((): string[] => []);
+const latestDate = dailyFiles
+  .filter((f: string) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f))
+  .sort().at(-1)?.replace('.json', '') ?? null;
+const totalDays = dailyFiles.filter((f: string) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).length;
+const totalWeeks = weeklyFiles.filter((f: string) => /^\d{4}-W\d{2}\.json$/.test(f)).length;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<Base title="Home" description="Daily AI/CV/Medical Imaging research updates — auto-generated at UK midnight">
+  <div class="page-wrap" style="padding-top:2rem;padding-bottom:4rem;">
+
+    <section class="hero panel" style="padding:2rem;margin-bottom:1.5rem;">
+      <div class="kicker">Live digest demo</div>
+      <h1 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.06;margin-bottom:.75rem;">
+        One research briefing,<br/>refreshed every day.
+      </h1>
+      <p style="color:var(--site-text-muted);font-size:1.05rem;line-height:1.75;max-width:560px;">
+        This site is a live example of what your own <strong>Linnet</strong> digest looks like after
+        forking the repo, adding one API key, and letting GitHub Actions do the rest.
+      </p>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.25rem;">
+        <a href={`${base}/setup/`} class="btn btn--primary">Open Setup Wizard</a>
+        <a href={`${base}/daily/`} class="btn btn--secondary">Browse Digests</a>
+        <a href="https://github.com/YuyangXueEd/linnet" class="btn btn--secondary" target="_blank" rel="noopener">Fork on GitHub</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat panel--strong">
+          <strong>{totalDays}</strong>
+          <span>Daily issues</span>
+        </div>
+        <div class="hero-stat panel--strong">
+          <strong>{totalWeeks}</strong>
+          <span>Weekly digests</span>
+        </div>
+        <div class="hero-stat panel--strong">
+          <strong>6+</strong>
+          <span>Sources</span>
+        </div>
+        <div class="hero-stat panel--strong">
+          <strong>2</strong>
+          <span>Delivery sinks</span>
+        </div>
+      </div>
+    </section>
+
+    {latestDate && (
+      <a href={`${base}/daily/${latestDate}/`} class="latest-cta panel">
+        <div>
+          <div class="kicker">Latest issue</div>
+          <p style="font-size:1.15rem;font-weight:700;color:var(--site-text);">{latestDate}</p>
+        </div>
+        <span class="btn btn--primary" style="white-space:nowrap;">Read →</span>
+      </a>
+    )}
+
+    <div class="feature-grid" style="margin-top:1.5rem;">
+      <div class="feature-card panel">
+        <div class="kicker">Sources</div>
+        <h2>Everything in one place</h2>
+        <p>arXiv papers · Hacker News · GitHub Trending · Weather · Postdoc jobs · Custom URLs</p>
+      </div>
+      <div class="feature-card panel">
+        <div class="kicker">Delivery</div>
+        <h2>Reaches you anywhere</h2>
+        <p>GitHub Pages site · Slack digest · ServerChan push · More sinks coming</p>
+      </div>
+      <div class="feature-card panel">
+        <div class="kicker">Zero maintenance</div>
+        <h2>Runs on GitHub Actions</h2>
+        <p>Fork, add one API key, done. Publishes at midnight UTC every day.</p>
+      </div>
+      <div class="feature-card panel">
+        <div class="kicker">Open source</div>
+        <h2>Extend it freely</h2>
+        <p>Add a new source extension in under an hour. Community-driven and MIT licensed.</p>
+      </div>
+    </div>
+
+    <div class="panel" style="padding:1.5rem;margin-top:1.5rem;text-align:center;">
+      <p style="color:var(--site-text-muted);margin-bottom:1rem;">Find Linnet useful? Help keep it running.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
+        <a href={`${base}/support/`} class="btn btn--secondary">Support the project</a>
+        <a href="https://github.com/YuyangXueEd/linnet" class="btn btn--secondary" target="_blank" rel="noopener">⭐ Star on GitHub</a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+.hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .75rem; margin-top: 1.5rem; }
+.hero-stat { padding: .9rem 1rem; border-radius: 18px; border: 1px solid var(--site-border); }
+.hero-stat strong { display: block; font-size: 1.5rem; font-weight: 800; color: var(--site-brand); line-height: 1.1; }
+.hero-stat span { font-size: .82rem; color: var(--site-text-muted); }
+.latest-cta { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; text-decoration: none !important; transition: transform .15s; }
+.latest-cta:hover { transform: translateY(-2px); }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.feature-card { padding: 1.25rem; display: flex; flex-direction: column; gap: .4rem; }
+.feature-card h2 { font-size: 1.05rem; font-weight: 700; color: var(--site-text); }
+.feature-card p { font-size: .88rem; color: var(--site-text-muted); line-height: 1.65; }
+</style>

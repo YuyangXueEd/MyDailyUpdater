@@ -1,0 +1,70 @@
+---
+import Base from '@/layouts/Base.astro';
+import { readdir, readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+declare const __DATA_ROOT__: string;
+const DATA_DIR = resolve(__DATA_ROOT__, 'daily');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+interface Entry { date: string; totalItems: number; sources: string[] }
+
+const files = await readdir(DATA_DIR);
+const entries: Entry[] = await Promise.all(
+  files
+    .filter((f: string) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f))
+    .sort()
+    .reverse()
+    .map(async (f: string): Promise<Entry> => {
+      const date = f.replace('.json', '');
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const d: any = JSON.parse(await readFile(resolve(DATA_DIR, f), 'utf-8'));
+        const sections: Array<{ key: string; items?: unknown[] }> = d.sections_ordered ?? [];
+        const totalItems = sections.reduce((n, s) => n + (s.items?.length ?? 0), 0);
+        const sources = sections.filter(s => s.items?.length).map(s => s.key);
+        return { date, totalItems, sources };
+      } catch {
+        return { date, totalItems: 0, sources: [] };
+      }
+    })
+);
+---
+<Base title="Daily Archive" description="Archive of all daily Linnet digests">
+  <div class="page-wrap" style="padding-top:1.5rem;padding-bottom:3rem;">
+    <header style="margin-bottom:2rem;">
+      <div class="kicker">Archive</div>
+      <h1 style="font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-.03em;">Daily Digests</h1>
+      <p style="color:var(--site-text-muted);margin-top:.5rem;">{entries.length} issues published</p>
+    </header>
+
+    <div class="archive-grid">
+      {entries.map(({ date, totalItems, sources }) => (
+        <a href={`${base}/daily/${date}/`} class="archive-card panel panel--strong">
+          <div class="kicker">{date}</div>
+          <p class="archive-card__count">{totalItems} items</p>
+          <p class="archive-card__sources">{sources.slice(0,4).join(' · ')}{sources.length > 4 ? ' …' : ''}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.archive-card {
+  padding: 1.1rem 1.25rem;
+  text-decoration: none !important;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  transition: box-shadow .15s, transform .15s;
+}
+.archive-card:hover { transform: translateY(-2px); box-shadow: 0 32px 70px rgba(0,0,0,.18); }
+.archive-card__count { font-size: 1.5rem; font-weight: 800; color: var(--site-brand); line-height: 1; }
+.archive-card__sources { font-size: .76rem; color: var(--site-text-muted); font-family: "JetBrains Mono", monospace; margin-top: .15rem; }
+</style>

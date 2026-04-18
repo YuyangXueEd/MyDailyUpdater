@@ -1,0 +1,115 @@
+---
+interface Props {
+  paper: {
+    id: string;
+    title: string;
+    authors: string[];
+    categories: string[];
+    abstract: string;
+    abstract_zh?: string;
+    url: string;
+    pdf_url?: string;
+    score?: number;
+    figure_url?: string;
+    figure_caption?: string;
+    primary_category?: string;
+    summary?: string;
+  };
+}
+const { paper } = Astro.props;
+const shortAuthors = paper.authors.slice(0, 3).join(', ') + (paper.authors.length > 3 ? ' et al.' : '');
+const abstract = paper.abstract_zh ?? paper.abstract ?? '';
+const truncated = abstract.length > 280 ? abstract.slice(0, 280) + '…' : abstract;
+---
+<article class="paper-card panel panel--strong">
+  <div class="paper-card__header">
+    <div class="paper-card__meta mono">
+      {paper.primary_category && <span class="chip">{paper.primary_category}</span>}
+      {paper.score != null && (
+        <span class="score-badge" title="Relevance score">{paper.score.toFixed(0)}</span>
+      )}
+    </div>
+    <h3 class="paper-card__title">
+      <a href={paper.url} target="_blank" rel="noopener">{paper.title}</a>
+    </h3>
+    <p class="paper-card__authors mono">{shortAuthors}</p>
+  </div>
+  {paper.figure_url && (
+    <div class="paper-card__figure">
+      <img src={paper.figure_url} alt={paper.figure_caption ?? paper.title} loading="lazy" />
+      {paper.figure_caption && <p class="paper-card__fig-caption">{paper.figure_caption}</p>}
+    </div>
+  )}
+  <p class="paper-card__abstract">{truncated}</p>
+  <div class="paper-card__actions">
+    <a href={paper.url} target="_blank" rel="noopener" class="btn btn--secondary">Abstract</a>
+    {paper.pdf_url && (
+      <a href={paper.pdf_url} target="_blank" rel="noopener" class="btn btn--primary">PDF</a>
+    )}
+  </div>
+</article>
+
+<style>
+.paper-card {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.paper-card__header { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.paper-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.paper-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--site-text);
+}
+
+.paper-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.paper-card__title a:hover { color: var(--site-brand); }
+
+.paper-card__authors {
+  font-size: 0.76rem;
+  color: var(--site-text-muted);
+}
+
+.paper-card__figure img {
+  border-radius: 12px;
+  border: 1px solid var(--site-border);
+  max-height: 220px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.paper-card__fig-caption {
+  font-size: 0.74rem;
+  color: var(--site-text-muted);
+  margin-top: 0.35rem;
+  font-style: italic;
+}
+
+.paper-card__abstract {
+  font-size: 0.88rem;
+  color: var(--site-text-muted);
+  line-height: 1.7;
+}
+
+.paper-card__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+</style>
