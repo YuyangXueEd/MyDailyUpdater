@@ -2,7 +2,7 @@ import main
 from extensions.arxiv import _prepare_papers as prepare_papers_for_rendering
 
 
-def test_prepare_papers_for_rendering_sorts_by_preferred_category_then_score():
+def test_prepare_papers_for_rendering_sorts_by_score_first():
     papers = [
         {
             "title": "A",
@@ -23,11 +23,11 @@ def test_prepare_papers_for_rendering_sorts_by_preferred_category_then_score():
 
     ordered = prepare_papers_for_rendering(papers, ["cs.CV", "cs.AI", "cs.LG"])
 
-    assert [p["title"] for p in ordered] == ["A", "B", "C"]
-    assert ordered[0]["primary_category"] == "cs.CV"
+    # Should be sorted by score descending: C (9.9), A (9.1), B (8.8)
+    assert [p["title"] for p in ordered] == ["C", "A", "B"]
+    assert ordered[0]["primary_category"] == "cs.AI"
     assert ordered[1]["primary_category"] == "cs.CV"
-    # Single category papers should always keep their own category.
-    assert ordered[2]["primary_category"] == "cs.AI"
+    assert ordered[2]["primary_category"] == "cs.CV"
 
 
 def test_get_llm_client_uses_provider_specific_api_key_env(monkeypatch):
