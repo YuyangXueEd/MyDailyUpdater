@@ -3,8 +3,8 @@
 display_order:
   - weather
   - arxiv
-  - hacker_news
   - github_trending
+  - hacker_news
   - quote_of_day
 
 hitokoto:
@@ -54,10 +54,10 @@ weekly:
   arxiv:
     enabled: true
     top_n: 5
-  hacker_news:
+  github_trending:
     enabled: true
     top_n: 5
-  github_trending:
+  hacker_news:
     enabled: true
     top_n: 5
   quote_of_day:
@@ -71,10 +71,10 @@ monthly:
   arxiv:
     enabled: true
     top_n: 10
-  hacker_news:
+  github_trending:
     enabled: true
     top_n: 5
-  github_trending:
+  hacker_news:
     enabled: true
     top_n: 5
   quote_of_day:
@@ -94,4 +94,3 @@ sinks:
     max_papers: 5
     max_hn: 3
     max_github: 3
-    max_jobs: 3
