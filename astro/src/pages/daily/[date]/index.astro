@@ -313,6 +313,17 @@ const totalSections = navSections.length;
         jumpToSection(Math.max(0, currentSectionIdx() - 1));
       }
     });
+    // ── Image Zoom ───────────────────────────────────────────
+    const zoomScript = document.createElement('script');
+    zoomScript.src = 'https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js';
+    zoomScript.onload = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).mediumZoom('.paper-fig img', {
+        background: 'var(--paper)',
+        margin: 24,
+      });
+    };
+    document.head.appendChild(zoomScript);
   })();
 </script>
 
