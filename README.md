@@ -17,10 +17,6 @@ Fork this repo, drop in one API key, and get your own searchable digest site run
 
 **[See a live example →](https://yuyangxueed.github.io/Linnet)** · **[Setup Wizard (EN) →](https://yuyangxueed.github.io/Linnet/setup/)** · **[设置向导 (中文) →](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[Manual config guide →](astro/public/setup/manual-config.md)**
 
-> **Important:** the public wizard is a generator for your own fork. It does **not** modify this demo site or this repository. Today it generates config for copy-paste; browser-side one-click deploy is not enabled yet.
->
-> **Default LLM path:** the quick-start flow uses OpenRouter with `OPENROUTER_API_KEY`. Advanced users can also edit models and `llm.base_url` in `config/sources.yaml`.
-
 ---
 
 ## What you get every morning
@@ -44,17 +40,21 @@ Everything runs on GitHub Actions and publishes to GitHub Pages as your own sear
 
 ## Get started in 5 simple steps
 
-### 1. Fork this repo
+### 1. Create your copy of this repo
 
-Click **Fork** on GitHub so the generated config and published site belong to you.
+Click **Use this template → Create a new repository** on GitHub. This is the recommended path — your new repo has GitHub Actions enabled by default.
+
+> **Forking instead?** Actions are disabled on forks by default. After forking, go to the **Actions** tab in your new repo and click **"I understand my workflows, go ahead and enable them"** before continuing. Without this step, nothing will run.
 
 ### 2. Add your API key
 
-Go to **Settings → Secrets and variables → Actions → New repository secret** in your fork.
+If you prefer the manual path, go to **Settings → Secrets and variables → Actions → New repository secret** in your fork.
 
 | Name | Value |
 |---|---|
 | `OPENROUTER_API_KEY` | Your key from [openrouter.ai/keys](https://openrouter.ai/keys) |
+
+If you use the wizard's GitHub one-click deploy in Step 6, you can paste the same key there instead of creating the secret manually.
 
 OpenRouter is the default fast path because one key can access many models. If you want to experiment with other OpenAI-compatible gateways later, start from the [manual config guide](astro/public/setup/manual-config.md).
 
@@ -64,7 +64,11 @@ Go to **Settings → Pages → Source: GitHub Actions** (not "Deploy from a bran
 
 ### 4. Open the wizard and generate config
 
-Use the [Setup Wizard](https://yuyangxueed.github.io/Linnet/setup/) for the fast path. It walks through source selection, ordering, sink choices, and generated files for **your fork**.
+Use the [Setup Wizard](https://yuyangxueed.github.io/Linnet/setup/) for the fast path. It walks through source selection, ordering, sink choices, and generated files for **your fork**. You can either stay on `Advanced manual config`, or choose `Connect GitHub` for one-click deploy in Step 6 to write files and secrets directly to your repository from the browser.
+
+If you want the browser-side `Connect GitHub` path, configure `PUBLIC_GITHUB_APP_CLIENT_ID` and `PUBLIC_GITHUB_APP_CLIENT_SECRET` for the Astro site first. The app will expose those values to the browser, so this path is intentionally marked experimental and includes a leakage warning in the UI.
+
+The quick-start flow uses OpenRouter with `OPENROUTER_API_KEY`. Advanced users can also edit models and `llm.base_url` in `config/sources.yaml`.
 
 If you prefer to edit everything yourself, use [`astro/public/setup/manual-config.md`](astro/public/setup/manual-config.md) instead.
 
@@ -89,15 +93,12 @@ display_order:
 
 weather:
   enabled: true
-  city: "Edinburgh"
-  timezone: "auto"
 
 arxiv:
   enabled: true
 
 github_trending:
   enabled: true
-  max_repos: 15
 
 hacker_news:
   enabled: true
@@ -115,6 +116,8 @@ Two key ideas:
 - `enabled: true/false` turns each source or sink on and off
 - `display_order` also controls the order those sections appear in the rendered digest
 
+Extension-specific settings such as weather city, arXiv filters, or GitHub Trending limits live in `config/extensions/<name>.yaml`.
+
 Keep the README mental model simple. Use the per-extension and per-sink docs for detailed options.
 
 ---
@@ -125,6 +128,7 @@ This project is built around an extension system.
 
 - Built-in examples live in [`extensions/`](extensions/)
 - Detailed conventions live in [`extensions/README.md`](extensions/README.md)
+- Each extension's Astro-side metadata now lives in `extensions/<name>/meta.json`
 - Extension-specific options belong in each extension's own `README.md`
 - New extensions can be created by copying [`extensions/_template/`](extensions/_template/)
 
@@ -258,8 +262,8 @@ This project actively encourages both contributors and end users to use AI agent
 
 Packaged skill folders now live in [`skills/`](skills/):
 
-- [`skills/dailyreport-contributor/SKILL.md`](skills/dailyreport-contributor/SKILL.md)
-- [`skills/dailyreport-config-customization/SKILL.md`](skills/dailyreport-config-customization/SKILL.md)
+- [`skills/linnet-contributor/SKILL.md`](skills/linnet-contributor/SKILL.md)
+- [`skills/linnet-config-customization/SKILL.md`](skills/linnet-config-customization/SKILL.md)
 
 Before asking an AI agent to make changes, point it at the repo guidance first:
 

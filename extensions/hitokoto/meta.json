@@ -1,0 +1,37 @@
+{
+  "key": "hitokoto",
+  "title": "一言",
+  "subtitle": "hitokoto.cn",
+  "icon": "feather",
+  "defaultOrder": 0,
+  "layout": "single",
+  "displayName": "一言",
+  "displayNameZh": "一言",
+  "description": "来自 hitokoto.cn 的每日一言，替换默认 tagline。无需 API key。",
+  "descriptionZh": "来自 hitokoto.cn 的每日一言，替换默认 tagline。无需 API key。",
+  "category": "custom",
+  "locale": "zh",
+  "tags": ["hitokoto", "一言", "quote", "chinese", "中文", "名言"],
+  "setupFields": [
+    {
+      "key": "type",
+      "label": "Sentence type",
+      "labelZh": "句子类型",
+      "type": "select",
+      "default": "",
+      "options": [
+        { "value": "", "label": "随机 (all)" },
+        { "value": "a", "label": "a — 动画" },
+        { "value": "b", "label": "b — 漫画" },
+        { "value": "c", "label": "c — 游戏" },
+        { "value": "d", "label": "d — 文学" },
+        { "value": "e", "label": "e — 原创" },
+        { "value": "h", "label": "h — 影视" },
+        { "value": "i", "label": "i — 诗词" },
+        { "value": "k", "label": "k — 哲学" }
+      ]
+    }
+  ],
+  "weeklyDefault": false,
+  "monthlyDefault": false
+}

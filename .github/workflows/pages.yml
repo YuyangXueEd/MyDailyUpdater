@@ -5,6 +5,7 @@ on:
     branches: [main, feat/astro-migration]
     paths:
       - 'astro/**'
+      - 'extensions/**'
       - 'docs/data/**'
   workflow_dispatch:
 
@@ -33,6 +34,10 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        working-directory: astro
+
+      - name: Run frontend tests
+        run: npm test
         working-directory: astro
 
       - name: Type check

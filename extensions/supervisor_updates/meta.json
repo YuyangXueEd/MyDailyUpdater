@@ -1,0 +1,28 @@
+{
+  "key": "supervisor_updates",
+  "title": "On My Radar",
+  "subtitle": "Monitored pages",
+  "icon": "feather",
+  "defaultOrder": 6,
+  "layout": "stack",
+  "displayName": "Page Monitor",
+  "displayNameZh": "页面监控",
+  "description": "Tracks changes on any web pages you care about — lab sites, supervisor pages, deadlines.",
+  "descriptionZh": "监控任意网页的变化——导师主页、实验室公告、截止日期等。",
+  "category": "custom",
+  "locale": "general",
+  "tags": ["monitor", "supervisor", "webpage", "changes", "tracking", "监控", "导师", "页面"],
+  "setupFields": [
+    {
+      "key": "urls",
+      "label": "Pages to monitor",
+      "labelZh": "要监控的页面",
+      "type": "urls",
+      "placeholder": "https://example.com/lab",
+      "hint": "Add one URL per line. Changes since the last run will be summarised.",
+      "hintZh": "每行一个 URL。自上次运行以来的变化将被自动摘要。"
+    }
+  ],
+  "weeklyDefault": false,
+  "monthlyDefault": false
+}

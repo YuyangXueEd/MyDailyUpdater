@@ -1,0 +1,205 @@
+---
+import type { ExtensionMeta } from '@/lib/registry';
+import { ARXIV_PROFILES } from '@/lib/arxivProfiles';
+import TextField     from './fields/TextField.astro';
+import SliderField   from './fields/SliderField.astro';
+import SelectField   from './fields/SelectField.astro';
+import MultiSelectField from './fields/MultiSelectField.astro';
+import TagsField     from './fields/TagsField.astro';
+import UrlsField     from './fields/UrlsField.astro';
+
+interface Props {
+  extensions: ExtensionMeta[];
+  locale: 'en' | 'zh';
+}
+const { extensions, locale } = Astro.props;
+
+const languageOptions = [
+  { value: 'en', label: locale === 'zh' ? '英文 (English)' : 'English' },
+  { value: 'zh', label: locale === 'zh' ? '中文 (Chinese)' : 'Chinese' },
+];
+
+const t = {
+  globalLang:     locale === 'zh' ? '全局语言' : 'Global language',
+  globalLangDesc: locale === 'zh' ? '应用于摘要、汇总和推送通知。' : 'Applied across summaries, rollups, and sink notifications.',
+  langLabel:      locale === 'zh' ? '摘要语言' : 'Summary language',
+  globalMeta:     locale === 'zh' ? '全局设置' : 'Global settings',
+  arxivDesc:      locale === 'zh' ? '混合一个或多个预设研究方向，然后添加自定义类别或关键词。' : 'Mix one or more preset research profiles, then add custom categories or keywords.',
+  arxivProfiles:  locale === 'zh' ? '研究方向预设' : 'Research profile presets',
+  customHead:     locale === 'zh' ? '自定义补充' : 'Custom additions',
+  customDesc:     locale === 'zh'
+    ? '如果预设不够，可以直接在下面补充自己的分类和关键词；也可以完全不选预设，只使用这些自定义项。'
+    : 'If presets are not enough, add your own categories and keywords below. You can also skip presets and rely only on the custom inputs.',
+  customCats:     locale === 'zh' ? '自定义分类（arXiv 分类，如 cs.LG）' : 'Custom categories (arXiv IDs, e.g. cs.LG)',
+  customKws:      locale === 'zh' ? '自定义关键词（must_include）' : 'Custom keywords (must_include)',
+  customBoosts:   locale === 'zh' ? '加权关键词（boost_keywords）' : 'Boost keywords',
+  threshold:      locale === 'zh' ? 'LLM 评分阈值' : 'LLM score threshold',
+  maxPapers:      locale === 'zh' ? '每次抓取最多论文数' : 'Max papers fetched per run',
+  addTag:         locale === 'zh' ? '添加' : 'Add',
+  noTag:          locale === 'zh' ? '尚未添加' : 'None added',
+  noUrl:          locale === 'zh' ? '尚未添加 URL' : 'No URLs added',
+  mergedProfile:  locale === 'zh' ? '预设合并说明' : 'Profile merge note',
+};
+
+const compactFieldTypes = new Set(['text', 'number', 'slider', 'select']);
+const categoryLabels = {
+  research: locale === 'zh' ? '学术' : 'Research',
+  tech: locale === 'zh' ? '技术' : 'Tech',
+  career: locale === 'zh' ? '职业' : 'Career',
+  local: locale === 'zh' ? '本地' : 'Local',
+  custom: locale === 'zh' ? '自定义' : 'Custom',
+};
+---
+
+<div class="wz-step" data-step="2" aria-hidden="true">
+  <div class="wz-step2-sheet">
+
+    <section class="wz-step2-section wz-step2-section--lead">
+      <div class="wz-step2-section__eyebrow">{t.globalMeta}</div>
+      <h3>{t.globalLang}</h3>
+      <p class="wz-card__desc">{t.globalLangDesc}</p>
+      <div class="wz-field">
+        <label for="global-language">{t.langLabel}</label>
+        <select id="global-language" name="language" data-global-language>
+          {languageOptions.map(opt => (
+            <option value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+    </section>
+
+    {extensions.map(ext => {
+      const name = locale === 'zh' ? (ext.displayNameZh ?? ext.displayName) : ext.displayName;
+      const compactFields = ext.setupFields.filter(field => compactFieldTypes.has(field.type));
+      const richFields = ext.setupFields.filter(field => !compactFieldTypes.has(field.type));
+      const categoryLabel = categoryLabels[ext.category];
+      return (
+        <section class="wz-config-panel wz-step2-section" data-config-for={ext.key} hidden>
+          <div class="wz-step2-divider" aria-hidden="true"></div>
+          <div class="wz-step2-section__head">
+            <div class="wz-step2-section__eyebrow">{categoryLabel}</div>
+            <h3>{name}</h3>
+          </div>
+
+          {ext.key === 'arxiv' ? (
+            <div>
+              <p class="wz-card__desc">{t.arxivDesc}</p>
+
+              <div class="wz-field wz-field--rich">
+                <div class="wz-field__label">{t.arxivProfiles}</div>
+                <div class="wz-profile-grid" data-arxiv-profiles>
+                  {Object.entries(ARXIV_PROFILES).map(([key, profile]) => {
+                    const pLabel = locale === 'zh' ? profile.labelZh : profile.label;
+                    const pSummary = locale === 'zh' ? profile.summaryZh : profile.summary;
+                    return (
+                      <label class="wz-profile-card">
+                        <input type="checkbox" name="arxiv_preset" value={key} />
+                        <span class="wz-profile-card__name">{pLabel}</span>
+                        <span class="wz-profile-card__summary">{pSummary}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div class="wz-step2-subhead">
+                <strong>{t.customHead}</strong>
+                <div class="wz-field__hint">{t.customDesc}</div>
+              </div>
+
+              <div class="wz-field-stack">
+                <div class="wz-field wz-field--rich">
+                  <div class="wz-field__label">{t.customKws}</div>
+                  <div class="wz-tags" data-arxiv-custom-keywords data-tags="[]">
+                    <div class="wz-tags__list" data-tags-list>
+                      <span class="wz-tags__empty">{t.noTag}</span>
+                    </div>
+                    <div class="wz-tags__input-row">
+                      <input type="text" placeholder="e.g. hallucination" class="wz-tags__input" autocomplete="off" />
+                      <button type="button" class="wz-tags__add" data-tags-add>{t.addTag}</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wz-field wz-field--rich">
+                  <div class="wz-field__label">{t.customCats}</div>
+                  <div class="wz-tags" data-arxiv-custom-categories data-tags="[]">
+                    <div class="wz-tags__list" data-tags-list>
+                      <span class="wz-tags__empty">{t.noTag}</span>
+                    </div>
+                    <div class="wz-tags__input-row">
+                      <input type="text" placeholder="e.g. cs.CV" class="wz-tags__input" autocomplete="off" />
+                      <button type="button" class="wz-tags__add" data-tags-add>{t.addTag}</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wz-field wz-field--rich">
+                  <div class="wz-field__label">{t.customBoosts}</div>
+                  <div class="wz-tags" data-arxiv-custom-boosts data-tags="[]">
+                    <div class="wz-tags__list" data-tags-list>
+                      <span class="wz-tags__empty">{t.noTag}</span>
+                    </div>
+                    <div class="wz-tags__input-row">
+                      <input type="text" placeholder="e.g. LoRA" class="wz-tags__input" autocomplete="off" />
+                      <button type="button" class="wz-tags__add" data-tags-add>{t.addTag}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wz-field-grid">
+                <div class="wz-field">
+                  <label for="arxiv-threshold">{t.threshold}</label>
+                  <div class="wz-slider-row">
+                    <input type="range" id="arxiv-threshold" data-arxiv-threshold min="0" max="10" step="1" value="7" />
+                    <span class="wz-slider-val" data-slider-val="arxiv-threshold">7</span>
+                  </div>
+                </div>
+                <div class="wz-field">
+                  <label for="arxiv-max-papers">{t.maxPapers}</label>
+                  <input type="number" id="arxiv-max-papers" data-arxiv-max-papers min="25" max="1000" step="25" value="100" />
+                </div>
+              </div>
+
+              <div class="wz-notice wz-notice--success" style="margin-top:16px">
+                <strong>{t.mergedProfile}</strong>
+                <div class="wz-field__hint">
+                  {locale === 'zh'
+                    ? '最终 categories / must_include 会根据你选中的预设和上面添加的自定义项一起生成。'
+                    : 'The final categories and must_include terms are generated from both the selected presets and your custom entries above.'}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div class="wz-field-stack">
+              {compactFields.length > 0 && (
+                <div class="wz-field-grid">
+                  {compactFields.map(field => {
+                    if (field.type === 'text')        return <TextField     {field} extKey={ext.key} {locale} />;
+                    if (field.type === 'number')      return <TextField     {field} extKey={ext.key} {locale} />;
+                    if (field.type === 'slider')      return <SliderField   {field} extKey={ext.key} {locale} />;
+                    if (field.type === 'select')      return <SelectField   {field} extKey={ext.key} {locale} />;
+                    return null;
+                  })}
+                </div>
+              )}
+
+              {richFields.map(field => {
+                if (field.type === 'text')        return <TextField     {field} extKey={ext.key} {locale} />;
+                if (field.type === 'number')      return <TextField     {field} extKey={ext.key} {locale} />;
+                if (field.type === 'slider')      return <SliderField   {field} extKey={ext.key} {locale} />;
+                if (field.type === 'select')      return <SelectField   {field} extKey={ext.key} {locale} />;
+                if (field.type === 'multiselect') return <MultiSelectField {field} extKey={ext.key} {locale} />;
+                if (field.type === 'tags')        return <TagsField     {field} extKey={ext.key} {locale} />;
+                if (field.type === 'urls')        return <UrlsField     {field} extKey={ext.key} {locale} />;
+                return null;
+              })}
+            </div>
+          )}
+        </section>
+      );
+    })}
+
+  </div>
+</div>

@@ -3,10 +3,16 @@
   "type": "module",
   "version": "0.1.0",
   "scripts": {
+    "sync:extension-meta": "node ./scripts/sync-extension-meta.mjs",
+    "predev": "npm run sync:extension-meta",
+    "prebuild": "npm run sync:extension-meta",
+    "precheck": "npm run sync:extension-meta",
+    "pretest": "npm run sync:extension-meta",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test": "node --test ./tests/**/*.test.mjs",
     "astro": "astro"
   },
   "dependencies": {

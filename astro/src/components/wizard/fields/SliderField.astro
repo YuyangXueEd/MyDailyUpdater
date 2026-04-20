@@ -1,0 +1,35 @@
+---
+import type { SetupField } from '@/lib/registry';
+
+interface Props {
+  field: SetupField;
+  extKey: string;
+  locale: 'en' | 'zh';
+}
+const { field, extKey, locale } = Astro.props;
+const label   = locale === 'zh' ? (field.labelZh ?? field.label) : field.label;
+const hint    = locale === 'zh' ? (field.hintZh  ?? field.hint)  : field.hint;
+const id      = `${extKey}-${field.key}`;
+const min     = field.min ?? 0;
+const max     = field.max ?? 100;
+const step    = field.step ?? 1;
+const def     = (field.default as number | undefined) ?? min;
+---
+<div class="wz-field wz-field--compact">
+  <label for={id}>{label}</label>
+  <div class="wz-slider-row">
+    <input
+      type="range"
+      id={id}
+      name={field.key}
+      min={min}
+      max={max}
+      step={step}
+      value={def}
+      data-config-for={extKey}
+      data-field={field.key}
+    />
+    <span class="wz-slider-val" data-slider-val={id}>{def}</span>
+  </div>
+  {hint && <div class="wz-field__hint">{hint}</div>}
+</div>

@@ -1,0 +1,34 @@
+---
+import type { SetupField } from '@/lib/registry';
+
+interface Props {
+  field: SetupField;
+  extKey: string;
+  locale: 'en' | 'zh';
+}
+const { field, extKey, locale } = Astro.props;
+const label = locale === 'zh' ? (field.labelZh ?? field.label) : field.label;
+const hint  = locale === 'zh' ? (field.hintZh  ?? field.hint)  : field.hint;
+const addLabel  = locale === 'zh' ? '添加' : 'Add';
+const emptyText = locale === 'zh' ? '尚未添加任何 URL' : 'No URLs added yet';
+const id = `${extKey}-${field.key}`;
+---
+<div class="wz-field wz-field--rich">
+  <div class="wz-field__label">{label}</div>
+  <div class="wz-urls" data-config-for={extKey} data-field={field.key} data-urls="[]">
+    <div class="wz-urls__list" data-urls-list>
+      <span class="wz-urls__empty">{emptyText}</span>
+    </div>
+    <div class="wz-urls__input-row">
+      <input
+        type="url"
+        id={id}
+        placeholder={field.placeholder ?? 'https://'}
+        class="wz-urls__input"
+        autocomplete="off"
+      />
+      <button type="button" class="wz-urls__add" data-urls-add>{addLabel}</button>
+    </div>
+  </div>
+  {hint && <div class="wz-field__hint">{hint}</div>}
+</div>

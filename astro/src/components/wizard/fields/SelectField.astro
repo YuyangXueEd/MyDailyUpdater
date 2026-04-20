@@ -1,0 +1,29 @@
+---
+import type { SetupField } from '@/lib/registry';
+
+interface Props {
+  field: SetupField;
+  extKey: string;
+  locale: 'en' | 'zh';
+}
+const { field, extKey, locale } = Astro.props;
+const label   = locale === 'zh' ? (field.labelZh ?? field.label) : field.label;
+const hint    = locale === 'zh' ? (field.hintZh  ?? field.hint)  : field.hint;
+const id      = `${extKey}-${field.key}`;
+const options = field.options ?? [];
+const def     = (field.default as string | undefined) ?? '';
+---
+<div class="wz-field wz-field--compact">
+  <label for={id}>{label}</label>
+  <select
+    id={id}
+    name={field.key}
+    data-config-for={extKey}
+    data-field={field.key}
+  >
+    {options.map(opt => (
+      <option value={opt.value} selected={opt.value === def}>{opt.label}</option>
+    ))}
+  </select>
+  {hint && <div class="wz-field__hint">{hint}</div>}
+</div>

@@ -11,9 +11,12 @@ cp -r extensions/_template extensions/my_source
 # 2. Rename the class and fill in the three methods
 #    Open extensions/my_source/__init__.py
 
-# 3. Update this README to document your extension
+# 3. Fill in extensions/my_source/meta.json
+#    This powers the Astro setup wizard and section registry.
 
-# 4. Register and configure — see extensions/README.md for full steps
+# 4. Update this README to document your extension
+#
+# 5. Register and configure — see extensions/README.md for full steps
 ```
 
 ## What to fill in
@@ -32,6 +35,24 @@ If your extension needs a custom card layout, add an Astro component:
 2. Register it in `astro/src/components/SectionBlock.astro` — add a branch for your `section.key`
 
 The default fallback is `GenericCard.astro`, which renders title + URL + summary for any unknown key. This is fine for most new extensions.
+
+## Template metadata
+
+`meta.json` is now the source of truth for the Astro-side extension registry.
+
+Fill in at least:
+
+- `key` — must match the directory name and Python extension key
+- `title` / `subtitle` — rendered section heading copy
+- `displayName` / `description` — setup wizard card copy
+- `layout`, `icon`, `category`, `locale`
+- `setupFields` — fields shown in the setup wizard
+
+After editing metadata, refresh the generated registry from `astro/`:
+
+```bash
+npm run sync:extension-meta
+```
 
 ## Template README structure
 

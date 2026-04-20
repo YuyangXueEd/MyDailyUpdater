@@ -1,0 +1,49 @@
+{
+  "key": "weather",
+  "title": "The Morning",
+  "subtitle": "Local weather",
+  "icon": "cloud",
+  "defaultOrder": 1,
+  "layout": "single",
+  "displayName": "Weather",
+  "displayNameZh": "天气",
+  "description": "Temperature, conditions, and a short forecast for your city.",
+  "descriptionZh": "你所在城市的气温、天气状况和简短预报。",
+  "category": "local",
+  "locale": "general",
+  "tags": ["weather", "forecast", "temperature", "city", "天气", "预报"],
+  "setupFields": [
+    {
+      "key": "city",
+      "label": "City",
+      "labelZh": "城市",
+      "type": "text",
+      "required": true,
+      "placeholder": "Edinburgh",
+      "hint": "City name passed to the weather API.",
+      "hintZh": "传给天气 API 的城市名称。"
+    },
+    {
+      "key": "timezone",
+      "label": "Timezone",
+      "labelZh": "时区",
+      "type": "select",
+      "default": "Europe/London",
+      "options": [
+        { "value": "Europe/London", "label": "London (GMT/BST)" },
+        { "value": "Europe/Paris", "label": "Paris (CET)" },
+        { "value": "America/New_York", "label": "New York (ET)" },
+        { "value": "America/Chicago", "label": "Chicago (CT)" },
+        { "value": "America/Los_Angeles", "label": "Los Angeles (PT)" },
+        { "value": "Asia/Shanghai", "label": "Shanghai (CST)" },
+        { "value": "Asia/Tokyo", "label": "Tokyo (JST)" },
+        { "value": "Asia/Kolkata", "label": "India (IST)" },
+        { "value": "Australia/Sydney", "label": "Sydney (AEST)" }
+      ],
+      "hint": "Used to align the briefing time with local sunrise.",
+      "hintZh": "用于让简报时间与当地日出对齐。"
+    }
+  ],
+  "weeklyDefault": false,
+  "monthlyDefault": false
+}

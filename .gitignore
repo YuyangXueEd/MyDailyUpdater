@@ -35,8 +35,9 @@ docs/monthly/
 .claude/
 .codex
 .codebuddy/
-.skills-lock.json
+skills-lock.json
 AGENTS.md
+.playwright/
 
 superpowers/
 

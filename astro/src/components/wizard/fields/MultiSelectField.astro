@@ -1,0 +1,33 @@
+---
+import type { SetupField } from '@/lib/registry';
+
+interface Props {
+  field: SetupField;
+  extKey: string;
+  locale: 'en' | 'zh';
+}
+const { field, extKey, locale } = Astro.props;
+const label   = locale === 'zh' ? (field.labelZh ?? field.label) : field.label;
+const hint    = locale === 'zh' ? (field.hintZh  ?? field.hint)  : field.hint;
+const options = field.options ?? [];
+const defaults = Array.isArray(field.default) ? field.default as string[] : [];
+---
+<div class="wz-field wz-field--rich">
+  <div class="wz-field__label">{label}</div>
+  <div
+    class="wz-multiselect"
+    data-config-for={extKey}
+    data-field={field.key}
+    >
+    {options.map(opt => (
+      <label class="wz-chip-label">
+        <input type="checkbox" value={opt.value} name={field.key} checked={defaults.includes(opt.value)} />
+        <span class="wz-chip">
+          {opt.label}
+          {opt.description && <span class="wz-chip__sub">{opt.description}</span>}
+        </span>
+      </label>
+    ))}
+  </div>
+  {hint && <div class="wz-field__hint">{hint}</div>}
+</div>

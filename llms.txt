@@ -33,6 +33,7 @@ extensions/          Pluggable data source extensions (one package = one source)
   base.py            BaseExtension ABC + FeedSection dataclass
   __init__.py        REGISTRY list
   README.md          Full extension guide
+  */meta.json        Astro-facing extension metadata for setup wizard + section registry
   arxiv/             arXiv papers: fetch → score → summarise → enrich figures
   hacker_news/       HN stories above score threshold
   github_trending/   GitHub trending repos
@@ -91,14 +92,17 @@ astro/               Astro v5 static site (served via GitHub Pages)
   src/components/    Astro components (PaperCard, HNCard, RepoCard, WeatherBlock, Icon, …)
   src/layouts/       Base layout with NavBar and theme toggle
   src/styles/        global.css with design tokens (Fraunces/Source Serif/Inter, warm tan palette)
-  src/lib/registry.ts  Extension registry — metadata, setup fields, locale, layout per extension
+  src/lib/registry.ts  Extension registry types + helpers, backed by generated metadata
+  src/lib/generatedExtensionRegistry.ts  Generated from extensions/*/meta.json
+  scripts/sync-extension-meta.mjs        Build-time generator for the Astro registry
+  Setup wizard GitHub auth envs: PUBLIC_GITHUB_APP_CLIENT_ID, PUBLIC_GITHUB_APP_CLIENT_SECRET
   public/            Static assets (favicon, logo, manual setup guide)
   astro.config.mjs   Astro config — base: /Linnet, __DATA_ROOT__ vite define
   dist/              Build output → deployed to GitHub Pages (git-ignored)
 
 skills/              Public AI-assistant guidance and packaged skills
-  dailyreport-contributor/                 Packaged contributor skill (SKILL.md + references/)
-  dailyreport-config-customization/        Packaged setup/customization skill (SKILL.md + references/)
+  linnet-contributor/                      Packaged contributor skill (SKILL.md + references/)
+  linnet-config-customization/             Packaged setup/customization skill (SKILL.md + references/)
 
 tests/               Pytest suite (no live network or LLM calls)
 ```

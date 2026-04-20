@@ -1,0 +1,28 @@
+{
+  "key": "quote_of_day",
+  "title": "Words for the Morning",
+  "subtitle": "Quote of the day",
+  "icon": "feather",
+  "defaultOrder": 0,
+  "layout": "single",
+  "displayName": "Quote of the Day",
+  "displayNameZh": "每日名言",
+  "description": "A daily quote from API Ninjas — replaces the default tagline. Requires API_NINJAS_KEY secret.",
+  "descriptionZh": "来自 API Ninjas 的每日名言，替换默认 tagline。需要配置 API_NINJAS_KEY。",
+  "category": "custom",
+  "locale": "en",
+  "tags": ["quote", "inspiration", "tagline", "名言", "每日"],
+  "setupFields": [
+    {
+      "key": "category",
+      "label": "Quote category",
+      "labelZh": "名言类别",
+      "type": "text",
+      "placeholder": "morning, inspiration, life ...",
+      "hint": "Leave blank for a random category. See API Ninjas docs for all options.",
+      "hintZh": "留空则随机选取类别。"
+    }
+  ],
+  "weeklyDefault": false,
+  "monthlyDefault": false
+}

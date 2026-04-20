@@ -1,0 +1,31 @@
+{
+  "key": "my_source",
+  "title": "My Source",
+  "subtitle": "Your subtitle here",
+  "icon": "book",
+  "defaultOrder": 99,
+  "layout": "stack",
+  "displayName": "My Source",
+  "displayNameZh": "我的来源",
+  "description": "Explain what this source gives the reader in one sentence.",
+  "descriptionZh": "用一句话说明这个来源会给读者带来什么。",
+  "category": "custom",
+  "locale": "general",
+  "tags": ["custom", "feed", "template"],
+  "setupFields": [
+    {
+      "key": "max_items",
+      "label": "Max items",
+      "labelZh": "最多条目数",
+      "type": "slider",
+      "default": 10,
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "hint": "Expose only the fields your wizard actually needs.",
+      "hintZh": "只暴露 wizard 真正需要的字段。"
+    }
+  ],
+  "weeklyDefault": false,
+  "monthlyDefault": false
+}

@@ -1,0 +1,90 @@
+---
+import type { ExtensionMeta } from '@/lib/registry';
+
+interface Props {
+  extensions: ExtensionMeta[];
+  locale: 'en' | 'zh';
+}
+const { extensions, locale } = Astro.props;
+
+const t = {
+  search:     locale === 'zh' ? '搜索扩展...' : 'Search extensions...',
+  all:        locale === 'zh' ? '全部' : 'All',
+  research:   locale === 'zh' ? '学术' : 'Research',
+  tech:       locale === 'zh' ? '技术' : 'Tech',
+  career:     locale === 'zh' ? '职业' : 'Career',
+  local:      locale === 'zh' ? '本地' : 'Local',
+  custom:     locale === 'zh' ? '自定义' : 'Custom',
+  orderHead:  locale === 'zh' ? '显示顺序（可拖拽调整）' : 'Display order (drag to reorder)',
+  noResults:  locale === 'zh' ? '无匹配结果' : 'No extensions match your search',
+};
+
+const categoryLabels = {
+  research: t.research,
+  tech: t.tech,
+  career: t.career,
+  local: t.local,
+  custom: t.custom,
+};
+---
+
+<div class="wz-step" data-step="1" aria-hidden="true">
+  <div class="wz-step1-layout">
+
+    <!-- Left: extension browser -->
+    <div class="wz-step1-browser">
+      <input
+        type="search"
+        class="wz-search"
+        placeholder={t.search}
+        data-ext-search
+        autocomplete="off"
+      />
+
+      <div class="wz-filter-chips" data-ext-filter>
+        <button class="wz-chip wz-chip--active" data-cat="all">{t.all}</button>
+        <button class="wz-chip" data-cat="research">{t.research}</button>
+        <button class="wz-chip" data-cat="tech">{t.tech}</button>
+        <button class="wz-chip" data-cat="career">{t.career}</button>
+        <button class="wz-chip" data-cat="local">{t.local}</button>
+        <button class="wz-chip" data-cat="custom">{t.custom}</button>
+      </div>
+
+      <div class="wz-ext-grid" data-ext-grid>
+        {extensions.map(ext => {
+          const name = locale === 'zh' ? (ext.displayNameZh ?? ext.displayName) : ext.displayName;
+          const desc = locale === 'zh' ? (ext.descriptionZh ?? ext.description) : ext.description;
+          const categoryLabel = categoryLabels[ext.category];
+          return (
+            <button
+              type="button"
+              class="wz-ext-card"
+              data-ext-key={ext.key}
+              data-ext-cat={ext.category}
+              data-ext-tags={ext.tags.join(' ')}
+              aria-pressed="false"
+            >
+              <div class="wz-ext-card__check" aria-hidden="true">✓</div>
+              <div class="wz-ext-card__name">{name}</div>
+              <p class="wz-ext-card__desc">{desc}</p>
+              <div class="wz-ext-card__meta">
+                <span class="wz-label">{categoryLabel}</span>
+                <span class="wz-label wz-label--ghost">{ext.key}</span>
+              </div>
+            </button>
+          );
+        })}
+        <div class="wz-ext-empty" data-ext-empty hidden>{t.noResults}</div>
+      </div>
+    </div>
+
+    <!-- Right: selected order -->
+    <div class="wz-step1-order">
+      <div class="wz-order-head">{t.orderHead}</div>
+      <div class="wz-order-list" data-order-list>
+        {/* populated by wizardController on init */}
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -59,7 +59,24 @@ The orchestrator merges your `sources.yaml` block with `config/extensions/{name}
 cp -r extensions/_template extensions/my_source
 ```
 
-### 2. Fill in the three methods
+### 2. Fill in the metadata
+
+Edit `extensions/my_source/meta.json`.
+
+This file is the source of truth for the Astro-side extension registry used by:
+
+- the setup wizard source picker
+- the setup wizard field forms
+- section titles / subtitles / layout hints in the site
+
+After editing metadata, refresh the generated Astro registry:
+
+```bash
+cd astro
+npm run sync:extension-meta
+```
+
+### 3. Fill in the three methods
 
 Open `extensions/my_source/__init__.py` and implement:
 
@@ -67,7 +84,7 @@ Open `extensions/my_source/__init__.py` and implement:
 - **`process()`** — optional. Call `self.llm` to score or summarise. Respect `dry_run`.
 - **`render()`** — wrap items in a `FeedSection`. No network calls here.
 
-### 3. Register it
+### 4. Register it
 
 In `extensions/__init__.py`:
 
@@ -80,7 +97,7 @@ REGISTRY = [
 ]
 ```
 
-### 4. Add a config block
+### 5. Add a config block
 
 Add it to `config/sources.yaml`:
 
@@ -105,7 +122,7 @@ keywords:
 llm_score_threshold: 7
 ```
 
-### 5. Write a test
+### 6. Write a test
 
 Add `tests/test_my_source.py`. At minimum, test your `fetch()` parsing logic with a fixture — no live network calls needed. See `tests/test_hn_collector.py` for a simple example.
 
@@ -131,6 +148,7 @@ python main.py --dry-run
 ## Built-in extensions
 
 Each extension is a package (`extensions/<name>/`) containing `__init__.py` (the extension class) and usually `README.md` (docs specific to that extension).
+Each built-in extension also has a `meta.json` file that feeds the Astro setup wizard registry.
 
 If your extension needs a custom card layout in the Astro site, add a component under `astro/src/components/` and register it in `SectionBlock.astro`. The default `GenericCard.astro` handles any unknown key automatically.
 
@@ -150,6 +168,7 @@ If your extension needs a custom card layout in the Astro site, add a component 
 Before opening a PR with a new extension:
 
 - [ ] `key` is unique and matches `config/sources.yaml`
+- [ ] `meta.json` exists and `meta.json.key` matches the directory name
 - [ ] `fetch()` makes no LLM calls
 - [ ] `process()` checks `self.config.get("dry_run")` and skips LLM calls if set
 - [ ] `render()` makes no network calls

@@ -1,0 +1,48 @@
+{
+  "key": "github_trending",
+  "title": "Workshops",
+  "subtitle": "GitHub Trending",
+  "icon": "repo",
+  "defaultOrder": 4,
+  "layout": "editorial",
+  "displayName": "GitHub Trending",
+  "displayNameZh": "GitHub 趋势",
+  "description": "Repositories gaining momentum — what the community is building right now.",
+  "descriptionZh": "正在获得关注的仓库——了解社区现在在做什么。",
+  "category": "tech",
+  "locale": "general",
+  "tags": ["github", "trending", "repositories", "open source", "code", "开源", "仓库"],
+  "setupFields": [
+    {
+      "key": "max_repos",
+      "label": "Max repositories",
+      "labelZh": "最多仓库数",
+      "type": "slider",
+      "default": 9,
+      "min": 3,
+      "max": 20,
+      "step": 1
+    },
+    {
+      "key": "programming_language",
+      "label": "Filter by language",
+      "labelZh": "按语言过滤",
+      "type": "select",
+      "default": "",
+      "options": [
+        { "value": "", "label": "All languages" },
+        { "value": "python", "label": "Python" },
+        { "value": "typescript", "label": "TypeScript" },
+        { "value": "javascript", "label": "JavaScript" },
+        { "value": "rust", "label": "Rust" },
+        { "value": "go", "label": "Go" },
+        { "value": "julia", "label": "Julia" },
+        { "value": "cpp", "label": "C++" }
+      ],
+      "hint": "Leave blank to track all languages."
+    }
+  ],
+  "weeklyDefault": true,
+  "monthlyDefault": false,
+  "weeklyTopN": 5
+}

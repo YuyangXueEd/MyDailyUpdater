@@ -4,9 +4,10 @@ _template — starter template for a new Linnet extension.
 Copy the whole extensions/_template/ directory to extensions/my_source/,
 then:
   1. Rename the class below and update key/title/icon.
-  2. Fill in collector.py with your fetch logic.
-  3. Fill in summarizer.py (or delete it if no LLM step is needed).
-  4. Follow extensions/README.md to register and configure.
+  2. Fill in meta.json for the Astro setup wizard and section registry.
+  3. Fill in collector.py with your fetch logic.
+  4. Fill in summarizer.py (or delete it if no LLM step is needed).
+  5. Follow extensions/README.md to register and configure.
 
 Quick reference:
   self.config  — config slice merged from sources.yaml + config/extensions/{name}.yaml

@@ -1,0 +1,41 @@
+{
+  "key": "hacker_news",
+  "title": "The Town Square",
+  "subtitle": "Hacker News",
+  "icon": "flame",
+  "defaultOrder": 3,
+  "layout": "columns-2",
+  "displayName": "Hacker News",
+  "description": "Top stories filtered by score threshold — signal without the scroll.",
+  "descriptionZh": "按分数阈值过滤的热门故事——去除噪音，只留信号。",
+  "category": "tech",
+  "locale": "general",
+  "tags": ["hacker news", "hn", "tech", "startups", "programming", "news", "科技", "新闻"],
+  "setupFields": [
+    {
+      "key": "min_score",
+      "label": "Minimum score",
+      "labelZh": "最低分数",
+      "type": "slider",
+      "default": 100,
+      "min": 20,
+      "max": 500,
+      "step": 10,
+      "hint": "Stories below this score are filtered out.",
+      "hintZh": "低于此分数的故事将被过滤掉。"
+    },
+    {
+      "key": "max_items",
+      "label": "Max stories",
+      "labelZh": "最多故事数",
+      "type": "slider",
+      "default": 10,
+      "min": 3,
+      "max": 25,
+      "step": 1
+    }
+  ],
+  "weeklyDefault": true,
+  "monthlyDefault": false,
+  "weeklyTopN": 5
+}

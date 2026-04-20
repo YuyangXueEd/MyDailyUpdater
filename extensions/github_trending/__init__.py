@@ -14,6 +14,7 @@ class GitHubTrendingExtension(BaseExtension):
         print("Fetching GitHub trending...")
         repos = fetch_github_trending(
             max_repos=self.config.get("max_repos", 15),
+            language=self.config.get("programming_language", ""),
             ai_topics=self.config.get("ai_topics"),
             ai_keywords=self.config.get("ai_keywords"),
             max_topics=self.config.get("max_topics", 5),

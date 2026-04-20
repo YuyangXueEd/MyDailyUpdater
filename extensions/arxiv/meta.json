@@ -1,0 +1,67 @@
+{
+  "key": "arxiv",
+  "title": "From the Archive",
+  "subtitle": "arXiv preprints",
+  "icon": "paper",
+  "defaultOrder": 2,
+  "layout": "editorial",
+  "displayName": "arXiv Papers",
+  "displayNameZh": "arXiv 论文",
+  "description": "Daily preprints ranked by your keyword and author preferences.",
+  "descriptionZh": "每日 arXiv 预印本，按你的关键词和作者偏好排序。",
+  "category": "research",
+  "locale": "general",
+  "tags": ["arxiv", "papers", "research", "academic", "preprint", "ml", "ai", "science", "论文", "学术"],
+  "setupFields": [
+    {
+      "key": "profiles",
+      "label": "Research areas",
+      "labelZh": "研究方向",
+      "type": "multiselect",
+      "hint": "Sets the arXiv categories to monitor.",
+      "hintZh": "设置要监控的 arXiv 分类。",
+      "options": [
+        { "value": "ai_ml", "label": "AI / ML", "description": "cs.LG, cs.AI, stat.ML" },
+        { "value": "nlp", "label": "NLP", "description": "cs.CL" },
+        { "value": "cv", "label": "Computer Vision", "description": "cs.CV" },
+        { "value": "robotics", "label": "Robotics", "description": "cs.RO" },
+        { "value": "medical_ai", "label": "Medical AI", "description": "cs.AI + q-bio" },
+        { "value": "hci", "label": "HCI", "description": "cs.HC" },
+        { "value": "systems", "label": "Systems", "description": "cs.OS, cs.DC, cs.NI" },
+        { "value": "theory", "label": "Theory", "description": "cs.CC, cs.DS, math.CO" }
+      ]
+    },
+    {
+      "key": "keywords",
+      "label": "Keywords",
+      "labelZh": "关键词",
+      "type": "tags",
+      "placeholder": "e.g. diffusion model, RLHF, RAG",
+      "hint": "Papers matching these keywords receive a higher relevance score.",
+      "hintZh": "命中这些关键词的论文会获得更高的相关性分数。"
+    },
+    {
+      "key": "authors",
+      "label": "Favourite authors",
+      "labelZh": "关注作者",
+      "type": "tags",
+      "placeholder": "e.g. Yann LeCun, Ilya Sutskever",
+      "hint": "Papers by these authors are always surfaced.",
+      "hintZh": "这些作者的论文始终会被收录。"
+    },
+    {
+      "key": "max_results",
+      "label": "Max papers per day",
+      "labelZh": "每日最多论文数",
+      "type": "slider",
+      "default": 10,
+      "min": 3,
+      "max": 30,
+      "step": 1
+    }
+  ],
+  "weeklyDefault": true,
+  "monthlyDefault": true,
+  "weeklyTopN": 5,
+  "monthlyTopN": 10
+}

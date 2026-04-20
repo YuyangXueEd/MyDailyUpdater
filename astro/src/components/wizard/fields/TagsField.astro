@@ -1,0 +1,34 @@
+---
+import type { SetupField } from '@/lib/registry';
+
+interface Props {
+  field: SetupField;
+  extKey: string;
+  locale: 'en' | 'zh';
+}
+const { field, extKey, locale } = Astro.props;
+const label = locale === 'zh' ? (field.labelZh ?? field.label) : field.label;
+const hint  = locale === 'zh' ? (field.hintZh  ?? field.hint)  : field.hint;
+const addLabel  = locale === 'zh' ? '添加' : 'Add';
+const emptyText = locale === 'zh' ? '尚未添加任何项目' : 'None added yet';
+const id = `${extKey}-${field.key}`;
+---
+<div class="wz-field wz-field--rich">
+  <div class="wz-field__label">{label}</div>
+  <div class="wz-tags" data-config-for={extKey} data-field={field.key} data-tags="[]">
+    <div class="wz-tags__list" data-tags-list>
+      <span class="wz-tags__empty">{emptyText}</span>
+    </div>
+    <div class="wz-tags__input-row">
+      <input
+        type="text"
+        id={id}
+        placeholder={field.placeholder ?? ''}
+        class="wz-tags__input"
+        autocomplete="off"
+      />
+      <button type="button" class="wz-tags__add" data-tags-add>{addLabel}</button>
+    </div>
+  </div>
+  {hint && <div class="wz-field__hint">{hint}</div>}
+</div>

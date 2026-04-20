@@ -1,0 +1,93 @@
+---
+import type { ExtensionMeta } from '@/lib/registry';
+
+interface Props {
+  extensions: ExtensionMeta[];
+  locale: 'en' | 'zh';
+}
+const { extensions, locale } = Astro.props;
+
+const t = {
+  weeklyHead:  locale === 'zh' ? '周报' : 'Weekly',
+  monthlyHead: locale === 'zh' ? '月报' : 'Monthly',
+  enable:      locale === 'zh' ? '启用' : 'Include',
+  topN:        locale === 'zh' ? '条目数' : 'Top N',
+  desc:        locale === 'zh'
+    ? '选择哪些来源应汇入每周和每月回顾摘要。'
+    : 'Choose which sources roll up into weekly and monthly digests for slower review.',
+};
+---
+
+<div class="wz-step" data-step="3" aria-hidden="true">
+  <p class="wz-step__desc">{t.desc}</p>
+
+  <div class="wz-schedule-table" role="table" aria-label="Schedule preferences">
+    <div class="wz-schedule-table__head" role="row">
+      <div role="columnheader">{locale === 'zh' ? '来源' : 'Source'}</div>
+      <div role="columnheader">{t.weeklyHead}</div>
+      <div role="columnheader">{t.monthlyHead}</div>
+    </div>
+
+    {extensions.map(ext => {
+      const name = locale === 'zh' ? (ext.displayNameZh ?? ext.displayName) : ext.displayName;
+      const weekDefault  = ext.weeklyDefault  ?? false;
+      const monthDefault = ext.monthlyDefault ?? false;
+      const weekTopN     = ext.weeklyTopN  ?? 5;
+      const monthTopN    = ext.monthlyTopN ?? 5;
+      return (
+        <div
+          class="wz-schedule-row"
+          data-schedule-for={ext.key}
+          role="row"
+          hidden
+        >
+          <div class="wz-schedule-row__name" role="cell">{name}</div>
+
+          <div class="wz-schedule-cell" role="cell">
+            <label class="wz-toggle">
+              <input
+                type="checkbox"
+                data-schedule-weekly-enabled={ext.key}
+                checked={weekDefault}
+              />
+              <span class="wz-toggle__label">{t.enable}</span>
+            </label>
+            <div class="wz-schedule-topn">
+              <label for={`weekly-topn-${ext.key}`}>{t.topN}</label>
+              <input
+                type="number"
+                id={`weekly-topn-${ext.key}`}
+                min="1"
+                max="20"
+                value={weekTopN}
+                data-schedule-weekly-topn={ext.key}
+              />
+            </div>
+          </div>
+
+          <div class="wz-schedule-cell" role="cell">
+            <label class="wz-toggle">
+              <input
+                type="checkbox"
+                data-schedule-monthly-enabled={ext.key}
+                checked={monthDefault}
+              />
+              <span class="wz-toggle__label">{t.enable}</span>
+            </label>
+            <div class="wz-schedule-topn">
+              <label for={`monthly-topn-${ext.key}`}>{t.topN}</label>
+              <input
+                type="number"
+                id={`monthly-topn-${ext.key}`}
+                min="1"
+                max="30"
+                value={monthTopN}
+                data-schedule-monthly-topn={ext.key}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>

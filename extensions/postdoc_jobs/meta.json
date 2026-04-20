@@ -1,0 +1,42 @@
+{
+  "key": "postdoc_jobs",
+  "title": "Postings",
+  "subtitle": "Academic positions",
+  "icon": "post",
+  "defaultOrder": 5,
+  "layout": "stack",
+  "displayName": "Academic Jobs",
+  "displayNameZh": "学术职位",
+  "description": "Postdoc and faculty postings surfaced automatically from job boards.",
+  "descriptionZh": "自动从招聘板块抓取的博后和教职职位。",
+  "category": "career",
+  "locale": "general",
+  "tags": ["jobs", "postdoc", "faculty", "academic", "career", "hiring", "职位", "招聘", "博后"],
+  "setupFields": [
+    {
+      "key": "keywords",
+      "label": "Search terms",
+      "labelZh": "搜索词",
+      "type": "tags",
+      "placeholder": "e.g. machine learning, neuroscience",
+      "hint": "Job titles or subject areas to match.",
+      "hintZh": "要匹配的职位名称或研究领域。"
+    },
+    {
+      "key": "llm_score_threshold",
+      "label": "Relevance threshold",
+      "labelZh": "相关性阈值",
+      "type": "slider",
+      "default": 7,
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "hint": "Jobs below this LLM score are filtered out.",
+      "hintZh": "低于这个 LLM 评分的职位会被过滤掉。"
+    }
+  ],
+  "weeklyDefault": true,
+  "monthlyDefault": true,
+  "weeklyTopN": 3,
+  "monthlyTopN": 5
+}

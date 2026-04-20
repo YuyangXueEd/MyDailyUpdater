@@ -29,3 +29,13 @@ jobs:
 
       - name: Test (pytest)
         run: PYTHONPATH=. pytest tests/ -q
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: astro/package-lock.json
+
+      - name: Frontend tests
+        run: npm test
+        working-directory: astro
