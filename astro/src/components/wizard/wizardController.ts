@@ -764,6 +764,9 @@ export function initWizard(): void {
   const deployPreviewEl = qs<HTMLElement>('[data-deploy-preview]', shell);
   const deployStatusEl = qs<HTMLElement>('[data-deploy-status]', shell);
   const deploySuccessEl = qs<HTMLElement>('[data-deploy-success]', shell);
+  const deploySiteTipEl = qs<HTMLElement>('[data-deploy-site-tip]', shell);
+  const deploySiteUrlEl = qs<HTMLAnchorElement>('[data-deploy-site-url]', shell);
+  const deployRepoHomeEl = qs<HTMLAnchorElement>('[data-deploy-repo-home]', shell);
   const modeButtons = qsa<HTMLButtonElement>('[data-setup-mode-btn]', shell);
   const modePanels = qsa<HTMLElement>('[data-setup-mode-panel]', shell);
   const connectBtn = qs<HTMLButtonElement>('[data-github-connect-btn]', shell);
@@ -819,6 +822,21 @@ export function initWizard(): void {
     if (scroll) scrollToProgressAnchor();
   }
 
+  function buildDefaultPagesUrl(owner: string, repo: string): string {
+    const isUserSiteRepo = repo.toLowerCase() === `${owner.toLowerCase()}.github.io`;
+    return `https://${owner}.github.io${isUserSiteRepo ? '/' : `/${repo}/`}`;
+  }
+
+  function renderDeploySuccessLinks(owner: string, repo: string, repoHtmlUrl: string): void {
+    const pagesUrl = buildDefaultPagesUrl(owner, repo);
+    if (deploySiteUrlEl) {
+      deploySiteUrlEl.href = pagesUrl;
+      deploySiteUrlEl.textContent = pagesUrl;
+    }
+    if (deployRepoHomeEl) deployRepoHomeEl.href = repoHtmlUrl;
+    if (deploySiteTipEl) deploySiteTipEl.hidden = false;
+  }
+
   function setDeployStatus(kind: 'info' | 'warn' | 'success', message: string): void {
     if (!deployStatusEl) return;
     deployStatusEl.hidden = false;
@@ -833,6 +851,12 @@ export function initWizard(): void {
       deployStatusEl.className = 'wz-notice wz-notice--info';
     }
     if (deploySuccessEl) deploySuccessEl.hidden = true;
+    if (deploySiteTipEl) deploySiteTipEl.hidden = true;
+    if (deploySiteUrlEl) {
+      deploySiteUrlEl.removeAttribute('href');
+      deploySiteUrlEl.textContent = '';
+    }
+    if (deployRepoHomeEl) deployRepoHomeEl.removeAttribute('href');
   }
 
   function setAuthStatus(kind: 'info' | 'warn' | 'success', message: string): void {
@@ -1687,6 +1711,7 @@ export function initWizard(): void {
       }
 
       if (deploySuccessEl) deploySuccessEl.hidden = false;
+      renderDeploySuccessLinks(repo.owner, repo.repo, result.htmlUrl);
       const autoEnableFailed = autoEnableFailures.length > 0;
       const statusKind = triggerSucceeded && !autoEnableFailed ? 'success' : 'warn';
       let statusMessage = '';
@@ -1743,6 +1768,42 @@ export function initWizard(): void {
 
 function initGeocodeAutocomplete(shell: HTMLElement): void {
   const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search';
+  const TIMEZONE_COUNTRY_CODES: Record<string, string> = {
+    'Africa/Cairo': 'EG',
+    'America/Chicago': 'US',
+    'America/Denver': 'US',
+    'America/Indiana/Indianapolis': 'US',
+    'America/Los_Angeles': 'US',
+    'America/New_York': 'US',
+    'America/Toronto': 'CA',
+    'America/Vancouver': 'CA',
+    'Asia/Hong_Kong': 'HK',
+    'Asia/Kolkata': 'IN',
+    'Asia/Seoul': 'KR',
+    'Asia/Shanghai': 'CN',
+    'Asia/Singapore': 'SG',
+    'Asia/Taipei': 'TW',
+    'Asia/Tokyo': 'JP',
+    'Australia/Sydney': 'AU',
+    'Europe/Amsterdam': 'NL',
+    'Europe/Berlin': 'DE',
+    'Europe/Brussels': 'BE',
+    'Europe/Copenhagen': 'DK',
+    'Europe/Dublin': 'IE',
+    'Europe/Helsinki': 'FI',
+    'Europe/Lisbon': 'PT',
+    'Europe/London': 'GB',
+    'Europe/Madrid': 'ES',
+    'Europe/Oslo': 'NO',
+    'Europe/Paris': 'FR',
+    'Europe/Prague': 'CZ',
+    'Europe/Rome': 'IT',
+    'Europe/Stockholm': 'SE',
+    'Europe/Vienna': 'AT',
+    'Europe/Warsaw': 'PL',
+    'Europe/Zurich': 'CH',
+    'Pacific/Auckland': 'NZ',
+  };
 
   function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number): T {
     let timer: ReturnType<typeof setTimeout>;
@@ -1752,14 +1813,42 @@ function initGeocodeAutocomplete(shell: HTMLElement): void {
     }) as T;
   }
 
-  async function fetchSuggestions(query: string, datalist: HTMLDataListElement): Promise<void> {
+  function inferCountryCodeFromTimezone(timezone: string | null | undefined): string | null {
+    if (!timezone || timezone === 'auto') return null;
+    return TIMEZONE_COUNTRY_CODES[timezone] ?? null;
+  }
+
+  async function fetchGeocodeResults(
+    query: string,
+    language: string,
+    countryCode: string | null,
+  ): Promise<Array<{ name: string; admin1?: string; country?: string }>> {
+    const params = new URLSearchParams({
+      name: query,
+      count: '5',
+      language,
+      format: 'json',
+    });
+    if (countryCode) params.set('countryCode', countryCode);
+
+    const res = await fetch(`${GEOCODING_URL}?${params.toString()}`);
+    if (!res.ok) return [];
+    const data = await res.json() as { results?: Array<{ name: string; admin1?: string; country?: string }> };
+    return data.results ?? [];
+  }
+
+  async function fetchSuggestions(
+    query: string,
+    datalist: HTMLDataListElement,
+    countryCode: string | null,
+  ): Promise<void> {
     if (query.length < 2) { datalist.innerHTML = ''; return; }
     try {
       const lang = qs<HTMLSelectElement>('[data-global-language]', shell)?.value ?? 'en';
-      const res = await fetch(`${GEOCODING_URL}?name=${encodeURIComponent(query)}&count=5&language=${lang}&format=json`);
-      if (!res.ok) return;
-      const data = await res.json() as { results?: Array<{ name: string; admin1?: string; country?: string }> };
-      const results = data.results ?? [];
+      let results = await fetchGeocodeResults(query, lang, countryCode);
+      if (!results.length && countryCode) {
+        results = await fetchGeocodeResults(query, lang, null);
+      }
       datalist.innerHTML = results.map(r => {
         const parts = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
         return `<option value="${r.name}">${parts}</option>`;
@@ -1773,8 +1862,15 @@ function initGeocodeAutocomplete(shell: HTMLElement): void {
   for (const input of inputs) {
     const datalist = input.list as HTMLDataListElement | null;
     if (!datalist) continue;
+    const extKey = input.dataset['configFor'] ?? '';
+    const timezoneField = extKey
+      ? qs<HTMLSelectElement>(`[data-config-for="${extKey}"][data-field="timezone"]`, shell)
+      : null;
     const debouncedFetch = debounce(
-      (...args: unknown[]) => void fetchSuggestions(args[0] as string, datalist),
+      (...args: unknown[]) => {
+        const countryCode = inferCountryCodeFromTimezone(timezoneField?.value);
+        void fetchSuggestions(args[0] as string, datalist, countryCode);
+      },
       300,
     );
     input.addEventListener('input', () => debouncedFetch(input.value.trim()));

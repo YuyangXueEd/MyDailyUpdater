@@ -36,6 +36,43 @@ WEATHER_CODES = {
     99: "Thunderstorm with heavy hail",
 }
 
+TIMEZONE_COUNTRY_CODES = {
+    "Africa/Cairo": "EG",
+    "America/Chicago": "US",
+    "America/Denver": "US",
+    "America/Indiana/Indianapolis": "US",
+    "America/Los_Angeles": "US",
+    "America/New_York": "US",
+    "America/Toronto": "CA",
+    "America/Vancouver": "CA",
+    "Asia/Hong_Kong": "HK",
+    "Asia/Kolkata": "IN",
+    "Asia/Seoul": "KR",
+    "Asia/Shanghai": "CN",
+    "Asia/Singapore": "SG",
+    "Asia/Taipei": "TW",
+    "Asia/Tokyo": "JP",
+    "Australia/Sydney": "AU",
+    "Europe/Amsterdam": "NL",
+    "Europe/Berlin": "DE",
+    "Europe/Brussels": "BE",
+    "Europe/Copenhagen": "DK",
+    "Europe/Dublin": "IE",
+    "Europe/Helsinki": "FI",
+    "Europe/Lisbon": "PT",
+    "Europe/London": "GB",
+    "Europe/Madrid": "ES",
+    "Europe/Oslo": "NO",
+    "Europe/Paris": "FR",
+    "Europe/Prague": "CZ",
+    "Europe/Rome": "IT",
+    "Europe/Stockholm": "SE",
+    "Europe/Vienna": "AT",
+    "Europe/Warsaw": "PL",
+    "Europe/Zurich": "CH",
+    "Pacific/Auckland": "NZ",
+}
+
 
 def describe_weather_code(code: int | None) -> str:
     if code is None:
@@ -46,6 +83,32 @@ def describe_weather_code(code: int | None) -> str:
 def _location_label(result: dict) -> str:
     parts = [result.get("name"), result.get("admin1"), result.get("country")]
     return ", ".join(part for part in parts if part)
+
+
+def infer_country_code_from_timezone(timezone: str | None) -> str | None:
+    if not timezone or timezone == "auto":
+        return None
+    return TIMEZONE_COUNTRY_CODES.get(timezone)
+
+
+def _geocode_city(
+    client: httpx.Client,
+    city: str,
+    language: str,
+    country_code: str | None = None,
+) -> list[dict]:
+    params = {
+        "name": city,
+        "count": 1,
+        "language": language,
+        "format": "json",
+    }
+    if country_code:
+        params["countryCode"] = country_code
+
+    geo_resp = client.get(GEOCODING_URL, params=params)
+    geo_resp.raise_for_status()
+    return geo_resp.json().get("results") or []
 
 
 def fetch_today_weather(
@@ -60,17 +123,20 @@ def fetch_today_weather(
 
     try:
         with httpx.Client(timeout=request_timeout, follow_redirects=True) as client:
-            geo_resp = client.get(
-                GEOCODING_URL,
-                params={
-                    "name": city,
-                    "count": 1,
-                    "language": language,
-                    "format": "json",
-                },
+            country_code = infer_country_code_from_timezone(timezone)
+            results = _geocode_city(
+                client=client,
+                city=city,
+                language=language,
+                country_code=country_code,
             )
-            geo_resp.raise_for_status()
-            results = geo_resp.json().get("results") or []
+            if not results and country_code:
+                results = _geocode_city(
+                    client=client,
+                    city=city,
+                    language=language,
+                    country_code=None,
+                )
             if not results:
                 print(f"  Weather: no city matched {city!r}")
                 return []

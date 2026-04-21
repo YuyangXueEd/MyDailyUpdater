@@ -130,6 +130,8 @@ Open **Actions → Daily Digest → Run workflow**.
 
 Your site should be live a few minutes later.
 
+Optional but worth doing: add that site URL to the repository's **About -> Website** field so visitors can open your digest directly from the GitHub repo header.
+
 ---
 
 ## Config mental model

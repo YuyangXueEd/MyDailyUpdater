@@ -111,6 +111,8 @@ You need to manually trigger **two** workflows in order:
 
 Once both are green, your site is live at `https://<your-username>.github.io/<repo-name>/`.
 
+Optional but recommended: paste that URL into the repository's **About -> Website** field so the site link also appears on the GitHub repo home page.
+
 ---
 
 ## Turn sources on and off

@@ -110,6 +110,8 @@ export OPENAI_API_KEY=sk-...
 
 全部完成后，打开 `https://<你的用户名>.github.io/<仓库名>/` 就能看到你的站点。
 
+可选但很推荐：把这个地址填到仓库主页的 **About -> Website** 里，这样 GitHub 仓库首页也会直接显示站点入口。
+
 ---
 
 ## 开关各个数据源（sources）

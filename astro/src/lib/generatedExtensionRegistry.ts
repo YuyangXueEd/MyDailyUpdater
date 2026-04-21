@@ -136,8 +136,8 @@ export const GENERATED_EXTENSION_REGISTRY = {
         "type": "text",
         "required": true,
         "placeholder": "Edinburgh",
-        "hint": "City name passed to the weather API.",
-        "hintZh": "传给天气 API 的城市名称。",
+        "hint": "City name passed to the weather API. The selected timezone helps disambiguate places like London or Edinburgh.",
+        "hintZh": "传给天气 API 的城市名称。所选时区会帮助区分 London、Edinburgh 这类重名城市。",
         "autocomplete": "geocode"
       },
       {

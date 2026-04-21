@@ -47,6 +47,11 @@ const t = {
   deployBtn:  locale === 'zh' ? '部署到 GitHub' : 'Deploy to GitHub',
   revoke:     locale === 'zh' ? '部署完成后，这个连接 token 仍会保留在当前浏览器会话中；如果是共享设备，记得断开连接。也可以现在直接去 GitHub 撤销它：' : 'After deploy, the connected token stays in this browser session only. Disconnect it if you are on a shared device. You can also revoke it on GitHub now:',
   revokeLinkLabel: locale === 'zh' ? '打开 token 设置' : 'Open token settings',
+  siteUrlLabel: locale === 'zh' ? '默认 GitHub Pages 地址：' : 'Default GitHub Pages URL:',
+  siteUrlHint: locale === 'zh'
+    ? '可选但推荐：站点上线后，把这个地址填到仓库主页的 About -> Website 里，这样 GitHub 上会直接显示站点入口。'
+    : 'Optional but recommended: once the site is live, paste this URL into the repository\'s About -> Website field so GitHub shows the homepage link.',
+  repoHomeLabel: locale === 'zh' ? '打开仓库主页' : 'Open repository home',
 };
 ---
 
@@ -120,6 +125,16 @@ const t = {
         {t.revoke}{' '}
         <a href={revokeLink} target="_blank" rel="noopener">{t.revokeLinkLabel}</a>
       </div>
+      <div data-deploy-site-tip hidden style="margin-top:12px">
+        <div>
+          {t.siteUrlLabel}{' '}
+          <a data-deploy-site-url href="#" target="_blank" rel="noopener"></a>
+        </div>
+        <div>
+          {t.siteUrlHint}{' '}
+          <a data-deploy-repo-home href="#" target="_blank" rel="noopener">{t.repoHomeLabel}</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -146,6 +161,7 @@ const t = {
       <li>{locale === 'zh' ? '如果你没有打开上面的自动启用开关，请自己在目标仓库里启用 GitHub Actions / workflows；fork 先在 Actions 标签页里点击确认。' : 'If you left the auto-enable switch off, enable GitHub Actions / workflows yourself in the target repository; forks need the Actions-tab confirmation first.'}</li>
       <li>{locale === 'zh' ? '如果你打开了自动启用开关但仍然收到警告，请检查 PAT 是否包含 Administration: write，或确认仓库 / 组织策略没有阻止 Actions。' : 'If you turned auto-enable on but still got a warning, check whether the PAT includes Administration: write or whether repo / org policy is blocking Actions.'}</li>
       <li>{locale === 'zh' ? '如果自动触发没有成功，再前往 Actions 手动运行一次 Daily Digest 以确认配置正常。' : 'If the auto-trigger did not start successfully, go to Actions and run Daily Digest manually to confirm the setup.'}</li>
+      <li>{locale === 'zh' ? '等 GitHub Pages 上线后，可选地把站点地址填到仓库主页的 About -> Website 里，方便在 GitHub 上直接看到入口。' : 'Once GitHub Pages is live, optionally add your site URL to the repository\'s About -> Website field so the homepage link appears on GitHub.'}</li>
       <li>{locale === 'zh' ? '如果在共享设备上操作，部署完成后请断开 GitHub 连接。' : 'If you are on a shared device, disconnect GitHub after the deploy finishes.'}</li>
     </ol>
   </div>
@@ -163,6 +179,7 @@ const t = {
       <li>{t.manual3sl}</li>
       <li>{t.manual4}</li>
       <li>{t.manual5}</li>
+      <li>{locale === 'zh' ? '等 GitHub Pages 上线后，可选地把站点地址填到仓库主页的 About -> Website 里，方便在 GitHub 上直接看到入口。' : 'Once GitHub Pages is live, optionally add your site URL to the repository\'s About -> Website field so the homepage link appears on GitHub.'}</li>
     </ol>
   </div>
 
