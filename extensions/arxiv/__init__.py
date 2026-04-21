@@ -91,6 +91,8 @@ class ArxivExtension(BaseExtension):
             scoring_model,
             threshold,
             prompt_template=prompts.get("arxiv_score"),
+            categories=self.config.get("categories"),
+            must_include=self.config.get("must_include"),
         )
         self._scored_count = len(scored)
         print(f"  After LLM filter: {self._scored_count}")

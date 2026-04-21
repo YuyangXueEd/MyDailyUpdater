@@ -1,6 +1,7 @@
 ---
 import type { ExtensionMeta } from '@/lib/registry';
 import { ARXIV_PROFILES } from '@/lib/arxivProfiles';
+import { ARXIV_CATEGORIES } from '@/lib/arxivCategories';
 import TextField     from './fields/TextField.astro';
 import SliderField   from './fields/SliderField.astro';
 import SelectField   from './fields/SelectField.astro';
@@ -135,11 +136,16 @@ const categoryLabels = {
                       <span class="wz-tags__empty">{t.noTag}</span>
                     </div>
                     <div class="wz-tags__input-row">
-                      <input type="text" placeholder="e.g. cs.CV" class="wz-tags__input" autocomplete="off" />
+                      <input type="text" placeholder="e.g. cs.CV" class="wz-tags__input" list="arxiv-cats-datalist" autocomplete="off" />
                       <button type="button" class="wz-tags__add" data-tags-add>{t.addTag}</button>
                     </div>
                   </div>
                 </div>
+                <datalist id="arxiv-cats-datalist">
+                  {ARXIV_CATEGORIES.map(cat => (
+                    <option value={cat.id}>{cat.id} — {cat.name} ({cat.group})</option>
+                  ))}
+                </datalist>
 
                 <div class="wz-field wz-field--rich">
                   <div class="wz-field__label">{t.customBoosts}</div>

@@ -4,21 +4,45 @@ from typing import Any
 
 from pipeline.utils import call_llm_scoring, parse_score
 
-# Default scoring prompt. Users can override the full prompt via
-# sources.yaml → llm.prompts.arxiv_score.
+# Fallback prompt used when no categories/keywords are configured.
+# Users can override the full prompt via sources.yaml → llm.prompts.arxiv_score.
 # Available placeholders: {title}, {abstract}
-_DEFAULT_SCORE_PROMPT = (
-    "Rate this arxiv paper's relevance to: Computer Vision, Medical Imaging "
-    "(MRI/CT/ultrasound/pathology/fundus), LLMs, Vision-Language Models, "
-    "Diffusion Models, Foundation Models.\n\n"
+_GENERIC_SCORE_PROMPT = (
+    "Rate this arXiv paper's relevance to the user's configured research area.\n\n"
     "Title: {title}\n"
     "Abstract: {abstract}\n\n"
     "Reply with ONLY a single integer 0-10. No explanation."
 )
 
 
-def _build_paper_prompt(paper: dict, prompt_template: str | None = None) -> str:
-    template = prompt_template or _DEFAULT_SCORE_PROMPT
+def _build_default_prompt(categories: list[str], must_include: list[str]) -> str:
+    """Build a scoring prompt from arxiv.yaml config so any research domain works."""
+    parts: list[str] = []
+    if categories:
+        parts.append(f"arXiv categories: {', '.join(categories)}")
+    if must_include:
+        parts.append(f"key topics: {', '.join(must_include)}")
+    if not parts:
+        return _GENERIC_SCORE_PROMPT
+    domain = "; ".join(parts)
+    return (
+        f"Rate this arXiv paper's relevance to a researcher interested in {domain}.\n\n"
+        "Title: {title}\n"
+        "Abstract: {abstract}\n\n"
+        "Reply with ONLY a single integer 0-10. No explanation."
+    )
+
+
+def _build_paper_prompt(
+    paper: dict,
+    prompt_template: str | None = None,
+    categories: list[str] | None = None,
+    must_include: list[str] | None = None,
+) -> str:
+    if prompt_template:
+        template = prompt_template
+    else:
+        template = _build_default_prompt(categories or [], must_include or [])
     return template.format(
         title=paper["title"],
         abstract=paper["abstract"][:600],
@@ -34,8 +58,17 @@ def parse_batch_scores(text: str, expected: int) -> list[float]:
     return [score] + [0.0] * (expected - 1)
 
 
-def _score_paper(paper: dict, client: Any, model: str, prompt_template: str | None = None) -> dict:
-    raw = call_llm_scoring(client, model, _build_paper_prompt(paper, prompt_template))
+def _score_paper(
+    paper: dict,
+    client: Any,
+    model: str,
+    prompt_template: str | None = None,
+    categories: list[str] | None = None,
+    must_include: list[str] | None = None,
+) -> dict:
+    raw = call_llm_scoring(
+        client, model, _build_paper_prompt(paper, prompt_template, categories, must_include)
+    )
     paper["score"] = parse_score(raw)
     return paper
 
@@ -46,6 +79,8 @@ def score_papers(
     model: str,
     threshold: float,
     prompt_template: str | None = None,
+    categories: list[str] | None = None,
+    must_include: list[str] | None = None,
 ) -> list[dict]:
     """Score papers sequentially to avoid rate limiting."""
     if not papers:
@@ -54,7 +89,7 @@ def score_papers(
     results: list[dict] = []
     for p in papers:
         try:
-            results.append(_score_paper(p, client, model, prompt_template))
+            results.append(_score_paper(p, client, model, prompt_template, categories, must_include))
         except Exception as e:
             p["score"] = 0.0
             results.append(p)

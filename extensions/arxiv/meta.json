@@ -28,7 +28,14 @@
         { "value": "medical_ai", "label": "Medical AI", "description": "cs.AI + q-bio" },
         { "value": "hci", "label": "HCI", "description": "cs.HC" },
         { "value": "systems", "label": "Systems", "description": "cs.OS, cs.DC, cs.NI" },
-        { "value": "theory", "label": "Theory", "description": "cs.CC, cs.DS, math.CO" }
+        { "value": "theory", "label": "Theory", "description": "cs.CC, cs.DS, math.CO" },
+        { "value": "physics", "label": "Physics", "description": "physics, cond-mat, quant-ph, hep-th" },
+        { "value": "chemistry", "label": "Chemistry", "description": "physics.chem-ph, cond-mat.mtrl-sci" },
+        { "value": "biology", "label": "Biology / Bioinformatics", "description": "q-bio, cs.LG + biology" },
+        { "value": "mathematics", "label": "Mathematics", "description": "math.AG, math.NT, math.PR, math.AP" },
+        { "value": "astrophysics", "label": "Astrophysics / Space", "description": "astro-ph, gr-qc" },
+        { "value": "economics", "label": "Economics / Finance", "description": "econ, q-fin" },
+        { "value": "neuroscience", "label": "Neuroscience", "description": "q-bio.NC, cs.NE" }
       ]
     },
     {
