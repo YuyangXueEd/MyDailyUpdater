@@ -24,6 +24,12 @@ docs/daily/
 docs/weekly/
 docs/monthly/
 
+# Generated feed data — forks start fresh; data accumulates from first CI run
+docs/data/daily/*.json
+docs/data/weekly/*.json
+docs/data/monthly/*.json
+docs/data/supervisor_hashes.json
+
 # Editor & OS
 .DS_Store
 .idea/
