@@ -29,10 +29,10 @@ const langHref   = isZh
 const langLabel  = isZh ? 'EN' : '中';
 ---
 
-<nav class="navbar">
+<nav class:list={['navbar', { 'navbar--zh': isZh }]}>
   <div class="navbar-inner page-wrap">
     <a href={homeHref} class="navbar-brand" aria-label="Linnet home">
-      <img src={`${base}/favicon.svg`} class="navbar-logo" alt="Linnet bird logo" width="28" height="28" />
+      <img src={`${base}/favicon.svg`} class="navbar-logo" alt="Linnet bird logo" width="36" height="36" />
       <span class="navbar-name" lang="en">Linnet</span>
     </a>
 
@@ -110,8 +110,8 @@ btn?.addEventListener('click', () => {
 }
 
 .navbar-logo {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -124,7 +124,7 @@ btn?.addEventListener('click', () => {
 .navbar-name {
   /* Explicit stack prevents CJK browser substitution when lang="zh-CN" */
   font-family: "Fraunces", "Charter", Georgia, ui-serif;
-  font-size: 1.375rem;
+  font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--ink);
@@ -138,9 +138,9 @@ btn?.addEventListener('click', () => {
 }
 
 .navbar-link {
-  padding: 5px 12px;
+  padding: 6px 12px;
   font-family: var(--font-mono);
-  font-size: 0.69rem;
+  font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -159,6 +159,19 @@ btn?.addEventListener('click', () => {
   color: var(--accent);
   font-weight: 700;
   border-bottom-color: var(--accent);
+}
+
+/* Chinese labels need a larger size and no uppercase/letter-spacing */
+.navbar--zh .navbar-link {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  padding: 6px 14px;
+}
+
+.navbar--zh .navbar-lang-btn {
+  font-size: 0.8rem;
 }
 
 .navbar-controls {
@@ -207,7 +220,9 @@ btn?.addEventListener('click', () => {
 [data-theme="dark"] .theme-icon-moon { display: none; }
 
 @media (max-width: 480px) {
-  .navbar-link { padding: 5px 8px; font-size: 0.65rem; }
-  .navbar-name { font-size: 1.1rem; }
+  .navbar-link { padding: 5px 8px; font-size: 0.76rem; }
+  .navbar--zh .navbar-link { font-size: 0.92rem; padding: 5px 10px; }
+  .navbar-name { font-size: 1.2rem; }
+  .navbar-logo { width: 30px; height: 30px; }
 }
 </style>
