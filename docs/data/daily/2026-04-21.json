@@ -1,6 +1,6 @@
 {
   "date": "2026-04-21",
-  "generated_at": "2026-04-21T06:15:06.454626+00:00",
+  "generated_at": "2026-04-21T07:47:56.411055+00:00",
   "sections_ordered": [
     {
       "key": "quote_of_day",
@@ -28,14 +28,14 @@
           "longitude": -0.12574,
           "timezone": "Europe/London",
           "forecast_date": "2026-04-21",
-          "condition": "Mainly clear",
-          "weather_code": 1,
-          "temperature_c": 7.4,
-          "apparent_temperature_c": 3.7,
+          "condition": "Overcast",
+          "weather_code": 3,
+          "temperature_c": 8.7,
+          "apparent_temperature_c": 4.6,
           "temp_max_c": 13.1,
-          "temp_min_c": 6.6,
-          "humidity_pct": 77,
-          "wind_speed_kmh": 15.5,
+          "temp_min_c": 6.5,
+          "humidity_pct": 64,
+          "wind_speed_kmh": 15.8,
           "precipitation_probability_pct": 0,
           "is_day": true,
           "sunrise": "2026-04-21T05:51",
@@ -72,7 +72,7 @@
           "id": 47831621,
           "title": "GitHub's fake star economy",
           "url": "https://awesomeagents.ai/news/github-fake-stars-investigation/",
-          "score": 760,
+          "score": 767,
           "created_at": "2026-04-20T08:26:52Z",
           "comments_url": "https://news.ycombinator.com/item?id=47831621",
           "summary": "Story: summary generation failed."
@@ -81,7 +81,7 @@
           "id": 47834565,
           "title": "Qwen3.6-Max-Preview: Smarter, Sharper, Still Evolving",
           "url": "https://qwen.ai/blog?id=qwen3.6-max-preview",
-          "score": 591,
+          "score": 612,
           "created_at": "2026-04-20T14:05:34Z",
           "comments_url": "https://news.ycombinator.com/item?id=47834565",
           "summary": "Story: summary generation failed."
@@ -90,7 +90,7 @@
           "id": 47833247,
           "title": "Atlassian enables default data collection to train AI",
           "url": "https://letsdatascience.com/news/atlassian-enables-default-data-collection-to-train-ai-f71343d8",
-          "score": 547,
+          "score": 563,
           "created_at": "2026-04-20T12:23:39Z",
           "comments_url": "https://news.ycombinator.com/item?id=47833247",
           "summary": "Story: summary generation failed."
@@ -99,7 +99,7 @@
           "id": 47839951,
           "title": "AI Resistance: some recent anti-AI stuff that’s worth discussing",
           "url": "https://stephvee.ca/blog/artificial%20intelligence/ai-resistance-is-growing/",
-          "score": 346,
+          "score": 354,
           "created_at": "2026-04-20T20:19:13Z",
           "comments_url": "https://news.ycombinator.com/item?id=47839951",
           "summary": "Story: summary generation failed."
@@ -108,7 +108,7 @@
           "id": 47835928,
           "title": "Deezer says 44% of songs uploaded to its platform daily are AI-generated",
           "url": "https://techcrunch.com/2026/04/20/deezer-says-44-of-songs-uploaded-to-its-platform-daily-are-ai-generated/",
-          "score": 333,
+          "score": 338,
           "created_at": "2026-04-20T15:41:02Z",
           "comments_url": "https://news.ycombinator.com/item?id=47835928",
           "summary": "Story: summary generation failed."
@@ -117,7 +117,7 @@
           "id": 47831437,
           "title": "OpenClaw isn't fooling me. I remember MS-DOS",
           "url": "https://www.flyingpenguin.com/build-an-openclaw-free-secure-always-on-local-ai-agent/",
-          "score": 284,
+          "score": 285,
           "created_at": "2026-04-20T07:49:48Z",
           "comments_url": "https://news.ycombinator.com/item?id=47831437",
           "summary": "Story: summary generation failed."
@@ -126,7 +126,7 @@
           "id": 47835646,
           "title": "I prompted ChatGPT, Claude, Perplexity, and Gemini and watched my Nginx logs",
           "url": "https://surfacedby.com/blog/nginx-logs-ai-traffic-vs-referral-traffic",
-          "score": 129,
+          "score": 130,
           "created_at": "2026-04-20T15:22:01Z",
           "comments_url": "https://news.ycombinator.com/item?id=47835646",
           "summary": "Story: summary generation failed."
@@ -135,14 +135,32 @@
           "id": 47842021,
           "title": "Even 'uncensored' models can't say what they want",
           "url": "https://morgin.ai/articles/even-uncensored-models-cant-say-what-they-want.html",
-          "score": 126,
+          "score": 128,
           "created_at": "2026-04-20T22:43:29Z",
           "comments_url": "https://news.ycombinator.com/item?id=47842021",
+          "summary": "Story: summary generation failed."
+        },
+        {
+          "id": 47844269,
+          "title": "Anthropic says OpenClaw-style Claude CLI usage is allowed again",
+          "url": "https://docs.openclaw.ai/providers/anthropic",
+          "score": 126,
+          "created_at": "2026-04-21T03:43:03Z",
+          "comments_url": "https://news.ycombinator.com/item?id=47844269",
+          "summary": "Story: summary generation failed."
+        },
+        {
+          "id": 47844431,
+          "title": "A Roblox cheat and one AI tool brought down Vercel's platform",
+          "url": "https://webmatrices.com/post/how-a-roblox-cheat-and-one-ai-tool-brought-down-vercel-s-entire-platform",
+          "score": 118,
+          "created_at": "2026-04-21T04:12:12Z",
+          "comments_url": "https://news.ycombinator.com/item?id=47844431",
           "summary": "Story: summary generation failed."
         }
       ],
       "meta": {
-        "count": 8
+        "count": 10
       }
     },
     {
@@ -156,7 +174,7 @@
           "url": "https://github.com/Fincept-Corporation/FinceptTerminal",
           "description": "FinceptTerminal is a modern finance application offering advanced market analytics, investment research, and economic data tools, designed for interactive exploration and data-driven decision-making in a user-friendly environment.",
           "stars_today": 3109,
-          "total_stars": 10162,
+          "total_stars": 10379,
           "language": "Python",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -166,7 +184,7 @@
           "url": "https://github.com/ruvnet/RuView",
           "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
           "stars_today": 713,
-          "total_stars": 48429,
+          "total_stars": 48498,
           "language": "Rust",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -176,7 +194,7 @@
           "url": "https://github.com/thunderbird/thunderbolt",
           "description": "AI You Control: Choose your models. Own your data. Eliminate vendor lock-in.",
           "stars_today": 675,
-          "total_stars": 2953,
+          "total_stars": 2999,
           "language": "TypeScript",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -186,7 +204,7 @@
           "url": "https://github.com/paperless-ngx/paperless-ngx",
           "description": "A community-supported supercharged document management system: scan, index and archive all your documents",
           "stars_today": 606,
-          "total_stars": 39537,
+          "total_stars": 39572,
           "language": "Python",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -196,7 +214,7 @@
           "url": "https://github.com/tractorjuice/arc-kit",
           "description": "Enterprise Architecture Governance & Vendor Procurement Toolkit",
           "stars_today": 329,
-          "total_stars": 1407,
+          "total_stars": 1441,
           "language": "HTML",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -206,7 +224,7 @@
           "url": "https://github.com/koala73/worldmonitor",
           "description": "Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitoring, and infrastructure tracking in a unified situational awareness interface",
           "stars_today": 316,
-          "total_stars": 50447,
+          "total_stars": 50542,
           "language": "TypeScript",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -216,7 +234,7 @@
           "url": "https://github.com/openai/openai-agents-python",
           "description": "A lightweight, powerful framework for multi-agent workflows",
           "stars_today": 905,
-          "total_stars": 24112,
+          "total_stars": 24161,
           "language": "Python",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -226,7 +244,7 @@
           "url": "https://github.com/deepseek-ai/DeepGEMM",
           "description": "DeepGEMM: clean and efficient FP8 GEMM kernels with fine-grained scaling",
           "stars_today": 109,
-          "total_stars": 6882,
+          "total_stars": 6894,
           "language": "Cuda",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -236,7 +254,7 @@
           "url": "https://github.com/pi-hole/pi-hole",
           "description": "A black hole for Internet advertisements",
           "stars_today": 196,
-          "total_stars": 57377,
+          "total_stars": 57437,
           "language": "Shell",
           "topics": [],
           "summary": "Repo: summary generation failed."
@@ -254,7 +272,7 @@
     "llm_model": "google/gemini-2.5-flash-lite-preview-09-2025",
     "scoring_model": "google/gemini-2.5-flash-lite-preview-09-2025",
     "summarization_model": "google/gemini-2.5-flash-lite-preview-09-2025",
-    "duration_seconds": 334
+    "duration_seconds": 389
   },
   "quote_of_day": [],
   "hitokoto": [],
@@ -265,7 +283,7 @@
       "id": 47831621,
       "title": "GitHub's fake star economy",
       "url": "https://awesomeagents.ai/news/github-fake-stars-investigation/",
-      "score": 760,
+      "score": 767,
       "created_at": "2026-04-20T08:26:52Z",
       "comments_url": "https://news.ycombinator.com/item?id=47831621",
       "summary": "Story: summary generation failed."
@@ -274,7 +292,7 @@
       "id": 47834565,
       "title": "Qwen3.6-Max-Preview: Smarter, Sharper, Still Evolving",
       "url": "https://qwen.ai/blog?id=qwen3.6-max-preview",
-      "score": 591,
+      "score": 612,
       "created_at": "2026-04-20T14:05:34Z",
       "comments_url": "https://news.ycombinator.com/item?id=47834565",
       "summary": "Story: summary generation failed."
@@ -283,7 +301,7 @@
       "id": 47833247,
       "title": "Atlassian enables default data collection to train AI",
       "url": "https://letsdatascience.com/news/atlassian-enables-default-data-collection-to-train-ai-f71343d8",
-      "score": 547,
+      "score": 563,
       "created_at": "2026-04-20T12:23:39Z",
       "comments_url": "https://news.ycombinator.com/item?id=47833247",
       "summary": "Story: summary generation failed."
@@ -292,7 +310,7 @@
       "id": 47839951,
       "title": "AI Resistance: some recent anti-AI stuff that’s worth discussing",
       "url": "https://stephvee.ca/blog/artificial%20intelligence/ai-resistance-is-growing/",
-      "score": 346,
+      "score": 354,
       "created_at": "2026-04-20T20:19:13Z",
       "comments_url": "https://news.ycombinator.com/item?id=47839951",
       "summary": "Story: summary generation failed."
@@ -301,7 +319,7 @@
       "id": 47835928,
       "title": "Deezer says 44% of songs uploaded to its platform daily are AI-generated",
       "url": "https://techcrunch.com/2026/04/20/deezer-says-44-of-songs-uploaded-to-its-platform-daily-are-ai-generated/",
-      "score": 333,
+      "score": 338,
       "created_at": "2026-04-20T15:41:02Z",
       "comments_url": "https://news.ycombinator.com/item?id=47835928",
       "summary": "Story: summary generation failed."
@@ -310,7 +328,7 @@
       "id": 47831437,
       "title": "OpenClaw isn't fooling me. I remember MS-DOS",
       "url": "https://www.flyingpenguin.com/build-an-openclaw-free-secure-always-on-local-ai-agent/",
-      "score": 284,
+      "score": 285,
       "created_at": "2026-04-20T07:49:48Z",
       "comments_url": "https://news.ycombinator.com/item?id=47831437",
       "summary": "Story: summary generation failed."
@@ -319,7 +337,7 @@
       "id": 47835646,
       "title": "I prompted ChatGPT, Claude, Perplexity, and Gemini and watched my Nginx logs",
       "url": "https://surfacedby.com/blog/nginx-logs-ai-traffic-vs-referral-traffic",
-      "score": 129,
+      "score": 130,
       "created_at": "2026-04-20T15:22:01Z",
       "comments_url": "https://news.ycombinator.com/item?id=47835646",
       "summary": "Story: summary generation failed."
@@ -328,9 +346,27 @@
       "id": 47842021,
       "title": "Even 'uncensored' models can't say what they want",
       "url": "https://morgin.ai/articles/even-uncensored-models-cant-say-what-they-want.html",
-      "score": 126,
+      "score": 128,
       "created_at": "2026-04-20T22:43:29Z",
       "comments_url": "https://news.ycombinator.com/item?id=47842021",
+      "summary": "Story: summary generation failed."
+    },
+    {
+      "id": 47844269,
+      "title": "Anthropic says OpenClaw-style Claude CLI usage is allowed again",
+      "url": "https://docs.openclaw.ai/providers/anthropic",
+      "score": 126,
+      "created_at": "2026-04-21T03:43:03Z",
+      "comments_url": "https://news.ycombinator.com/item?id=47844269",
+      "summary": "Story: summary generation failed."
+    },
+    {
+      "id": 47844431,
+      "title": "A Roblox cheat and one AI tool brought down Vercel's platform",
+      "url": "https://webmatrices.com/post/how-a-roblox-cheat-and-one-ai-tool-brought-down-vercel-s-entire-platform",
+      "score": 118,
+      "created_at": "2026-04-21T04:12:12Z",
+      "comments_url": "https://news.ycombinator.com/item?id=47844431",
       "summary": "Story: summary generation failed."
     }
   ],
@@ -340,7 +376,7 @@
       "url": "https://github.com/Fincept-Corporation/FinceptTerminal",
       "description": "FinceptTerminal is a modern finance application offering advanced market analytics, investment research, and economic data tools, designed for interactive exploration and data-driven decision-making in a user-friendly environment.",
       "stars_today": 3109,
-      "total_stars": 10162,
+      "total_stars": 10379,
       "language": "Python",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -350,7 +386,7 @@
       "url": "https://github.com/ruvnet/RuView",
       "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
       "stars_today": 713,
-      "total_stars": 48429,
+      "total_stars": 48498,
       "language": "Rust",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -360,7 +396,7 @@
       "url": "https://github.com/thunderbird/thunderbolt",
       "description": "AI You Control: Choose your models. Own your data. Eliminate vendor lock-in.",
       "stars_today": 675,
-      "total_stars": 2953,
+      "total_stars": 2999,
       "language": "TypeScript",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -370,7 +406,7 @@
       "url": "https://github.com/paperless-ngx/paperless-ngx",
       "description": "A community-supported supercharged document management system: scan, index and archive all your documents",
       "stars_today": 606,
-      "total_stars": 39537,
+      "total_stars": 39572,
       "language": "Python",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -380,7 +416,7 @@
       "url": "https://github.com/tractorjuice/arc-kit",
       "description": "Enterprise Architecture Governance & Vendor Procurement Toolkit",
       "stars_today": 329,
-      "total_stars": 1407,
+      "total_stars": 1441,
       "language": "HTML",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -390,7 +426,7 @@
       "url": "https://github.com/koala73/worldmonitor",
       "description": "Real-time global intelligence dashboard. AI-powered news aggregation, geopolitical monitoring, and infrastructure tracking in a unified situational awareness interface",
       "stars_today": 316,
-      "total_stars": 50447,
+      "total_stars": 50542,
       "language": "TypeScript",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -400,7 +436,7 @@
       "url": "https://github.com/openai/openai-agents-python",
       "description": "A lightweight, powerful framework for multi-agent workflows",
       "stars_today": 905,
-      "total_stars": 24112,
+      "total_stars": 24161,
       "language": "Python",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -410,7 +446,7 @@
       "url": "https://github.com/deepseek-ai/DeepGEMM",
       "description": "DeepGEMM: clean and efficient FP8 GEMM kernels with fine-grained scaling",
       "stars_today": 109,
-      "total_stars": 6882,
+      "total_stars": 6894,
       "language": "Cuda",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -420,7 +456,7 @@
       "url": "https://github.com/pi-hole/pi-hole",
       "description": "A black hole for Internet advertisements",
       "stars_today": 196,
-      "total_stars": 57377,
+      "total_stars": 57437,
       "language": "Shell",
       "topics": [],
       "summary": "Repo: summary generation failed."
@@ -440,14 +476,14 @@
       "longitude": -0.12574,
       "timezone": "Europe/London",
       "forecast_date": "2026-04-21",
-      "condition": "Mainly clear",
-      "weather_code": 1,
-      "temperature_c": 7.4,
-      "apparent_temperature_c": 3.7,
+      "condition": "Overcast",
+      "weather_code": 3,
+      "temperature_c": 8.7,
+      "apparent_temperature_c": 4.6,
       "temp_max_c": 13.1,
-      "temp_min_c": 6.6,
-      "humidity_pct": 77,
-      "wind_speed_kmh": 15.5,
+      "temp_min_c": 6.5,
+      "humidity_pct": 64,
+      "wind_speed_kmh": 15.8,
       "precipitation_probability_pct": 0,
       "is_day": true,
       "sunrise": "2026-04-21T05:51",
