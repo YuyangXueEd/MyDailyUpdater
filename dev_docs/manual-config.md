@@ -3,7 +3,7 @@
 > 🌐 **Language / 语言**: **English** · [中文](manual-config.zh.md)
 
 Prefer to configure everything by hand? This page walks through every step.
-If you'd rather use the interactive wizard, open the [Setup Wizard](https://yuyangxueed.github.io/Linnet/setup/) instead.
+If you'd rather use the interactive wizard, open `/setup/` on your own deployed site instead. If you want to preview the upstream flow first, use the [upstream setup demo](https://yuyangxueed.github.io/Linnet/setup/).
 
 ---
 
@@ -14,7 +14,7 @@ GitHub will create your own copy with all the automation included.
 
 ### Optional: one-click deploy via the Setup Wizard
 
-The [Setup Wizard](https://yuyangxueed.github.io/Linnet/setup/) can write config files and secrets directly into your fork. For that you need a GitHub Personal Access Token (PAT) with the following permissions:
+The Setup Wizard on your deployed site can write config files and secrets directly into your fork. For that you need a GitHub Personal Access Token (PAT) with the following permissions:
 
 **Fine-grained PAT (recommended)**
 

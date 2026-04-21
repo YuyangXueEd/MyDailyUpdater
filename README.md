@@ -13,7 +13,7 @@
 
 Fork the repo, add one API key, and run it on GitHub Actions. No server, no subscription, no dashboard lock-in.
 
-**[Live example](https://yuyangxueed.github.io/Linnet)** · **[Setup Wizard (EN)](https://yuyangxueed.github.io/Linnet/setup/)** · **[设置向导 (中文)](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[Manual config guide](dev_docs/manual-config.md)**
+**[Live example](https://yuyangxueed.github.io/Linnet)** · **[Upstream setup demo (EN)](https://yuyangxueed.github.io/Linnet/setup/)** · **[上游配置演示 (中文)](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[Manual config guide](dev_docs/manual-config.md)**
 
 ---
 
@@ -85,9 +85,11 @@ Step 3 of the wizard lets you change the secret name if you want a different con
 
 Go to **Settings → Pages → Source: GitHub Actions**.
 
+During GitHub Actions builds, Linnet infers the correct GitHub Pages base path from your repository name, so `/setup/`, `/daily/`, and the other internal links point to your own project site rather than the upstream `Linnet` demo. For custom domains or advanced deploys, override this with `SITE_URL` and optionally `SITE_BASE`.
+
 ### 4. Open the setup wizard
 
-Use the [Setup Wizard](https://yuyangxueed.github.io/Linnet/setup/) for the shortest path.
+After your GitHub Pages site is live, open `/setup/` on your own deployed site for the shortest path. If you want to preview the upstream experience first, use the [upstream setup demo](https://yuyangxueed.github.io/Linnet/setup/).
 
 It handles:
 
