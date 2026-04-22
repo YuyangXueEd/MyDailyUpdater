@@ -13,7 +13,7 @@
 
 ![Linnet Hero](assets/hero.png)
 
-Fork the repo, add one API key, and run it on GitHub Actions. No server, no subscription, no dashboard lock-in.
+Use this template, add one API key, and run it on GitHub Actions. No server, no subscription, no dashboard lock-in.
 
 **[Live example](https://yuyangxueed.github.io/Linnet)** · **[Upstream setup demo (EN)](https://yuyangxueed.github.io/Linnet/setup/)** · **[上游配置演示 (中文)](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[Manual config guide](dev_docs/manual-config.md)**
 
@@ -65,70 +65,57 @@ Generated JSON under `docs/data/` stays ignored in normal local worktrees to avo
 
 Use **Use this template → Create a new repository** on GitHub.
 
-If you fork instead, GitHub disables Actions by default. Open the **Actions** tab in your new repo and click **"I understand my workflows, go ahead and enable them"** before you continue.
+If you are just setting up your own briefing site, prefer **Use this template** over **Fork**. Forks still work, but they are more likely to hit extra GitHub friction around Actions and setup.
 
-### 2. Pick an LLM provider and add its secret
+### 2. Install the Linnet Bridge GitHub App on that repo
 
-If you use the wizard's manual path, add the secret in **Settings → Secrets and variables → Actions**.
+Open the repo you just created, then install the **Linnet Bridge** GitHub App to that target repository.
 
-| Provider preset | Default secret name | Notes |
-|---|---|---|
-| `OpenRouter` | `OPENROUTER_API_KEY` | Recommended fast path, one key for many models |
-| `OpenAI` | `OPENAI_API_KEY` | Direct OpenAI endpoint |
-| `Anthropic compat` | `ANTHROPIC_API_KEY` | OpenAI-compatible endpoint |
-| `Gemini compat` | `GEMINI_API_KEY` | OpenAI-compatible endpoint |
-| `Custom` | `LLM_API_KEY` | Any OpenAI-compatible gateway |
+This is the lower-friction path. It lets Linnet write files, GitHub Actions secrets, workflow settings, and GitHub Pages config for you without asking you to mint a PAT.
 
-Step 3 of the wizard lets you change the secret name if you want a different convention. Step 6 will then use that same name for both the manual checklist and one-click deploy.
+### 3. Open the upstream setup wizard
 
-### 3. Enable GitHub Pages
+Use the upstream wizard as the primary entry point:
 
-Go to **Settings → Pages → Source: GitHub Actions**.
+- English: [https://yuyangxueed.github.io/Linnet/setup/](https://yuyangxueed.github.io/Linnet/setup/)
+- Chinese: [https://yuyangxueed.github.io/Linnet/setup/zh/](https://yuyangxueed.github.io/Linnet/setup/zh/)
 
-During GitHub Actions builds, Linnet infers the correct GitHub Pages base path from your repository name, so `/setup/`, `/daily/`, and the other internal links point to your own project site rather than the upstream `Linnet` demo. For custom domains or advanced deploys, override this with `SITE_URL` and optionally `SITE_BASE`.
+You no longer need to deploy your own copy of `/setup/` first just to get started.
 
-### 4. Open the setup wizard
+### 4. Fill the wizard, authorize GitHub, and deploy
 
-After your GitHub Pages site is live, open `/setup/` on your own deployed site for the shortest path. If you want to preview the upstream experience first, use the [upstream setup demo](https://yuyangxueed.github.io/Linnet/setup/).
+At the top of the wizard:
 
-It handles:
+- click **Install GitHub App** if you have not already installed it
+- click **Authorize GitHub** so this browser can finish the setup flow
+
+Then continue through the normal steps:
 
 - source selection and ordering
 - LLM provider, API key, and model choices in Step 3
 - theme and palette choices
 - optional sinks
-- generated files for your own fork
-- optional `Connect GitHub` one-click deploy in Step 6
 
-For the `Connect GitHub` one-click deploy path, you need a GitHub Personal Access Token with the right permissions:
+In Step 6, choose your target repository and click **Deploy to GitHub**.
 
-**Fine-grained PAT (recommended)**
+The default one-click path now uses the Linnet Bridge GitHub App flow, not a PAT. On success it will:
 
-| Permission | Level |
-|---|---|
-| Actions | Read and write |
-| Administration | Read and write if you want Step 6 to auto-enable Actions and workflows |
-| Contents | Read and write |
-| Metadata | Read-only (auto-selected) |
-| Secrets | Read and write |
-
-Set **Repository access** to **Only select repositories** and pick your fork — do not use "All repositories".
-
-**Classic PAT** — check `repo` (all sub-scopes) and `workflow`.
-
-Turn on the Step 6 `Auto-enable GitHub Actions and workflows` switch if you want the wizard to re-enable the repo and the `daily.yml`, `weekly.yml`, `monthly.yml`, and `pages.yml` workflows for you. If you leave it off, enable them manually from the `Actions` tab.
-
-The wizard's **Instructions** link walks through every field step by step.
-
-> If the deploy step fails with `Resource not accessible by personal access token`, the token is missing one of the permissions above — regenerate it with the correct scopes.
+- write the generated config files in a single commit
+- create or update the needed GitHub Actions secrets
+- enable `daily.yml`, `weekly.yml`, `monthly.yml`, and `pages.yml`
+- configure GitHub Pages for workflow-based publishing
+- trigger the first `Daily Digest` run
 
 ### 5. Run the first workflow
 
-If you did not use the Step 6 auto-enable option, or if it warned about PAT/repo policy, enable GitHub Actions / workflows in the target repo first.
+Most users should not need to click anything else after Step 6. Watch these two workflows in your repo:
 
-Open **Actions → Daily Digest → Run workflow**.
+- **Daily Digest** — generates the first issue and commits the published data
+- **Deploy Astro Site to GitHub Pages** — builds the site and publishes it
 
-Your site should be live a few minutes later.
+Your site should go live at `https://<your-username>.github.io/<repo-name>/` a few minutes later.
+
+GitHub Pages provisioning can lag slightly behind the API call on a brand-new repo, so give it a short moment before assuming it failed. If repo or org policy blocks app installation, Actions, or Pages, fall back to the [manual config guide](dev_docs/manual-config.md).
 
 Optional but worth doing: add that site URL to the repository's **About -> Website** field so visitors can open your digest directly from the GitHub repo header.
 
@@ -210,7 +197,7 @@ sinks:
 - [`.github/workflows/weekly.yml`](.github/workflows/weekly.yml)
 - [`.github/workflows/monthly.yml`](.github/workflows/monthly.yml)
 
-GitHub Actions cron uses UTC. Edit those cron lines directly in your fork if you want different times.
+GitHub Actions cron uses UTC. Edit those cron lines directly in your repo if you want different times.
 
 ---
 
@@ -246,7 +233,7 @@ If you are modifying repo code or docs, start with:
 - [`sinks/llms.txt`](sinks/llms.txt)
 - [`skills/linnet-contributor/SKILL.md`](skills/linnet-contributor/SKILL.md)
 
-If you are mostly helping someone configure their own fork, start with:
+If you are mostly helping someone configure their own repo or digest site, start with:
 
 - [`dev_docs/manual-config.md`](dev_docs/manual-config.md)
 - [`skills/linnet-config-customization/SKILL.md`](skills/linnet-config-customization/SKILL.md)

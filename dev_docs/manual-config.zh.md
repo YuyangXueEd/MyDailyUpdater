@@ -3,42 +3,33 @@
 > 🌐 **Language / 语言**: **中文** · [English](manual-config.md)
 
 想要完全手动配置每一项？这篇文档会带你走完全部步骤。
-如果你更想用交互式向导，请在你自己部署好的站点上打开 `/setup/zh/`。如果你只是想先看上游演示，可以访问 [Setup Wizard（中文设置向导）](https://yuyangxueed.github.io/Linnet/setup/zh/)。
+如果你更想用交互式向导，直接使用上游的 [Setup Wizard（中文设置向导）](https://yuyangxueed.github.io/Linnet/setup/zh/) 即可。
 
 ---
 
-## Step 1 — Fork 本仓库
+## Step 1 — 用模板创建你自己的仓库
 
-打开 [GitHub 项目页面](https://github.com/YuyangXueEd/Linnet)，点右上角的 **Fork** 按钮。
-GitHub 会帮你复制一份包含全部自动化流程的副本到你自己的账号下。
+优先在 [GitHub 项目页面](https://github.com/YuyangXueEd/Linnet) 上使用 **Use this template → Create a new repository**。
+这样你会得到一份带完整自动化流程的独立仓库，也更少遇到 fork 带来的 Actions 限制。
+
+如果你确实需要保留和上游的 fork 关系，当然也可以继续使用 **Fork**；但这份手动指南默认你是在创建自己的独立 digest 仓库。
 
 ### 可选：通过设置向导一键部署
 
-你自己站点上的设置向导可以直接把配置文件和 Secrets 写入你的 fork。为此需要一个有以下权限的 GitHub Personal Access Token（PAT）：
+推荐的一键部署路径已经不再使用 PAT。现在的方式是：
 
-**Fine-grained PAT（推荐）**
+1. 把 **Linnet Bridge** GitHub App 安装到目标仓库
+2. 打开上游设置向导：<https://yuyangxueed.github.io/Linnet/setup/zh/>
+3. 点击 **安装 GitHub App** / **授权 GitHub**
+4. 在 Step 6 里直接部署
 
-| 权限 | 级别 |
-|---|---|
-| Actions | Read and write |
-| Administration | 只有在你想让 Step 6 自动启用 Actions / workflows 时才需要 Read and write |
-| Contents | Read and write |
-| Metadata | Read-only（自动勾选） |
-| Secrets | Read and write |
-
-**Repository access** 选 **Only select repositories**，然后勾选你的 fork——不要选"All repositories"。
-
-**Classic PAT** — 勾选 `repo`（全部子项）和 `workflow`。
-
-如果你打算在设置向导的 Step 6 打开 `自动启用 GitHub Actions 和 workflows` 开关，PAT 还需要额外包含 `Administration: Read and write`。如果不打开这个开关，后面就按手动方式启用。
-
-> 如果部署时提示 `Resource not accessible by personal access token`，说明 token 缺少上述某项权限，请重新生成并勾选正确的 scopes。
+这份手动指南保留给两种情况：你想完全自己掌控每一步配置，或者组织 / 仓库策略阻止了 GitHub App 流程。
 
 ---
 
 ## Step 2 — 添加你的 API Key
 
-在你 fork 后的仓库里，进入：**Settings → Secrets and variables → Actions → New repository secret**
+在你的仓库里，进入：**Settings → Secrets and variables → Actions → New repository secret**
 
 | 名称（Name） | 值（Value） |
 |---|---|
@@ -99,7 +90,7 @@ export OPENAI_API_KEY=sk-...
 
 ## Step 5 — 首次运行
 
-如果这是一个 fork，或者 GitHub Actions / workflows 当前仍处于禁用状态，而你又没有成功使用设置向导 Step 6 的自动启用功能，请先在仓库里手动启用它们。
+如果仓库里的 GitHub Actions / workflows 当前仍处于禁用状态，而你又没有成功使用设置向导 Step 6 的自动启用功能，请先在仓库里手动启用它们。这种情况最常见于 fork。
 
 需要**依次**手动触发两个 workflow：
 

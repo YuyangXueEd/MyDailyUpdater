@@ -3,42 +3,33 @@
 > 🌐 **Language / 语言**: **English** · [中文](manual-config.zh.md)
 
 Prefer to configure everything by hand? This page walks through every step.
-If you'd rather use the interactive wizard, open `/setup/` on your own deployed site instead. If you want to preview the upstream flow first, use the [upstream setup demo](https://yuyangxueed.github.io/Linnet/setup/).
+If you'd rather use the interactive wizard, use the [upstream setup wizard](https://yuyangxueed.github.io/Linnet/setup/) instead.
 
 ---
 
-## Step 1 — Fork this repo
+## Step 1 — Create your own repo from this template
 
-Click **Fork** at the top of the [GitHub page](https://github.com/YuyangXueEd/Linnet).
-GitHub will create your own copy with all the automation included.
+Prefer **Use this template → Create a new repository** on the [GitHub page](https://github.com/YuyangXueEd/Linnet).
+That gives you your own copy with all the automation included, without the extra Actions friction that forks often add.
+
+If you intentionally need an upstream-linked development copy, you can still use **Fork**, but this manual guide assumes you are creating your own standalone digest repo.
 
 ### Optional: one-click deploy via the Setup Wizard
 
-The Setup Wizard on your deployed site can write config files and secrets directly into your fork. For that you need a GitHub Personal Access Token (PAT) with the following permissions:
+The recommended one-click path no longer uses a PAT. Instead:
 
-**Fine-grained PAT (recommended)**
+1. install the **Linnet Bridge** GitHub App on your target repo
+2. open the upstream setup wizard at <https://yuyangxueed.github.io/Linnet/setup/>
+3. click **Install GitHub App** / **Authorize GitHub**
+4. deploy from Step 6
 
-| Permission | Level |
-|---|---|
-| Actions | Read and write |
-| Administration | Read and write only if you want Step 6 to auto-enable Actions / workflows |
-| Contents | Read and write |
-| Metadata | Read-only (auto-selected) |
-| Secrets | Read and write |
-
-Set **Repository access** to **Only select repositories** and pick your fork — do not choose "All repositories".
-
-**Classic PAT** — check `repo` (all sub-scopes) and `workflow`.
-
-If you turn on the Step 6 `Auto-enable GitHub Actions and workflows` switch in the Setup Wizard, the PAT also needs `Administration: Read and write`. If you skip that switch, you will enable Actions manually below.
-
-> If the deploy step fails with `Resource not accessible by personal access token`, the token is missing one of the permissions above — regenerate it with the correct scopes.
+This manual guide remains the fallback path when you want to keep every config change explicit, or when org / repo policy blocks the GitHub App flow.
 
 ---
 
 ## Step 2 — Add your API key
 
-In your forked repo go to: **Settings → Secrets and variables → Actions → New repository secret**
+In your repo go to: **Settings → Secrets and variables → Actions → New repository secret**
 
 | Name | Value |
 |---|---|
@@ -100,7 +91,7 @@ change `language: "en"` to `"zh"`, `"fr"`, `"de"`, `"ja"`, `"ko"`, `"es"`, or an
 
 ## Step 5 — Run it for the first time
 
-If this is a fork, or if GitHub Actions / workflows are currently disabled, enable them manually in the repo first unless you already used the Setup Wizard’s Step 6 auto-enable option successfully.
+If GitHub Actions / workflows are currently disabled in the repo, enable them manually first unless you already used the Setup Wizard’s Step 6 auto-enable option successfully. This is most common on forks.
 
 You need to manually trigger **two** workflows in order:
 

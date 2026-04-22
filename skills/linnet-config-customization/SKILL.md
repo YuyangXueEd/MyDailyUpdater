@@ -5,7 +5,7 @@ description: This skill should be used when helping someone use, configure, or c
 
 # Linnet Config & Customization
 
-Use this skill when the task is mainly about helping someone set up or customize their own Linnet fork.
+Use this skill when the task is mainly about helping someone set up or customize their own Linnet repository.
 
 Do not use it as the main guide for contributor-facing repo edits. For implementation work inside the repo, prefer `skills/linnet-contributor/SKILL.md`.
 
@@ -14,11 +14,12 @@ Do not use it as the main guide for contributor-facing repo edits. For implement
 Start with the user-facing setup path first:
 
 1. `README.md` or `README_zh.md`
-2. `dev_docs/manual-config.md`
-3. `config/sources.yaml`
-4. `config/extensions/*.yaml` for the relevant source
-5. `sinks/README.md` plus the relevant sink `README.md` if delivery changes are involved
-6. `.github/workflows/daily.yml`, `weekly.yml`, or `monthly.yml` if schedule changes are requested
+2. `setup-bridge/README.md`
+3. `dev_docs/manual-config.md`
+4. `config/sources.yaml`
+5. `config/extensions/*.yaml` for the relevant source
+6. `sinks/README.md` plus the relevant sink `README.md` if delivery changes are involved
+7. `.github/workflows/daily.yml`, `weekly.yml`, or `monthly.yml` if schedule changes are requested
 
 Read `references/config-map.md` when you want a compact config map.
 
@@ -38,6 +39,9 @@ Read `references/config-map.md` when you want a compact config map.
 - Keep optional features clearly optional
 - Prefer editing existing config keys over inventing new top-level config
 - Keep setup docs and wizard wording aligned with the actual generated config
+- Prefer `Use this template` plus the upstream setup wizard over `Fork` for first-time users
+- Treat the GitHub App + Linnet Bridge flow as the default happy path
+- Treat manual config as a fallback path, not the main onboarding story
 
 ## Common tasks
 
@@ -47,6 +51,12 @@ Read `references/config-map.md` when you want a compact config map.
 - `llm.base_url` and `llm.api_key_env` already support OpenAI-compatible endpoints
 - the chosen secret name must match the environment variable that actually exists
 - Step 6 deploy instructions should reflect the resolved provider config, not assume OpenRouter
+
+### Setup and deploy changes
+
+- the default path is: `Use this template -> install Linnet Bridge GitHub App -> authorize browser -> deploy`
+- do not reintroduce PAT requirements into the default wizard path
+- if a user cannot install the GitHub App or is blocked by org policy, move them to the manual guide explicitly
 
 ### Source changes
 

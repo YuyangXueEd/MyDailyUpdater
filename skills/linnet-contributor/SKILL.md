@@ -7,7 +7,7 @@ description: This skill should be used when contributing code, docs, extensions,
 
 Use this skill when you are editing the Linnet repository itself.
 
-Do not use it as the main guide for "help me configure my fork" requests. For that, prefer `skills/linnet-config-customization/SKILL.md`.
+Do not use it as the main guide for "help me configure my repo or digest site" requests. For that, prefer `skills/linnet-config-customization/SKILL.md`.
 
 ## Quick routing
 
@@ -19,9 +19,11 @@ Read the smallest relevant set before editing:
 3. `superpowers/roadmap.md` if the change might close tracked debt
 
 ### Setup wizard or public-site changes
-1. `dev_docs/manual-config.md`
-2. `astro/src/pages/setup/index.astro` or `astro/src/pages/setup/zh/index.astro`
-3. `astro/src/components/wizard/`
+1. `README.md` or `README_zh.md`
+2. `setup-bridge/README.md`
+3. `dev_docs/manual-config.md`
+4. `astro/src/pages/setup/index.astro` or `astro/src/pages/setup/zh/index.astro`
+5. `astro/src/components/wizard/`
 
 ### Extension work
 1. `extensions/llms.txt`
@@ -68,6 +70,7 @@ Read `references/repo-map.md` when you want a compact map instead of opening man
 2. Reflect current provider/secret behaviour accurately
 3. Update `llms.txt` or skills if the agent guidance changed
 4. Remove obsolete references when a migration is complete
+5. Keep the GitHub App + bridge flow as the default onboarding path, and push PAT/manual steps into explicit fallback docs only
 
 ## Validation
 
