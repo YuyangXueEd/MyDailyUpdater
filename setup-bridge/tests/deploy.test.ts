@@ -68,7 +68,21 @@ test('deployWithInstallation scopes token and performs repo writes, secrets, act
       build_type: 'workflow',
       source: { branch: 'main', path: '/' },
     }),
-    jsonResponse(404, { message: 'Not Found' }),
+    jsonResponse(200, {
+      object: {
+        sha: 'head-commit-sha',
+        type: 'commit',
+      },
+    }),
+    jsonResponse(200, {
+      sha: 'head-commit-sha',
+      tree: {
+        sha: 'base-tree-sha',
+      },
+    }),
+    jsonResponse(201, { sha: 'blob-sha-1' }),
+    jsonResponse(201, { sha: 'next-tree-sha' }),
+    jsonResponse(201, { sha: 'next-commit-sha' }),
     jsonResponse(200, {}),
     jsonResponse(200, { key: repositoryPublicKey, key_id: 'KEY_ID' }),
     jsonResponse(201, {}),
@@ -102,7 +116,7 @@ test('deployWithInstallation scopes token and performs repo writes, secrets, act
   assert.equal(result.workflowDispatch.workflowId, 'daily.yml');
   assert.equal(result.workflowDispatch.ref, 'main');
 
-  assert.equal(calls.length, 14);
+  assert.equal(calls.length, 18);
   assert.match(calls[0].url, /\/app\/installations\/77\/access_tokens$/);
   assert.match(calls[1].url, /\/repos\/octocat\/briefing$/);
   assert.match(calls[2].url, /\/actions\/permissions$/);
@@ -112,19 +126,52 @@ test('deployWithInstallation scopes token and performs repo writes, secrets, act
   assert.match(calls[6].url, /actions\/workflows\/pages\.yml\/enable$/);
   assert.match(calls[7].url, /\/repos\/octocat\/briefing\/pages$/);
   assert.match(calls[8].url, /\/repos\/octocat\/briefing\/pages$/);
-  assert.match(calls[9].url, /contents\/config\/sources\.yaml\?ref=main$/);
-  assert.match(calls[10].url, /contents\/config\/sources\.yaml$/);
-  assert.match(calls[11].url, /actions\/secrets\/public-key$/);
-  assert.match(calls[12].url, /actions\/secrets\/OPENROUTER_API_KEY$/);
-  assert.match(calls[13].url, /actions\/workflows\/daily\.yml\/dispatches$/);
+  assert.match(calls[9].url, /\/git\/ref\/heads\/main$/);
+  assert.match(calls[10].url, /\/git\/commits\/head-commit-sha$/);
+  assert.match(calls[11].url, /\/git\/blobs$/);
+  assert.match(calls[12].url, /\/git\/trees$/);
+  assert.match(calls[13].url, /\/git\/commits$/);
+  assert.match(calls[14].url, /\/git\/refs\/heads\/main$/);
+  assert.match(calls[15].url, /actions\/secrets\/public-key$/);
+  assert.match(calls[16].url, /actions\/secrets\/OPENROUTER_API_KEY$/);
+  assert.match(calls[17].url, /actions\/workflows\/daily\.yml\/dispatches$/);
 
   const tokenBody = JSON.parse(String(calls[0].init?.body));
   assert.deepEqual(tokenBody, { repositories: ['briefing'] });
 
-  const putFileBody = JSON.parse(String(calls[10].init?.body));
-  assert.equal(putFileBody.content, 'bGFuZ3VhZ2U6ICJlbiIK');
+  const putBlobBody = JSON.parse(String(calls[11].init?.body));
+  assert.deepEqual(putBlobBody, {
+    content: 'language: "en"\n',
+    encoding: 'utf-8',
+  });
 
-  const putSecretBody = JSON.parse(String(calls[12].init?.body));
+  const createTreeBody = JSON.parse(String(calls[12].init?.body));
+  assert.deepEqual(createTreeBody, {
+    base_tree: 'base-tree-sha',
+    tree: [
+      {
+        path: 'config/sources.yaml',
+        mode: '100644',
+        type: 'blob',
+        sha: 'blob-sha-1',
+      },
+    ],
+  });
+
+  const createCommitBody = JSON.parse(String(calls[13].init?.body));
+  assert.deepEqual(createCommitBody, {
+    message: 'chore: configure Linnet via setup bridge',
+    tree: 'next-tree-sha',
+    parents: ['head-commit-sha'],
+  });
+
+  const updateRefBody = JSON.parse(String(calls[14].init?.body));
+  assert.deepEqual(updateRefBody, {
+    sha: 'next-commit-sha',
+    force: false,
+  });
+
+  const putSecretBody = JSON.parse(String(calls[16].init?.body));
   assert.equal(putSecretBody.key_id, 'KEY_ID');
   assert.equal(typeof putSecretBody.encrypted_value, 'string');
   assert.notEqual(putSecretBody.encrypted_value, '');
@@ -139,6 +186,6 @@ test('deployWithInstallation scopes token and performs repo writes, secrets, act
     },
   });
 
-  const dispatchBody = JSON.parse(String(calls[13].init?.body));
+  const dispatchBody = JSON.parse(String(calls[17].init?.body));
   assert.deepEqual(dispatchBody, { ref: 'main' });
 });

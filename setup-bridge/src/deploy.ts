@@ -72,7 +72,29 @@ type RepoInfo = {
   html_url?: string;
 };
 
-type RepoContent = {
+type GitReference = {
+  object?: {
+    sha?: string;
+    type?: string;
+  };
+};
+
+type GitCommit = {
+  sha?: string;
+  tree?: {
+    sha?: string;
+  };
+};
+
+type GitBlob = {
+  sha?: string;
+};
+
+type GitTree = {
+  sha?: string;
+};
+
+type GitCreatedCommit = {
   sha?: string;
 };
 
@@ -95,10 +117,6 @@ type InstallationAccessTokenResponse = {
   expires_at: string;
   permissions?: Record<string, string>;
 };
-
-function encodeContentPath(path: string): string {
-  return path.split('/').map((part) => encodeURIComponent(part)).join('/');
-}
 
 function githubHeaders(token: string): Record<string, string> {
   return {
@@ -210,43 +228,104 @@ async function upsertRepositoryFiles(
   commitMessage: string,
   fetchImpl: typeof fetch,
 ): Promise<string[]> {
-  const committedPaths: string[] = [];
+  const encodedBranch = defaultBranch.split('/').map((part) => encodeURIComponent(part)).join('/');
+  const headRef = await githubInstallationRequest<GitReference>(
+    token,
+    `/repos/${repo.owner}/${repo.repo}/git/ref/heads/${encodedBranch}`,
+    {},
+    fetchImpl,
+  );
+  const headCommitSha = headRef?.object?.sha ?? null;
+  if (!headCommitSha) {
+    throw new GitHubApiError(`Could not resolve HEAD for ${repo.owner}/${repo.repo}@${defaultBranch}.`, 500);
+  }
 
+  const headCommit = await githubInstallationRequest<GitCommit>(
+    token,
+    `/repos/${repo.owner}/${repo.repo}/git/commits/${encodeURIComponent(headCommitSha)}`,
+    {},
+    fetchImpl,
+  );
+  const baseTreeSha = headCommit?.tree?.sha ?? null;
+  if (!baseTreeSha) {
+    throw new GitHubApiError(`Could not resolve the base tree for ${repo.owner}/${repo.repo}@${defaultBranch}.`, 500);
+  }
+
+  const tree = [];
   for (const file of files) {
-    const encodedPath = encodeContentPath(file.path);
-    let existingSha: string | null = null;
-
-    try {
-      const existing = await githubInstallationRequest<RepoContent>(
-        token,
-        `/repos/${repo.owner}/${repo.repo}/contents/${encodedPath}?ref=${encodeURIComponent(defaultBranch)}`,
-        {},
-        fetchImpl,
-      );
-      existingSha = existing?.sha ?? null;
-    } catch (error) {
-      if (!(error instanceof GitHubApiError) || error.status !== 404) throw error;
-    }
-
-    await githubInstallationRequest(
+    const blob = await githubInstallationRequest<GitBlob>(
       token,
-      `/repos/${repo.owner}/${repo.repo}/contents/${encodedPath}`,
+      `/repos/${repo.owner}/${repo.repo}/git/blobs`,
       {
-        method: 'PUT',
+        method: 'POST',
         body: JSON.stringify({
-          message: commitMessage,
-          content: utf8ToBase64(file.body),
-          branch: defaultBranch,
-          ...(existingSha ? { sha: existingSha } : {}),
+          content: file.body,
+          encoding: 'utf-8',
         }),
       },
       fetchImpl,
     );
-
-    committedPaths.push(file.path);
+    const blobSha = blob?.sha ?? null;
+    if (!blobSha) {
+      throw new GitHubApiError(`Could not create blob for ${file.path}.`, 500);
+    }
+    tree.push({
+      path: file.path,
+      mode: '100644',
+      type: 'blob',
+      sha: blobSha,
+    });
   }
 
-  return committedPaths;
+  const nextTree = await githubInstallationRequest<GitTree>(
+    token,
+    `/repos/${repo.owner}/${repo.repo}/git/trees`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        base_tree: baseTreeSha,
+        tree,
+      }),
+    },
+    fetchImpl,
+  );
+  const nextTreeSha = nextTree?.sha ?? null;
+  if (!nextTreeSha) {
+    throw new GitHubApiError(`Could not create the next tree for ${repo.owner}/${repo.repo}.`, 500);
+  }
+
+  const nextCommit = await githubInstallationRequest<GitCreatedCommit>(
+    token,
+    `/repos/${repo.owner}/${repo.repo}/git/commits`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        message: commitMessage,
+        tree: nextTreeSha,
+        parents: [headCommitSha],
+      }),
+    },
+    fetchImpl,
+  );
+  const nextCommitSha = nextCommit?.sha ?? null;
+  if (!nextCommitSha) {
+    throw new GitHubApiError(`Could not create the next commit for ${repo.owner}/${repo.repo}.`, 500);
+  }
+
+  await githubInstallationRequest(
+    token,
+    `/repos/${repo.owner}/${repo.repo}/git/refs/heads/${encodedBranch}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({
+        sha: nextCommitSha,
+        force: false,
+      }),
+    },
+    fetchImpl,
+  );
+
+  return files.map((file) => file.path);
 }
 
 async function upsertRepositorySecrets(
