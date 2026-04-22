@@ -46,13 +46,18 @@ AGENTS.md
 .playwright/
 .playwright-cli/
 
-superpowers/
+superpowers/*
 scratch/
 
 # Astro / Node.js
 astro/node_modules/
 astro/dist/
 astro/.astro/
+setup-bridge/node_modules/
+setup-bridge/.wrangler/
+setup-bridge/.dev.vars
+setup-bridge/GITHUB_APP_CLIENT_SECRET
+setup-bridge/*.private-key.pem
 *.tsbuildinfo
 npm-debug.log*
 yarn-error.log

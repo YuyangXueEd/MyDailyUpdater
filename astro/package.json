@@ -12,7 +12,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node --test tests/",
+    "test": "node --test tests/*.mjs",
     "astro": "astro"
   },
   "dependencies": {

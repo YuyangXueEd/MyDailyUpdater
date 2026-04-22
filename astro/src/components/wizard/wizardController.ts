@@ -1,12 +1,17 @@
 import { EXTENSION_LIST, REGISTRY, type SetupField } from '@/lib/registry';
 import { ARXIV_PROFILES } from '@/lib/arxivProfiles';
 import { createInitialState, DEFAULT_TOP_N, type WizardState } from './wizardState';
-import { buildGitHubCallPreview, deployGeneratedConfig, enableWorkflow, parseRepoInput, setRepositoryActionsEnabled, triggerWorkflowDispatch } from './githubDeploy.js';
+import { buildGitHubCallPreview, parseRepoInput } from './githubDeploy.js';
 import {
-  listAccessibleRepositories,
-  getCurrentUser,
-  looksLikePat,
-} from './githubAuth.js';
+  buildCleanReturnTo,
+  deployViaBridge,
+  fetchBridgeSession,
+  logoutBridgeSession,
+  normalizeBridgeUrl,
+  readInstallationIdFromLocation,
+  startBridgeAuthorize,
+  startBridgeInstall,
+} from './setupBridge.js';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -90,14 +95,71 @@ interface GitHubRepoOption {
 }
 
 interface GitHubSession {
-  token: string;
+  mode: 'bridge';
+  bridgeUrl: string;
+  installationId: number | null;
   repositories: GitHubRepoOption[];
+  repositoriesTruncated: boolean;
   selectedRepo: string;
+  connected: boolean;
   user?: {
     login: string;
     avatarUrl: string;
-    name?: string;
+    htmlUrl?: string;
   };
+  installation?: {
+    accountLogin: string | null;
+    accountType: string | null;
+    repositorySelection: string | null;
+    targetType: string | null;
+    htmlUrl: string | null;
+  };
+  repositoryAccess?: {
+    checked: boolean;
+    verified: boolean;
+    repositoryId: number | null;
+  };
+  authWarning?: string | null;
+}
+
+interface BridgeSessionResponse {
+  configured?: boolean;
+  githubApp?: {
+    missing?: string[];
+  };
+  userSession?: {
+    authenticated?: boolean;
+    user?: {
+      login?: string;
+      avatarUrl?: string | null;
+      htmlUrl?: string | null;
+    } | null;
+    repositoryAccess?: {
+      checked?: boolean;
+      verified?: boolean;
+      repositoryId?: number | null;
+    };
+    repositories?: {
+      totalCount?: number;
+      truncated?: boolean;
+      items?: Array<{
+        id?: number;
+        owner?: string;
+        repo?: string;
+        fullName?: string;
+        htmlUrl?: string | null;
+      }>;
+    };
+    authWarning?: string | null;
+  };
+  installation?: {
+    id?: number;
+    accountLogin?: string | null;
+    accountType?: string | null;
+    repositorySelection?: string | null;
+    targetType?: string | null;
+    htmlUrl?: string | null;
+  } | null;
 }
 
 type SetupMode = 'connect' | 'manual';
@@ -759,7 +821,6 @@ export function initWizard(): void {
   const llmProviderNoteEl = qs<HTMLElement>('[data-llm-provider-note]', shell);
   const deployRepoInput = qs<HTMLInputElement>('[data-deploy-repo]', shell);
   const autoEnableActionsCheckbox = qs<HTMLInputElement>('[data-auto-enable-actions]', shell);
-  const deployTokenInput = qs<HTMLInputElement>('[data-deploy-token]', shell);
   const deploySubmitBtn = qs<HTMLButtonElement>('[data-deploy-submit]', shell);
   const deployPreviewEl = qs<HTMLElement>('[data-deploy-preview]', shell);
   const deployStatusEl = qs<HTMLElement>('[data-deploy-status]', shell);
@@ -769,9 +830,9 @@ export function initWizard(): void {
   const deployRepoHomeEl = qs<HTMLAnchorElement>('[data-deploy-repo-home]', shell);
   const modeButtons = qsa<HTMLButtonElement>('[data-setup-mode-btn]', shell);
   const modePanels = qsa<HTMLElement>('[data-setup-mode-panel]', shell);
+  const installBtn = qs<HTMLButtonElement>('[data-github-install-btn]', shell);
   const connectBtn = qs<HTMLButtonElement>('[data-github-connect-btn]', shell);
   const disconnectBtn = qs<HTMLButtonElement>('[data-github-disconnect-btn]', shell);
-  const patInput = qs<HTMLInputElement>('[data-github-pat-input]', shell);
   const authStatusEl = qs<HTMLElement>('[data-github-auth-status]', shell);
   const authSummaryEl = qs<HTMLElement>('[data-github-auth-summary]', shell);
   const repoOptionsEl = qs<HTMLDataListElement>('[data-deploy-repo-options]', shell);
@@ -782,9 +843,14 @@ export function initWizard(): void {
   const connectNextStepsEl = qs<HTMLElement>('[data-connect-next-steps]', shell);
   const manualLlmSecretNameEls = qsa<HTMLElement>('[data-manual-llm-secret-name]', shell);
   const llmSecretCodeEls = qsa<HTMLElement>('[data-llm-secret-code]', shell);
+  const setupBridgeUrl = normalizeBridgeUrl(shell.dataset['setupBridgeUrl'] ?? '');
   let latestOutputs: OutputBlock[] = [];
   let setupMode: SetupMode = loadJson<SetupMode>(WIZARD_SETUP_MODE_KEY) ?? 'connect';
-  let githubSession = loadJson<GitHubSession>(GITHUB_AUTH_SESSION_KEY);
+  const storedGitHubSession = loadJson<GitHubSession & { mode?: string }>(GITHUB_AUTH_SESSION_KEY);
+  let githubSession = storedGitHubSession?.mode === 'bridge' ? storedGitHubSession : null;
+  if (!githubSession && storedGitHubSession) {
+    removeJson(GITHUB_AUTH_SESSION_KEY);
+  }
   if (autoEnableActionsCheckbox) {
     autoEnableActionsCheckbox.checked = loadJson<boolean>(WIZARD_AUTO_ENABLE_ACTIONS_KEY) ?? false;
   }
@@ -827,11 +893,11 @@ export function initWizard(): void {
     return `https://${owner}.github.io${isUserSiteRepo ? '/' : `/${repo}/`}`;
   }
 
-  function renderDeploySuccessLinks(owner: string, repo: string, repoHtmlUrl: string): void {
-    const pagesUrl = buildDefaultPagesUrl(owner, repo);
+  function renderDeploySuccessLinks(owner: string, repo: string, repoHtmlUrl: string, pagesUrl?: string | null): void {
+    const resolvedPagesUrl = pagesUrl || buildDefaultPagesUrl(owner, repo);
     if (deploySiteUrlEl) {
-      deploySiteUrlEl.href = pagesUrl;
-      deploySiteUrlEl.textContent = pagesUrl;
+      deploySiteUrlEl.href = resolvedPagesUrl;
+      deploySiteUrlEl.textContent = resolvedPagesUrl;
     }
     if (deployRepoHomeEl) deployRepoHomeEl.href = repoHtmlUrl;
     if (deploySiteTipEl) deploySiteTipEl.hidden = false;
@@ -874,6 +940,25 @@ export function initWizard(): void {
     githubSession = session;
     if (session) saveJson(GITHUB_AUTH_SESSION_KEY, session);
     else removeJson(GITHUB_AUTH_SESSION_KEY);
+  }
+
+  function currentInstallationId(): number | null {
+    return readInstallationIdFromLocation(window.location) ?? githubSession?.installationId ?? null;
+  }
+
+  function currentUrlInstallationId(): number | null {
+    return readInstallationIdFromLocation(window.location);
+  }
+
+  function currentVerifiedInstallationId(): number | null {
+    const urlInstallationId = currentUrlInstallationId();
+    if (!githubSession?.installationId) return null;
+    if (urlInstallationId && githubSession.installationId !== urlInstallationId) return null;
+    return githubSession.installationId;
+  }
+
+  function currentSelectedRepoValue(): string {
+    return deployRepoInput?.value.trim() || githubSession?.selectedRepo || '';
   }
 
   function getSelectedLlmProviderOption(): HTMLOptionElement | null {
@@ -1016,6 +1101,110 @@ export function initWizard(): void {
     }
   }
 
+  function buildBridgeGitHubSession(data: BridgeSessionResponse): GitHubSession | null {
+    const repositories = (data.userSession?.repositories?.items ?? [])
+      .filter((repository) => repository.id && repository.owner && repository.repo && repository.fullName)
+      .map((repository) => ({
+        id: repository.id as number,
+        owner: repository.owner as string,
+        repo: repository.repo as string,
+        fullName: repository.fullName as string,
+        htmlUrl: repository.htmlUrl ?? `https://github.com/${repository.fullName}`,
+      }));
+
+    const installationId = typeof data.installation?.id === 'number'
+      ? data.installation.id
+      : currentInstallationId();
+    const availableRepos = new Set(repositories.map((repository) => repository.fullName));
+    const preferredRepo = currentSelectedRepoValue();
+    const guessedRepo = guessCurrentRepository(repositories, data.userSession?.user?.login ?? undefined);
+    const selectedRepo = (
+      (preferredRepo && (availableRepos.size === 0 || availableRepos.has(preferredRepo)) && preferredRepo)
+      || (githubSession?.selectedRepo
+        && (availableRepos.size === 0 || availableRepos.has(githubSession.selectedRepo))
+        && githubSession.selectedRepo)
+      || guessedRepo
+      || repositories[0]?.fullName
+      || preferredRepo
+    );
+    const connected = Boolean(data.userSession?.authenticated);
+
+    if (!connected && !installationId) return null;
+
+    return {
+      mode: 'bridge',
+      bridgeUrl: setupBridgeUrl,
+      installationId,
+      repositories,
+      repositoriesTruncated: Boolean(data.userSession?.repositories?.truncated),
+      selectedRepo,
+      connected,
+      user: data.userSession?.user?.login && data.userSession.user.avatarUrl
+        ? {
+            login: data.userSession.user.login,
+            avatarUrl: data.userSession.user.avatarUrl,
+            htmlUrl: data.userSession.user.htmlUrl ?? undefined,
+          }
+        : undefined,
+      installation: data.installation
+        ? {
+            accountLogin: data.installation.accountLogin ?? null,
+            accountType: data.installation.accountType ?? null,
+            repositorySelection: data.installation.repositorySelection ?? null,
+            targetType: data.installation.targetType ?? null,
+            htmlUrl: data.installation.htmlUrl ?? null,
+          }
+        : undefined,
+      repositoryAccess: {
+        checked: Boolean(data.userSession?.repositoryAccess?.checked),
+        verified: Boolean(data.userSession?.repositoryAccess?.verified),
+        repositoryId: data.userSession?.repositoryAccess?.repositoryId ?? null,
+      },
+      authWarning: data.userSession?.authWarning ?? null,
+    };
+  }
+
+  async function refreshGitHubSession(options: { preserveStatus?: boolean } = {}): Promise<void> {
+    if (!setupBridgeUrl) {
+      setAuthStatus(
+        'warn',
+        locale === 'zh'
+          ? '还没有配置 setup bridge 地址。请先设置 PUBLIC_SETUP_BRIDGE_URL。'
+          : 'No setup bridge URL is configured yet. Set PUBLIC_SETUP_BRIDGE_URL first.',
+      );
+      return;
+    }
+
+    const installationId = currentInstallationId();
+    const repo = parseRepoInput(currentSelectedRepoValue());
+    if (!options.preserveStatus) {
+      setAuthStatus(
+        'info',
+        locale === 'zh' ? '正在同步 GitHub 安装与授权状态…' : 'Syncing GitHub installation and authorization state…',
+      );
+    }
+
+    try {
+      const data = await fetchBridgeSession({
+        bridgeUrl: setupBridgeUrl,
+        installationId,
+        repo,
+      }) as BridgeSessionResponse;
+      saveGitHubSession(buildBridgeGitHubSession(data));
+      if (window.location.search.includes('github_auth=')) {
+        window.history.replaceState({}, document.title, buildCleanReturnTo(window.location.href));
+      }
+      renderGitHubSession();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setAuthStatus(
+        'warn',
+        (locale === 'zh' ? '同步 GitHub 状态失败：' : 'Failed to sync GitHub state: ') + message,
+      );
+      renderGitHubSession();
+    }
+  }
+
   function renderSetupMode(): void {
     modeButtons.forEach((button) => {
       const mode = (button.dataset['setupModeBtn'] ?? 'manual') as SetupMode;
@@ -1033,11 +1222,13 @@ export function initWizard(): void {
   }
 
   function renderGitHubSession(): void {
-    const connected = Boolean(githubSession?.token);
+    const connected = Boolean(githubSession?.connected);
+    const installationDetected = Boolean(currentVerifiedInstallationId());
     if (disconnectBtn) disconnectBtn.hidden = !connected;
     if (connectedNoticeEl) connectedNoticeEl.hidden = !connected;
     if (connectRequiredEl) connectRequiredEl.hidden = connected || setupMode !== 'connect';
-    if (deploySubmitBtn) deploySubmitBtn.disabled = setupMode === 'connect' && !connected;
+    if (connectBtn) connectBtn.disabled = !installationDetected || !setupBridgeUrl;
+    if (deploySubmitBtn) deploySubmitBtn.disabled = setupMode === 'connect' && (!connected || !installationDetected);
 
     // Update Connect chip status
     const connectChip = qs<HTMLElement>('[data-setup-mode-btn="connect"]', shell);
@@ -1047,8 +1238,11 @@ export function initWizard(): void {
         if (connected) {
           meta.textContent = locale === 'zh' ? '● 已连接' : '● Connected';
           meta.style.color = 'var(--accent)';
+        } else if (installationDetected) {
+          meta.textContent = locale === 'zh' ? '● 已安装待授权' : '● Installed, authorize browser';
+          meta.style.color = 'var(--accent)';
         } else {
-          meta.textContent = locale === 'zh' ? '浏览器授权 + 仓库直写' : 'Browser auth + direct repo write';
+          meta.textContent = locale === 'zh' ? '安装 App + 浏览器授权' : 'Install app + browser auth';
           meta.style.color = '';
         }
       }
@@ -1056,7 +1250,22 @@ export function initWizard(): void {
 
     if (connected && authSummaryEl && githubSession) {
       const count = githubSession.repositories.length;
-      const userName = githubSession.user?.name || githubSession.user?.login || '';
+      const userName = githubSession.user?.login || '';
+      const installationLabel = githubSession.installation?.accountLogin
+        ? `@${githubSession.installation.accountLogin}`
+        : `#${githubSession.installationId ?? '—'}`;
+      const repoScope = githubSession.installation?.repositorySelection === 'all'
+        ? (locale === 'zh' ? '全部仓库' : 'all repositories')
+        : (locale === 'zh' ? '选定仓库' : 'selected repositories');
+      const accessSummary = githubSession.repositoryAccess?.checked
+        ? (githubSession.repositoryAccess.verified
+          ? (locale === 'zh'
+            ? '当前目标仓库已通过访问校验。'
+            : 'The current target repository has been verified.')
+          : (locale === 'zh'
+            ? '当前目标仓库还没有通过访问校验，请检查是否已把 App 安装到该仓库。'
+            : 'The current target repository has not been verified yet. Check whether the app is installed on that repository.'))
+        : '';
       const userHtml = githubSession.user ? `
         <div class="wz-user-badge">
           <img src="${githubSession.user.avatarUrl}" alt="${githubSession.user.login}" class="wz-user-badge__avatar" />
@@ -1071,74 +1280,51 @@ export function initWizard(): void {
         ${userHtml}
         <p style="margin-top:12px">
           ${locale === 'zh'
-            ? `已连接 GitHub。当前会话可访问 ${count} 个仓库；到第 6 步时只需要选择其中一个目标仓库即可。`
-            : `GitHub connected. This browser session can access ${count} repositories; at Step 6 you only need to choose the target repository.`}
+            ? `已授权 Linnet Bridge。当前安装目标为 ${installationLabel}，仓库范围是 ${repoScope}；到第 6 步时只需要确认目标仓库即可。`
+            : `Linnet Bridge is authorized. The current installation targets ${installationLabel} with ${repoScope}; at Step 6 you only need to confirm the target repository.`}
         </p>
+        ${accessSummary ? `<p style="margin-top:8px">${accessSummary}</p>` : ''}
+        ${githubSession.repositoriesTruncated ? `<p style="margin-top:8px">${locale === 'zh' ? '仓库建议列表较长，当前只展示其中一部分；如果没看到目标仓库，也可以手动输入 owner/repo。' : 'The repository suggestion list is long, so only part of it is shown here; you can still type owner/repo manually if your target is missing.'}</p>` : ''}
       `;
       setAuthStatus(
         'success',
         locale === 'zh'
-          ? 'GitHub 授权已完成。现在可以放心继续填写向导，最后一步直接部署。'
+          ? 'GitHub 授权已完成。现在可以继续填写向导，最后一步直接部署。'
           : 'GitHub authorization completed. You can continue the wizard and deploy directly at the end.',
+      );
+    } else if (installationDetected && authSummaryEl) {
+      const installationLabel = githubSession?.installation?.accountLogin
+        ? `@${githubSession.installation.accountLogin}`
+        : `#${currentVerifiedInstallationId() ?? '—'}`;
+      authSummaryEl.innerHTML = `
+        <p>
+          ${locale === 'zh'
+            ? `已经检测到 Linnet Bridge 安装（${installationLabel}），但当前浏览器还没有完成授权。点击上面的“授权 GitHub”后，GitHub 会把你带回这个 setup 页面。`
+            : `A Linnet Bridge installation was detected (${installationLabel}), but this browser has not been authorized yet. Click “Authorize GitHub” above and GitHub will bring you back to this setup page.`}
+        </p>
+      `;
+      setAuthStatus(
+        githubSession?.authWarning ? 'warn' : 'info',
+        githubSession?.authWarning
+          ? (locale === 'zh' ? `GitHub 会话已失效：${githubSession.authWarning}` : `The GitHub session expired: ${githubSession.authWarning}`)
+          : (locale === 'zh'
+            ? '安装已经完成，下一步只需要授权当前浏览器。'
+            : 'The installation is ready. The next step is authorizing this browser.'),
       );
     } else if (authSummaryEl) {
       authSummaryEl.textContent = locale === 'zh'
-        ? '未连接时，你仍然可以完成向导并导出配置，但需要自己提交文件和 secrets。'
-        : 'You can still complete the wizard without connecting, but you will commit files and secrets yourself.';
+        ? '未连接时，你仍然可以完成向导并导出配置，但需要自己提交文件和 secrets。先点击“安装 GitHub App”，安装完成后再回来授权浏览器。'
+        : 'You can still complete the wizard without connecting, but you will commit files and secrets yourself. Click “Install GitHub App” first, then come back and authorize the browser.';
       setAuthStatus(
         'info',
         locale === 'zh'
-          ? '粘贴一个 fine-grained Personal Access Token 即可启用一键部署。Token 只保存在当前浏览器标签的 sessionStorage 中。'
-          : 'Paste a fine-grained Personal Access Token to enable one-click deploy. The token is kept only in this tab\u2019s sessionStorage.',
+          ? '还没有检测到 Linnet Bridge 安装。先安装 GitHub App，然后再回来完成授权。'
+          : 'No Linnet Bridge installation has been detected yet. Install the GitHub App first, then come back to authorize.',
       );
     }
 
     updateRepoSuggestions();
     renderDeployPreview();
-  }
-
-  async function connectWithPat(token: string): Promise<void> {
-    const trimmed = token.trim();
-    if (!trimmed) {
-      setAuthStatus(
-        'warn',
-        locale === 'zh' ? '请先粘贴 Personal Access Token。' : 'Please paste a Personal Access Token first.',
-      );
-      return;
-    }
-    if (!looksLikePat(trimmed)) {
-      setAuthStatus(
-        'warn',
-        locale === 'zh'
-          ? 'Token 格式不像 GitHub PAT（应以 github_pat_ 或 ghp_ 开头）。'
-          : 'Token does not look like a GitHub PAT (should start with github_pat_ or ghp_).',
-      );
-      return;
-    }
-    setAuthStatus(
-      'info',
-      locale === 'zh' ? '正在校验 token 并读取仓库列表…' : 'Verifying token and loading repositories…',
-    );
-    try {
-      const user = await getCurrentUser({ token: trimmed });
-      const repositories = await listAccessibleRepositories({ token: trimmed });
-      const selectedRepo = guessCurrentRepository(repositories, user.login) || repositories[0]?.fullName || '';
-      saveGitHubSession({
-        token: trimmed,
-        repositories,
-        selectedRepo,
-        user,
-      });
-      if (patInput) patInput.value = '';
-      renderGitHubSession();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      setAuthStatus(
-        'warn',
-        (locale === 'zh' ? 'Token 校验失败：' : 'Token verification failed: ') + message,
-      );
-      saveGitHubSession(null);
-    }
   }
 
   function requiredDeploySecretNames(): string[] {
@@ -1198,21 +1384,73 @@ export function initWizard(): void {
     });
   });
 
-  connectBtn?.addEventListener('click', async () => {
-    await connectWithPat(patInput?.value ?? '');
-  });
-
-  patInput?.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      void connectWithPat(patInput.value);
+  installBtn?.addEventListener('click', () => {
+    if (!setupBridgeUrl) {
+      setAuthStatus(
+        'warn',
+        locale === 'zh'
+          ? '还没有配置 setup bridge 地址。请先设置 PUBLIC_SETUP_BRIDGE_URL。'
+          : 'No setup bridge URL is configured yet. Set PUBLIC_SETUP_BRIDGE_URL first.',
+      );
+      return;
     }
+    setAuthStatus(
+      'info',
+      locale === 'zh' ? '正在跳转到 GitHub 安装 Linnet Bridge…' : 'Redirecting to GitHub to install Linnet Bridge…',
+    );
+    startBridgeInstall({ bridgeUrl: setupBridgeUrl });
   });
 
-  disconnectBtn?.addEventListener('click', () => {
-    saveGitHubSession(null);
-    renderGitHubSession();
-    clearDeployStatus();
+  connectBtn?.addEventListener('click', () => {
+    if (!setupBridgeUrl) {
+      setAuthStatus(
+        'warn',
+        locale === 'zh'
+          ? '还没有配置 setup bridge 地址。请先设置 PUBLIC_SETUP_BRIDGE_URL。'
+          : 'No setup bridge URL is configured yet. Set PUBLIC_SETUP_BRIDGE_URL first.',
+      );
+      return;
+    }
+
+    const installationId = currentVerifiedInstallationId();
+    if (!installationId) {
+      setAuthStatus(
+        'warn',
+        locale === 'zh'
+          ? '还没有验证到可用的 GitHub App 安装结果。请先点击“安装 GitHub App”，完成后等待页面同步安装状态。'
+          : 'No verified GitHub App installation has been detected yet. Click “Install GitHub App” first and wait for the page to sync the installation state.',
+      );
+      return;
+    }
+
+    setAuthStatus(
+      'info',
+      locale === 'zh' ? '正在跳转到 GitHub 授权当前浏览器…' : 'Redirecting to GitHub to authorize this browser…',
+    );
+    startBridgeAuthorize({
+      bridgeUrl: setupBridgeUrl,
+      installationId,
+      returnTo: buildCleanReturnTo(window.location.href),
+      repo: parseRepoInput(currentSelectedRepoValue()),
+    });
+  });
+
+  disconnectBtn?.addEventListener('click', async () => {
+    try {
+      if (setupBridgeUrl) {
+        await logoutBridgeSession({ bridgeUrl: setupBridgeUrl });
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setAuthStatus(
+        'warn',
+        (locale === 'zh' ? '断开 GitHub 会话时出现问题：' : 'Failed to disconnect the GitHub session: ') + message,
+      );
+    } finally {
+      saveGitHubSession(null);
+      renderGitHubSession();
+      clearDeployStatus();
+    }
   });
 
   nextBtn?.addEventListener('click', () => {
@@ -1617,6 +1855,9 @@ export function initWizard(): void {
       saveGitHubSession(githubSession);
     }
     renderDeployPreview();
+    if (currentVerifiedInstallationId() && githubSession?.connected) {
+      void refreshGitHubSession({ preserveStatus: true });
+    }
   });
   qsa<HTMLInputElement>('[data-deploy-secret]', shell).forEach((input) => {
     input.addEventListener('input', renderDeployPreview);
@@ -1640,13 +1881,13 @@ export function initWizard(): void {
       return;
     }
 
-    const token = githubSession?.token ?? deployTokenInput?.value.trim() ?? '';
-    if (!token) {
+    const installationId = currentVerifiedInstallationId();
+    if (!installationId || !githubSession?.connected) {
       setDeployStatus(
         'warn',
         locale === 'zh'
-          ? '请先在页面顶部连接 GitHub。'
-          : 'Connect GitHub at the top of the page first.',
+          ? '请先在页面顶部完成 Linnet Bridge 安装和 GitHub 授权。'
+          : 'Finish the Linnet Bridge install and GitHub authorization at the top of the page first.',
       );
       return;
     }
@@ -1668,75 +1909,50 @@ export function initWizard(): void {
     deploySubmitBtn.textContent = locale === 'zh' ? '部署中...' : 'Deploying...';
     setDeployStatus(
       'info',
-      locale === 'zh' ? '正在写入配置文件和 GitHub Secrets...' : 'Writing config files and GitHub secrets...',
+      locale === 'zh' ? '正在通过 Linnet Bridge 写入配置、Secrets、Actions 和 Pages...' : 'Using Linnet Bridge to write config, secrets, Actions, and Pages setup...',
     );
 
     try {
-      const result = await deployGeneratedConfig({
-        owner: repo.owner,
-        repo: repo.repo,
-        token,
-        files: latestOutputs.map(({ path, body }) => ({ path, body })),
-        secrets,
+      const response = await deployViaBridge({
+        bridgeUrl: setupBridgeUrl,
+        payload: {
+          installationId,
+          repo,
+          files: latestOutputs.map(({ path, body }) => ({ path, body })),
+          secrets,
+          autoEnableActions: shouldAutoEnableActions(),
+          workflowsToEnable: [...AUTO_ENABLE_WORKFLOW_IDS],
+          configurePages: true,
+          triggerWorkflowId: 'daily.yml',
+        },
       });
-
+      const result = response.result as {
+        repo: { htmlUrl: string };
+        committedPaths: string[];
+        writtenSecrets: string[];
+        actions: { enabled: boolean };
+        pages: { attempted: boolean; htmlUrl: string | null; status: string };
+        workflowDispatch: { triggered: boolean };
+      };
       const autoEnableRequested = shouldAutoEnableActions();
-      const autoEnableFailures: string[] = [];
-      if (autoEnableRequested) {
-        try {
-          await setRepositoryActionsEnabled(token, repo.owner, repo.repo);
-        } catch (error) {
-          const message = error instanceof Error ? error.message : String(error);
-          autoEnableFailures.push(locale === 'zh' ? `仓库级 Actions（${message}）` : `repository Actions (${message})`);
-        }
-
-        for (const workflowId of AUTO_ENABLE_WORKFLOW_IDS) {
-          try {
-            await enableWorkflow(token, repo.owner, repo.repo, workflowId);
-          } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            autoEnableFailures.push(`${workflowId} (${message})`);
-          }
-        }
-      }
-
-      let triggerSucceeded = false;
-      let triggerErrorMessage = '';
-      try {
-        await triggerWorkflowDispatch(token, repo.owner, repo.repo, 'daily.yml', result.defaultBranch);
-        triggerSucceeded = true;
-      } catch (triggerError) {
-        console.warn('Failed to trigger workflow dispatch:', triggerError);
-        triggerErrorMessage = triggerError instanceof Error ? triggerError.message : String(triggerError);
-      }
+      const pagesConfigured = result.pages.attempted && result.pages.status !== 'skipped';
+      const actionsConfigured = autoEnableRequested && result.actions.enabled;
+      const triggerSummary = result.workflowDispatch.triggered
+        ? (locale === 'zh' ? 'Daily Digest 也已经触发。' : 'Daily Digest has also been triggered.')
+        : (locale === 'zh' ? '请稍后在 Actions 页面手动运行 Daily Digest。' : 'Please run Daily Digest manually from the Actions page.');
 
       if (deploySuccessEl) deploySuccessEl.hidden = false;
-      renderDeploySuccessLinks(repo.owner, repo.repo, result.htmlUrl);
-      const autoEnableFailed = autoEnableFailures.length > 0;
-      const statusKind = triggerSucceeded && !autoEnableFailed ? 'success' : 'warn';
-      let statusMessage = '';
-      if (triggerSucceeded && !autoEnableRequested) {
-        statusMessage = locale === 'zh'
-          ? `已写入 ${result.committedPaths.length} 个文件，并更新 ${result.writtenSecrets.length} 个 secret。已为您触发 Daily Digest 工作流测试（生效通常需要 3-5 分钟）。`
-          : `Wrote ${result.committedPaths.length} files and updated ${result.writtenSecrets.length} secrets. A Daily Digest workflow run has been triggered for you (may take 3-5 mins to take effect).`;
-      } else if (triggerSucceeded && !autoEnableFailed) {
-        statusMessage = locale === 'zh'
-          ? `已写入 ${result.committedPaths.length} 个文件，并更新 ${result.writtenSecrets.length} 个 secret；同时自动启用了 GitHub Actions 和相关 workflows，并已触发 Daily Digest（生效通常需要 3-5 分钟）。`
-          : `Wrote ${result.committedPaths.length} files and updated ${result.writtenSecrets.length} secrets; GitHub Actions and the related workflows were auto-enabled, and Daily Digest has been triggered (may take 3-5 mins to take effect).`;
-      } else if (triggerSucceeded) {
-        statusMessage = locale === 'zh'
-          ? `已写入 ${result.committedPaths.length} 个文件，并更新 ${result.writtenSecrets.length} 个 secret；Daily Digest 也已经触发，但自动启用部分未完全成功：${autoEnableFailures.join('；')}。请检查 PAT 是否包含 Administration: write，或确认仓库 / 组织策略没有阻止 Actions。`
-          : `Wrote ${result.committedPaths.length} files and updated ${result.writtenSecrets.length} secrets, and Daily Digest has been triggered, but auto-enable did not fully succeed: ${autoEnableFailures.join('; ')}. Check whether the PAT includes Administration: write or whether repo / org policy is blocking Actions.`;
-      } else if (autoEnableRequested) {
-        statusMessage = locale === 'zh'
-          ? `已写入 ${result.committedPaths.length} 个文件，并更新 ${result.writtenSecrets.length} 个 secret，但未能自动触发 Daily Digest。自动启用结果：${autoEnableFailures.length ? autoEnableFailures.join('；') : 'Actions 已打开，但 dispatch 仍然失败'}。请检查 PAT 权限（尤其是 Administration: write）、仓库 / 组织策略，然后在 Actions 页面手动运行 Daily Digest。${triggerErrorMessage ? ` 触发报错：${triggerErrorMessage}` : ''}`
-          : `Wrote ${result.committedPaths.length} files and updated ${result.writtenSecrets.length} secrets, but could not auto-trigger Daily Digest. Auto-enable result: ${autoEnableFailures.length ? autoEnableFailures.join('; ') : 'Actions were enabled, but dispatch still failed'}. Check the PAT permissions (especially Administration: write), repo / org policy, then run Daily Digest manually from the Actions page.${triggerErrorMessage ? ` Trigger error: ${triggerErrorMessage}` : ''}`;
-      } else {
-        statusMessage = locale === 'zh'
-          ? `已写入 ${result.committedPaths.length} 个文件，并更新 ${result.writtenSecrets.length} 个 secret，但未能自动触发 Daily Digest。请先在目标仓库里启用 GitHub Actions / workflows（fork 需要先在 Actions 页点击 “I understand my workflows, go ahead and enable them”），然后手动运行 Daily Digest。${triggerErrorMessage ? ` 触发报错：${triggerErrorMessage}` : ''}`
-          : `Wrote ${result.committedPaths.length} files and updated ${result.writtenSecrets.length} secrets, but could not auto-trigger Daily Digest. Enable GitHub Actions / workflows in the target repository first (forks need the Actions-tab confirmation), then run Daily Digest manually.${triggerErrorMessage ? ` Trigger error: ${triggerErrorMessage}` : ''}`;
-      }
-      setDeployStatus(statusKind, statusMessage);
+      renderDeploySuccessLinks(repo.owner, repo.repo, result.repo.htmlUrl, result.pages.htmlUrl);
+      setDeployStatus(
+        'success',
+        autoEnableRequested
+          ? (locale === 'zh'
+            ? `已写入 ${result.committedPaths.length} 个文件，并更新 ${result.writtenSecrets.length} 个 secret；GitHub Actions${actionsConfigured ? '已启用' : '已保留现状'}，GitHub Pages${pagesConfigured ? '已配置' : '未变更'}，${triggerSummary}`
+            : `Wrote ${result.committedPaths.length} files and updated ${result.writtenSecrets.length} secrets; GitHub Actions were ${actionsConfigured ? 'enabled' : 'left as-is'}, GitHub Pages were ${pagesConfigured ? 'configured' : 'left unchanged'}, and ${triggerSummary}`)
+          : (locale === 'zh'
+            ? `已写入 ${result.committedPaths.length} 个文件，并更新 ${result.writtenSecrets.length} 个 secret；GitHub Pages${pagesConfigured ? '已配置' : '未变更'}，${triggerSummary}`
+            : `Wrote ${result.committedPaths.length} files and updated ${result.writtenSecrets.length} secrets; GitHub Pages were ${pagesConfigured ? 'configured' : 'left unchanged'}, and ${triggerSummary}`),
+      );
 
       if (connectNextStepsEl) connectNextStepsEl.hidden = false;
     } catch (error) {
@@ -1760,8 +1976,10 @@ export function initWizard(): void {
   syncLlmApiKeyInputs();
   syncDeploySecretRows();
   renderGitHubSession();
-  // PAT flow: no OAuth callback to process
   renderDeployPreview();
+  if (setupBridgeUrl && (currentUrlInstallationId() || githubSession?.connected)) {
+    void refreshGitHubSession({ preserveStatus: !window.location.search.includes('github_auth=success') });
+  }
   initGeocodeAutocomplete(shell);
   showStep(1);
 }

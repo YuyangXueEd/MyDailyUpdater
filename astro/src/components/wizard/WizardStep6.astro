@@ -3,7 +3,7 @@ interface Props {
   locale: 'en' | 'zh';
 }
 const { locale } = Astro.props;
-const revokeLink = 'https://github.com/settings/tokens';
+const revokeLink = 'https://github.com/settings/installations';
 
 const t = {
   nextHead:   locale === 'zh' ? '接下来的步骤' : 'Suggested next steps',
@@ -14,9 +14,9 @@ const t = {
   manual4:    locale === 'zh' ? '先在目标仓库中启用 GitHub Actions / workflows。fork 仓库需要先进入 Actions 标签页，点击 “I understand my workflows, go ahead and enable them”。' : 'Enable GitHub Actions / workflows in the target repository first. For forks, open the Actions tab and click "I understand my workflows, go ahead and enable them".',
   manual5:    locale === 'zh' ? '然后前往 Actions，运行一次 Daily Digest 以确认配置正常。' : 'Then go to Actions and run Daily Digest once to confirm the setup.',
   connectHead: locale === 'zh' ? 'Connect GitHub 一键部署' : 'One-click deploy with Connect GitHub',
-  connectDesc: locale === 'zh' ? '如果你在开始前已经连接 GitHub，这里会直接把生成的配置文件和所需 secrets 写入你自己的仓库。你也可以额外开启下面的自动启用开关，让 Linnet 帮你打开 Actions 并重新启用相关 workflows。' : 'If you connected GitHub before starting, this section writes the generated config files and required secrets straight into your own repository. You can also opt into the switch below if you want Linnet to turn Actions back on and re-enable the related workflows for you.',
-  connectNeed: locale === 'zh' ? '当前还没有 GitHub 连接。请回到页面顶部，先选择 “Connect GitHub 一键部署” 并完成授权。' : 'GitHub is not connected yet. Go back to the top of the page, choose the Connect GitHub path, and finish authorization first.',
-  connectedUsing: locale === 'zh' ? '当前正在使用已连接的 GitHub 会话。' : 'This deploy uses your connected GitHub session.',
+  connectDesc: locale === 'zh' ? '如果你在开始前已经安装 Linnet Bridge GitHub App 并授权当前浏览器，这里会直接把生成的配置文件和所需 secrets 写入你自己的仓库。你也可以额外开启下面的自动启用开关，让 Linnet 帮你打开 Actions、重新启用相关 workflows，并配置 GitHub Pages。' : 'If you installed the Linnet Bridge GitHub App and authorized this browser first, this section writes the generated config files and required secrets straight into your own repository. You can also opt into the switch below if you want Linnet to turn Actions back on, re-enable the related workflows, and configure GitHub Pages for you.',
+  connectNeed: locale === 'zh' ? '当前还没有 GitHub 连接。请回到页面顶部，先安装 Linnet Bridge GitHub App，并完成浏览器授权。' : 'GitHub is not connected yet. Go back to the top of the page, install the Linnet Bridge GitHub App, and finish browser authorization first.',
+  connectedUsing: locale === 'zh' ? '当前正在使用已授权的 Linnet Bridge GitHub 会话。' : 'This deploy uses your authorized Linnet Bridge GitHub session.',
   repoLabel:  locale === 'zh' ? '目标仓库' : 'Target repository',
   repoHint:   locale === 'zh'
     ? '默认会优先选当前这个站点所在的仓库；你也可以手动填写 owner/repo，或直接粘贴 GitHub 仓库 URL。'
@@ -34,19 +34,19 @@ const t = {
     ? '如果你不使用自动启用开关，fork 仓库仍然需要先打开 Actions 标签页，点击 “I understand my workflows, go ahead and enable them”。'
     : 'If you do not use the auto-enable switch, forks still need the Actions-tab confirmation first.',
   enablerManual: locale === 'zh'
-    ? '如果你打开自动启用开关，PAT 还需要额外拥有 Administration: write；否则请继续手动启用 Daily / Weekly / Monthly / Pages workflow。'
-    : 'If you turn on auto-enable, the PAT also needs Administration: write; otherwise keep the manual path for Daily / Weekly / Monthly / Pages.',
+    ? '如果你打开自动启用开关，请确认 Linnet Bridge GitHub App 安装时包含 Actions、Secrets、Administration 和 Pages 的写权限；否则请继续手动启用 Daily / Weekly / Monthly / Pages workflow。'
+    : 'If you turn on auto-enable, make sure the Linnet Bridge GitHub App installation has write access for Actions, Secrets, Administration, and Pages; otherwise keep the manual path for Daily / Weekly / Monthly / Pages.',
   autoEnableLabel: locale === 'zh' ? '自动启用 GitHub Actions 和 workflows' : 'Auto-enable GitHub Actions and workflows',
   autoEnableHint: locale === 'zh'
-    ? '会尝试打开仓库级 Actions，并重新启用 daily.yml、weekly.yml、monthly.yml、pages.yml。需要 PAT 额外拥有 Administration: write。'
-    : 'This attempts to turn on repository Actions and re-enable daily.yml, weekly.yml, monthly.yml, and pages.yml. It requires Administration: write on the PAT.',
+    ? '会尝试打开仓库级 Actions，重新启用 daily.yml、weekly.yml、monthly.yml、pages.yml，并配置 Pages 使用 workflow 构建。'
+    : 'This attempts to turn on repository Actions, re-enable daily.yml, weekly.yml, monthly.yml, and pages.yml, and configure Pages to build from workflows.',
   autoEnableNote: locale === 'zh'
     ? '关闭时：仍然会写入文件和 secrets，但你需要自己到 Actions 页面里启用。'
     : 'When off: Linnet still writes files and secrets, but you enable the repo/workflows yourself from the Actions page.',
   previewHead: locale === 'zh' ? '将调用的 GitHub API' : 'GitHub API calls',
   deployBtn:  locale === 'zh' ? '部署到 GitHub' : 'Deploy to GitHub',
-  revoke:     locale === 'zh' ? '部署完成后，这个连接 token 仍会保留在当前浏览器会话中；如果是共享设备，记得断开连接。也可以现在直接去 GitHub 撤销它：' : 'After deploy, the connected token stays in this browser session only. Disconnect it if you are on a shared device. You can also revoke it on GitHub now:',
-  revokeLinkLabel: locale === 'zh' ? '打开 token 设置' : 'Open token settings',
+  revoke:     locale === 'zh' ? '部署完成后，这个浏览器会话仍会保留到期前的 GitHub 授权；如果是共享设备，记得断开连接。也可以现在直接去 GitHub 管理已安装的 App：' : 'After deploy, this browser session keeps the GitHub authorization until it expires. Disconnect it if you are on a shared device. You can also manage installed apps on GitHub now:',
+  revokeLinkLabel: locale === 'zh' ? '打开 App 安装设置' : 'Open app installations',
   siteUrlLabel: locale === 'zh' ? '默认 GitHub Pages 地址：' : 'Default GitHub Pages URL:',
   siteUrlHint: locale === 'zh'
     ? '可选但推荐：站点上线后，把这个地址填到仓库主页的 About -> Website 里，这样 GitHub 上会直接显示站点入口。'
@@ -159,7 +159,7 @@ const t = {
     <ol class="wz-checklist">
       <li>{locale === 'zh' ? '检查仓库里的 config 文件和 GitHub Actions secrets 是否都已经写入。' : 'Check that the config files and GitHub Actions secrets were written to the repository.'}</li>
       <li>{locale === 'zh' ? '如果你没有打开上面的自动启用开关，请自己在目标仓库里启用 GitHub Actions / workflows；fork 先在 Actions 标签页里点击确认。' : 'If you left the auto-enable switch off, enable GitHub Actions / workflows yourself in the target repository; forks need the Actions-tab confirmation first.'}</li>
-      <li>{locale === 'zh' ? '如果你打开了自动启用开关但仍然收到警告，请检查 PAT 是否包含 Administration: write，或确认仓库 / 组织策略没有阻止 Actions。' : 'If you turned auto-enable on but still got a warning, check whether the PAT includes Administration: write or whether repo / org policy is blocking Actions.'}</li>
+      <li>{locale === 'zh' ? '如果你打开了自动启用开关但仍然收到警告，请检查 Linnet Bridge GitHub App 是否已经安装到目标仓库，并确认仓库 / 组织策略没有阻止 Actions 或 Pages。' : 'If you turned auto-enable on but still got a warning, check whether the Linnet Bridge GitHub App is installed on the target repository and whether repo / org policy is blocking Actions or Pages.'}</li>
       <li>{locale === 'zh' ? '如果自动触发没有成功，再前往 Actions 手动运行一次 Daily Digest 以确认配置正常。' : 'If the auto-trigger did not start successfully, go to Actions and run Daily Digest manually to confirm the setup.'}</li>
       <li>{locale === 'zh' ? '等 GitHub Pages 上线后，可选地把站点地址填到仓库主页的 About -> Website 里，方便在 GitHub 上直接看到入口。' : 'Once GitHub Pages is live, optionally add your site URL to the repository\'s About -> Website field so the homepage link appears on GitHub.'}</li>
       <li>{locale === 'zh' ? '如果在共享设备上操作，部署完成后请断开 GitHub 连接。' : 'If you are on a shared device, disconnect GitHub after the deploy finishes.'}</li>

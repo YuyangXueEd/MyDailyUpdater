@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "linnet-setup-bridge",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "GITHUB_APP_SLUG": "linnet-bridge",
+    "GITHUB_APP_ID": "3469148",
+    "GITHUB_APP_CLIENT_ID": "Iv23liGLxdxfmBkpVs0g",
+    "CORS_ALLOWED_ORIGINS": "https://yuyangxueed.github.io,http://127.0.0.1:4321,http://localhost:4321",
+    "ALLOW_UNSAFE_INSTALLATION_ID_DEPLOY": "false"
+  }
+}

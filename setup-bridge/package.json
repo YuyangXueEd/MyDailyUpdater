@@ -1,0 +1,22 @@
+{
+  "name": "linnet-setup-bridge",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "tsc --noEmit",
+    "test": "node --import tsx --test tests/**/*.test.ts"
+  },
+  "dependencies": {
+    "hono": "4.12.14",
+    "libsodium-wrappers": "0.8.4"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.0",
+    "tsx": "4.20.6",
+    "typescript": "6.0.3",
+    "wrangler": "4.84.1"
+  }
+}

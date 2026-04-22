@@ -13,6 +13,7 @@ interface Props {
 const { locale } = Astro.props;
 
 const extensions = getExtensionsForLocale(locale);
+const setupBridgeUrl = import.meta.env.PUBLIC_SETUP_BRIDGE_URL || 'https://linnet-setup-bridge.yuyangxueed.workers.dev';
 
 const STEPS = locale === 'zh'
   ? ['来源', '配置', '计划', '推送', '主题', '导出']
@@ -40,41 +41,37 @@ const backLabel = locale === 'zh' ? '上一步' : 'Back';
 const nextLabel = locale === 'zh' ? '下一步' : 'Next';
 const connectTitle = locale === 'zh' ? '部署方式' : 'Deploy Path';
 const connectDesc = locale === 'zh'
-  ? '先决定最后是手动提交配置，还是用前端 GitHub 连接做一键部署。'
-  : 'Choose whether you want to finish with manual config handoff or a browser-side GitHub deploy.';
+  ? '先决定最后是手动提交配置，还是通过 Linnet Bridge 完成更低门槛的一键部署。'
+  : 'Choose whether you want to finish with manual config handoff or use Linnet Bridge for the lower-friction one-click path.';
 const connectModeTitle = locale === 'zh' ? 'Connect GitHub 一键部署' : 'One-click with Connect GitHub';
-const connectModeMeta = locale === 'zh' ? '浏览器授权 + 仓库直写' : 'Browser auth + direct repo write';
+const connectModeMeta = locale === 'zh' ? '安装 App + 浏览器授权' : 'Install app + browser auth';
 const connectModeDesc = locale === 'zh'
-  ? '推荐先授权 GitHub，再继续填写向导。到第 6 步时可以直接写入仓库和 secrets。'
-  : 'Recommended for first-time setup. Authorize GitHub first, then write files and secrets directly at Step 6.';
+  ? '推荐给第一次上手的用户。先安装 Linnet Bridge GitHub App，再授权当前浏览器；到第 6 步时可以直接写入仓库、secrets、Pages 和 Actions 配置。'
+  : 'Recommended for first-time users. Install the Linnet Bridge GitHub App first, then authorize this browser; at Step 6 Linnet can write files, secrets, Pages, and Actions setup for you.';
 const manualModeTitle = locale === 'zh' ? 'Advanced manual config' : 'Advanced manual config';
 const manualModeMeta = locale === 'zh' ? '复制 YAML + 手动加 secrets' : 'Copy YAML + add secrets';
 const manualModeDesc = locale === 'zh'
   ? '继续使用生成的 YAML 和 secret 清单，手动提交到自己的仓库。'
   : 'Export YAML blocks and the secret checklist, then commit everything yourself.';
-const connectButtonLabel = locale === 'zh' ? '连接' : 'Connect';
+const installButtonLabel = locale === 'zh' ? '安装 GitHub App' : 'Install GitHub App';
+const connectButtonLabel = locale === 'zh' ? '授权 GitHub' : 'Authorize GitHub';
 const disconnectButtonLabel = locale === 'zh' ? '断开连接' : 'Disconnect';
-const patPlaceholder = locale === 'zh' ? '粘贴 Personal Access Token…' : 'Paste Personal Access Token…';
-const patHint = locale === 'zh'
-  ? '需要 contents:write、metadata:read、actions:write、secrets:write 权限的 Fine-grained PAT；如果想让 Step 6 自动启用 Actions / workflows，再额外加 administration:write。Classic PAT 继续使用 repo + workflow。'
-  : 'Fine-grained PAT with contents:write, metadata:read, actions:write, and secrets:write. Add administration:write too if you want Step 6 to auto-enable Actions / workflows. Classic PAT can still use repo + workflow.';
-const patCreateLink = 'https://github.com/settings/personal-access-tokens/new';
-const patCreateLabel = locale === 'zh' ? '在 GitHub 创建 Token →' : 'Create token on GitHub →';
-const patInstructionLabel = locale === 'zh' ? '填写说明' : 'Instructions';
-const patInstructionTitle = locale === 'zh' ? '如何创建 GitHub PAT' : 'How to create a GitHub PAT';
-const patInstructionClose = locale === 'zh' ? '关闭' : 'Close';
+const bridgeHint = locale === 'zh'
+  ? '这条路径不再要求新人手动创建 PAT。流程是：先安装 App 到目标仓库，再回到这里授权当前浏览器。'
+  : 'This path no longer asks new users to mint a PAT. The flow is: install the app on the target repository first, then return here and authorize this browser.';
 const connectStatusIdle = locale === 'zh'
-  ? '尚未连接 GitHub。建议先连接，再开始填写向导。'
-  : 'GitHub is not connected yet. Connect first if you want the one-click path.';
+  ? '还没有 GitHub 连接。请先安装 Linnet Bridge GitHub App，然后授权当前浏览器。'
+  : 'GitHub is not connected yet. Install the Linnet Bridge GitHub App first, then authorize this browser.';
 const connectSummaryIdle = locale === 'zh'
-  ? '未连接时，你仍然可以完成向导并导出配置，但需要自己提交文件和 secrets。'
-  : 'You can still complete the wizard without connecting, but you will commit files and secrets yourself.';
+  ? '未连接时，你仍然可以完成向导并导出配置，但需要自己提交文件和 secrets。完成安装后，GitHub 会把你带回这个 setup 页面。'
+  : 'You can still complete the wizard without connecting, but you will commit files and secrets yourself. After installation, GitHub will bring you back to this setup page.';
 ---
 
 <div
   class="wz"
   data-locale={locale}
   data-wizard
+  data-setup-bridge-url={setupBridgeUrl}
   data-step-blurbs={JSON.stringify(STEP_BLURBS)}
 >
 
@@ -108,28 +105,19 @@ const connectSummaryIdle = locale === 'zh'
     <div class="wz-card" data-setup-mode-panel="connect" hidden={false}>
       <h3>{connectModeTitle}</h3>
       <p class="wz-card__desc">{connectModeDesc}</p>
-      <div class="wz-field">
-        <input
-          type="password"
-          class="wz-input"
-          data-github-pat-input
-          placeholder={patPlaceholder}
-          autocomplete="off"
-          spellcheck={false}
-        />
-        <div class="wz-field__hint">
-          {patHint}
-          {' '}<a href={patCreateLink} target="_blank" rel="noopener">{patCreateLabel}</a>
-          {' · '}<button type="button" class="wz-hint-link" data-pat-instruction-btn>{patInstructionLabel}</button>
-        </div>
-      </div>
       <div class="wz-auth-actions">
+        <button type="button" class="wz-btn wz-btn--secondary" data-github-install-btn>
+          {installButtonLabel}
+        </button>
         <button type="button" class="wz-btn wz-btn--primary" data-github-connect-btn>
           {connectButtonLabel}
         </button>
         <button type="button" class="wz-btn wz-btn--ghost" data-github-disconnect-btn hidden>
           {disconnectButtonLabel}
         </button>
+      </div>
+      <div class="wz-field__hint" style="margin-top:12px">
+        {bridgeHint}
       </div>
       <div class="wz-notice wz-notice--info" data-github-auth-status>
         {connectStatusIdle}
@@ -201,93 +189,9 @@ const connectSummaryIdle = locale === 'zh'
 
 </div>
 
-<!-- ── PAT instruction dialog ─────────────────────────────── -->
-<dialog class="wz-dialog" id="wz-pat-dialog" aria-label={patInstructionTitle}>
-  <div class="wz-dialog__inner">
-    <div class="wz-dialog__header">
-      <h2 class="wz-dialog__title">{patInstructionTitle}</h2>
-      <button type="button" class="wz-dialog__close" data-pat-instruction-close aria-label={patInstructionClose}>✕</button>
-    </div>
-    <div class="wz-dialog__body">
-      {locale === 'zh' ? (
-        <>
-          <p class="wz-dialog__lead">前往 <a href={patCreateLink} target="_blank" rel="noopener">GitHub → Settings → Developer settings → Personal access tokens</a> 新建 Token，按以下步骤填写：</p>
-
-          <h3 class="wz-dialog__section-title">Fine-grained PAT（推荐）</h3>
-          <ol class="wz-dialog__steps">
-            <li><strong>Token name</strong>：填写一个描述性名称，例如 <code>linnet-deploy</code></li>
-            <li><strong>Expiration</strong>：建议选 90 天或更长</li>
-            <li><strong>Resource owner</strong>：选择你的账号（或 Org）</li>
-            <li><strong>Repository access</strong>：选 <em>Only select repositories</em>，然后勾选你的 Linnet fork</li>
-            <li><strong>Permissions</strong>（展开 Repository permissions）：
-              <ul class="wz-dialog__perms">
-                <li><code>Contents</code> → <strong>Read and write</strong></li>
-                <li><code>Metadata</code> → <strong>Read</strong>（强制自动勾选）</li>
-                <li><code>Actions</code> → <strong>Read and write</strong></li>
-                <li><code>Secrets</code> → <strong>Read and write</strong></li>
-                <li><code>Administration</code> → <strong>Read and write</strong>（仅在你想让 Step 6 自动启用 Actions / workflows 时需要）</li>
-              </ul>
-            </li>
-            <li>点击 <strong>Generate token</strong>，立即复制（仅显示一次）</li>
-          </ol>
-
-          <h3 class="wz-dialog__section-title">Classic PAT（操作更简单，权限范围更广）</h3>
-          <ol class="wz-dialog__steps">
-            <li><strong>Token name</strong>：例如 <code>linnet-deploy</code></li>
-            <li><strong>Expiration</strong>：自选</li>
-            <li><strong>Scopes</strong>：勾选 <code>repo</code>（全部子项）和 <code>workflow</code></li>
-            <li>点击 <strong>Generate token</strong>，立即复制（仅显示一次）</li>
-          </ol>
-        </>
-      ) : (
-        <>
-          <p class="wz-dialog__lead">Go to <a href={patCreateLink} target="_blank" rel="noopener">GitHub → Settings → Developer settings → Personal access tokens</a> and create a new token:</p>
-
-          <h3 class="wz-dialog__section-title">Fine-grained PAT (recommended)</h3>
-          <ol class="wz-dialog__steps">
-            <li><strong>Token name</strong> — something descriptive, e.g. <code>linnet-deploy</code></li>
-            <li><strong>Expiration</strong> — 90 days or longer recommended</li>
-            <li><strong>Resource owner</strong> — your account or org</li>
-            <li><strong>Repository access</strong> — choose <em>Only select repositories</em>, then pick your Linnet fork</li>
-            <li><strong>Permissions</strong> — expand <em>Repository permissions</em> and set:
-              <ul class="wz-dialog__perms">
-                <li><code>Contents</code> → <strong>Read and write</strong></li>
-                <li><code>Metadata</code> → <strong>Read</strong> (auto-selected, required)</li>
-                <li><code>Actions</code> → <strong>Read and write</strong></li>
-                <li><code>Secrets</code> → <strong>Read and write</strong></li>
-                <li><code>Administration</code> → <strong>Read and write</strong> (only if you want Step 6 to auto-enable Actions / workflows)</li>
-              </ul>
-            </li>
-            <li>Click <strong>Generate token</strong> and copy it immediately — it is shown only once</li>
-          </ol>
-
-          <h3 class="wz-dialog__section-title">Classic PAT (simpler, broader access)</h3>
-          <ol class="wz-dialog__steps">
-            <li><strong>Token name</strong> — e.g. <code>linnet-deploy</code></li>
-            <li><strong>Expiration</strong> — pick a duration</li>
-            <li><strong>Scopes</strong> — check <code>repo</code> (all sub-scopes) and <code>workflow</code></li>
-            <li>Click <strong>Generate token</strong> and copy immediately — shown only once</li>
-          </ol>
-        </>
-      )}
-    </div>
-  </div>
-</dialog>
-
 <script>
   import { initWizard } from './wizardController';
   initWizard();
-
-  const dialog = document.getElementById('wz-pat-dialog') as HTMLDialogElement | null;
-  document.querySelector('[data-pat-instruction-btn]')?.addEventListener('click', () => {
-    dialog?.showModal();
-  });
-  document.querySelector('[data-pat-instruction-close]')?.addEventListener('click', () => {
-    dialog?.close();
-  });
-  dialog?.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
-  });
 </script>
 
 <style is:global>
