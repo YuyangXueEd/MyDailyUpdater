@@ -1,11 +1,13 @@
 ![Linnet](assets/teaser.gif)
 
+# Linnet
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Daily Digest](https://github.com/YuyangXueEd/linnet/actions/workflows/daily.yml/badge.svg)](https://github.com/YuyangXueEd/linnet/actions/workflows/daily.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/YuyangXueEd/linnet/pulls)
 
-[中文文档](README_zh.md)
+[中文](README_zh.md)
 
 **Your personal AI morning briefing.** arXiv papers, Hacker News stories, GitHub trends, weather, and optional extras are collected overnight, summarised for you, and published as your own searchable digest site.
 
@@ -14,8 +16,6 @@
 Fork the repo, add one API key, and run it on GitHub Actions. No server, no subscription, no dashboard lock-in.
 
 **[Live example](https://yuyangxueed.github.io/Linnet)** · **[Upstream setup demo (EN)](https://yuyangxueed.github.io/Linnet/setup/)** · **[上游配置演示 (中文)](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[Manual config guide](dev_docs/manual-config.md)**
-
----
 
 ---
 
