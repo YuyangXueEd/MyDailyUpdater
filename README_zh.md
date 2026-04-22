@@ -1,3 +1,4 @@
+![Linnet](assets/teaser.gif)
 # Linnet
 
 [English](README.md)
