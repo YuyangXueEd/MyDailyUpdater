@@ -40,6 +40,7 @@ const totalDays  = dailyFiles.filter((f: string) => /^\d{4}-\d{2}-\d{2}\.json$/.
 const totalWeeks = weeklyFiles.filter((f: string) => /^\d{4}-W\d{2}\.json$/.test(f)).length;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const officialSetupUrl = 'https://yuyangxueed.github.io/Linnet/setup/zh/';
 
 const previewLines = latestDate
   ? await loadDigestPreview(resolve(dailyDir, `${latestDate}.json`))
@@ -150,7 +151,7 @@ function fallbackPreviewLines(): DigestPreviewLine[] {
 
     <!-- ── Action bar ────────────────────────────────────────── -->
     <div class="cover-actions">
-      <a href={`${base}/setup/zh/`} class="cover-btn cover-btn--primary">开始配置</a>
+      <a href={officialSetupUrl} class="cover-btn cover-btn--primary">开始配置</a>
       <a href={latestDate ? `${base}/daily/${latestDate}/` : `${base}/daily/`} class="cover-btn cover-btn--ghost">
         看今天的简报 →
       </a>
@@ -235,7 +236,7 @@ function fallbackPreviewLines(): DigestPreviewLine[] {
         <li><span><strong>让它自动运行。</strong>之后每天醒来，简报已经准备好了。</span></li>
       </ol>
       <div class="cover-infra__actions">
-        <a href={`${base}/setup/zh/`} class="cover-btn cover-btn--primary">打开配置向导</a>
+        <a href={officialSetupUrl} class="cover-btn cover-btn--primary">打开配置向导</a>
         <a href="https://github.com/YuyangXueEd/linnet" class="cover-ext-link" target="_blank" rel="noopener">
           在 GitHub 上查看 ↗
         </a>

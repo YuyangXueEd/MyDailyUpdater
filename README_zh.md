@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Daily Digest](https://github.com/YuyangXueEd/linnet/actions/workflows/daily.yml/badge.svg)](https://github.com/YuyangXueEd/linnet/actions/workflows/daily.yml)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/YuyangXueEd/linnet/pulls)
 
 [English](README.md)
@@ -15,7 +15,7 @@
 
 当你用模板创建好自己的仓库后，第一步就该打开设置向导。它现在就是新的主入口：登录 GitHub、完成授权、填写配置、直接部署，都会在这里走完。当前自托管路径会在背后使用 GitHub Actions 和 Pages；你不用维护服务器，也不会被锁在某个 dashboard 里。
 
-**[在线示例](https://yuyangxueed.github.io/Linnet)** · **[中文设置向导入口](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[English setup entry](https://yuyangxueed.github.io/Linnet/setup/)** · **[手动配置指南](dev_docs/manual-config.zh.md)**
+**[在线示例](https://yuyangxueed.github.io/linnet_new/)** · **[中文设置向导入口](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[English setup entry](https://yuyangxueed.github.io/Linnet/setup/)** · **[手动配置指南](dev_docs/manual-config.zh.md)**
 
 > **克隆或从模板创建仓库后，先点这里**
 >

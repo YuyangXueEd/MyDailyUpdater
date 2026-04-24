@@ -57,22 +57,6 @@ const t = {
   </div>
 
   <div class="wz-card-grid">
-    <div class="wz-card wz-card--compact" data-optional-secret-card="API_NINJAS_KEY" hidden>
-      <h3>{t.quoteHead}</h3>
-      <p class="wz-card__desc">{t.quoteDesc}</p>
-      <div class="wz-field">
-        <label for="quote-api-key">{t.quoteKeyLabel}</label>
-        <input
-          id="quote-api-key"
-          type="password"
-          data-deploy-secret="API_NINJAS_KEY"
-          placeholder="..."
-          autocomplete="off"
-        />
-        <div class="wz-field__hint">{t.quoteHint}</div>
-      </div>
-    </div>
-
     <div class="wz-card wz-card--compact">
       <div class="wz-card__header">
         <h3>{t.slackHead}</h3>
@@ -152,6 +136,22 @@ const t = {
             <input type="number" id="sc-max-jobs" data-sink-sc-max-jobs min="1" max="10" value="3" />
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="wz-card wz-card--compact" data-optional-secret-card="API_NINJAS_KEY" hidden>
+      <h3>{t.quoteHead}</h3>
+      <p class="wz-card__desc">{t.quoteDesc}</p>
+      <div class="wz-field">
+        <label for="quote-api-key">{t.quoteKeyLabel}</label>
+        <input
+          id="quote-api-key"
+          type="password"
+          data-deploy-secret="API_NINJAS_KEY"
+          placeholder="..."
+          autocomplete="off"
+        />
+        <div class="wz-field__hint">{t.quoteHint}</div>
       </div>
     </div>
   </div>

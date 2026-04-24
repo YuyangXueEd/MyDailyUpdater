@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Daily Digest](https://github.com/YuyangXueEd/linnet/actions/workflows/daily.yml/badge.svg)](https://github.com/YuyangXueEd/linnet/actions/workflows/daily.yml)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/YuyangXueEd/linnet/pulls)
 
 [中文](README_zh.md)
@@ -15,7 +15,7 @@
 
 After you create your own repo from this template, start with the setup wizard. It is now the main sign-in, GitHub authorization, and deployment entry point: choose the briefing shape you want, add your LLM key, and let Linnet prepare the repo handoff. The current self-hosted path uses GitHub Actions and Pages behind the scenes; you do not need to run a server or accept dashboard lock-in.
 
-**[Live example](https://yuyangxueed.github.io/Linnet)** · **[Start setup in English](https://yuyangxueed.github.io/Linnet/setup/)** · **[用中文进入设置向导](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[Manual config guide](dev_docs/manual-config.md)**
+**[Live example](https://yuyangxueed.github.io/linnet_new/)** · **[Start setup in English](https://yuyangxueed.github.io/Linnet/setup/)** · **[用中文进入设置向导](https://yuyangxueed.github.io/Linnet/setup/zh/)** · **[Manual config guide](dev_docs/manual-config.md)**
 
 > **Start here after creating your repo**
 > The setup page is now the main sign-in, GitHub authorization, and deployment flow for new users.

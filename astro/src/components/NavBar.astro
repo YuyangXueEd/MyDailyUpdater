@@ -6,6 +6,7 @@ interface Props {
 
 const { current, lang = 'en' } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const officialSetupBase = 'https://yuyangxueed.github.io/Linnet/setup';
 const isZh = lang === 'zh-CN' || lang === 'zh';
 const pathname = Astro.url.pathname;
 
@@ -32,13 +33,13 @@ const links = isZh
       { key: 'daily',   href: `${base}/daily/`,    label: '日报' },
       { key: 'weekly',  href: `${base}/weekly/`,   label: '周报' },
       { key: 'monthly', href: `${base}/monthly/`,  label: '月报' },
-      { key: 'setup',   href: `${base}/setup/zh/`, label: '配置' },
+      { key: 'setup',   href: `${officialSetupBase}/zh/`, label: '配置' },
     ]
   : [
       { key: 'daily',   href: `${base}/daily/`,   label: 'Daily' },
       { key: 'weekly',  href: `${base}/weekly/`,  label: 'Weekly' },
       { key: 'monthly', href: `${base}/monthly/`, label: 'Monthly' },
-      { key: 'setup',   href: `${base}/setup/`,   label: 'Setup' },
+      { key: 'setup',   href: `${officialSetupBase}/`,   label: 'Setup' },
     ];
 
 const homeHref   = isZh ? `${base}/zh/` : `${base}/`;

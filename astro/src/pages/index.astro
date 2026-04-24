@@ -40,6 +40,7 @@ const totalDays  = dailyFiles.filter((f: string) => /^\d{4}-\d{2}-\d{2}\.json$/.
 const totalWeeks = weeklyFiles.filter((f: string) => /^\d{4}-W\d{2}\.json$/.test(f)).length;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const officialSetupUrl = 'https://yuyangxueed.github.io/Linnet/setup/';
 
 const previewLines = latestDate
   ? await loadDigestPreview(resolve(dailyDir, `${latestDate}.json`))
@@ -149,7 +150,7 @@ function fallbackPreviewLines(): DigestPreviewLine[] {
 
     <!-- ── Action bar ────────────────────────────────────────── -->
     <div class="cover-actions">
-      <a href={`${base}/setup/`} class="cover-btn cover-btn--primary">Start the Setup Wizard</a>
+      <a href={officialSetupUrl} class="cover-btn cover-btn--primary">Start the Setup Wizard</a>
       <a href={latestDate ? `${base}/daily/${latestDate}/` : `${base}/daily/`} class="cover-btn cover-btn--ghost">
         Read today's briefing →
       </a>
@@ -233,7 +234,7 @@ function fallbackPreviewLines(): DigestPreviewLine[] {
         <li><span><strong>Let it run.</strong> Wake up to a finished briefing from then on.</span></li>
       </ol>
       <div class="cover-infra__actions">
-        <a href={`${base}/setup/`} class="cover-btn cover-btn--primary">Open the wizard</a>
+        <a href={officialSetupUrl} class="cover-btn cover-btn--primary">Open the wizard</a>
         <a href="https://github.com/YuyangXueEd/linnet" class="cover-ext-link" target="_blank" rel="noopener">
           View on GitHub ↗
         </a>
